@@ -450,4 +450,11 @@ namespace HumanitarianAssistance.Common.Enums
         AnalyticalInformation = 8
 
     }
+
+    public enum OperationType
+    {
+        Store = 1,
+        DirectVoucher = 2,
+        Logistics = 3,
+    }
 }

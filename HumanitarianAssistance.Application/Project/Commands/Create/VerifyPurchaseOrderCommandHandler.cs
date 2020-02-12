@@ -57,6 +57,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
                         JournalCode= request.Journal,
                         OfficeId= _logisticReq.OfficeId,
                         TimezoneOffset= -330,
+                        OperationalType = (int)OperationType.Logistics,
                         VoucherDate= _logisticReq.PurchaseDate ?? throw new Exception("Purchase not submitted!"),
                         VoucherTypeId= 2
                     };

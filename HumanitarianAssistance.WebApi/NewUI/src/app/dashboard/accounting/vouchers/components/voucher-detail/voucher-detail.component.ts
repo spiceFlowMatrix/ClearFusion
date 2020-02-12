@@ -46,6 +46,7 @@ export class VoucherDetailComponent implements OnInit {
   typeList: any[] = [];
   selectedAccount: any;
   selectedProject: any;
+  recordCount = 0;
   VoucherTypeEnum = VoucherType;
   filterdOptionsProjectList: Observable<any[]>;
   hideUnitColums: Observable<{ headers?: string[], items?: string[] }>;
@@ -53,6 +54,8 @@ export class VoucherDetailComponent implements OnInit {
   myControl = new FormControl();
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]>;
+
+  transactionPagingModel: any;
 
   constructor(private routeActive: ActivatedRoute,
     private router: Router, private voucherService: VoucherService,
@@ -67,6 +70,13 @@ export class VoucherDetailComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.transactionPagingModel = {
+      PageSize: 10,
+      PageIndex: 0,
+      Records: 0,
+      VoucherNo: this.voucherNo
+    };
+
     this.onFormInIt();
     this.getDetailsByVoucherNo();
     this.getVoucherTransactionsByVoucherNo();
@@ -78,7 +88,6 @@ export class VoucherDetailComponent implements OnInit {
   }
 
   onFormInIt() {
-
     this.voucherDetail = {
       VoucherNo: null,
       CurrencyCode: null,
@@ -99,13 +108,16 @@ export class VoucherDetailComponent implements OnInit {
       FinancialYearName: null,
       IsVoucherVerified: null,
       IsExchangeGainLos: null,
-      OperationalType: null
+      OperationalType: null,
+      PurchaseOrderModel: {
+        ProjectId: null,
+        Code: null,
+        PurchaseOrderId: null,
+        Description: null,
+        ApprovedBy: null,
+        ApprovedOn: null
+      }
     };
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 
   getDetailsByVoucherNo() {
@@ -143,10 +155,11 @@ export class VoucherDetailComponent implements OnInit {
   }
 
   getVoucherTransactionsByVoucherNo() {
-    this.voucherService.GetTransactionByVoucherId(this.voucherNo).subscribe(x => {
+    this.voucherService.GetTransactionByVoucherId(this.transactionPagingModel).subscribe(x => {
       this.ELEMENT_DATA = [];
       if (x.statusCode === 200) {
         this.ELEMENT_DATA = x.data;
+        this.recordCount = x.total;
         this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
         this.selection.clear();
       }
@@ -162,22 +175,6 @@ export class VoucherDetailComponent implements OnInit {
 
   cancelTransactionBtnClicked() {
     this.addEditTransaction = false;
-  }
-
-  private filterAccountName(value: string): any[] {
-    const filterValue = value.toLowerCase();
-    if (value.length >= 3) {
-      this.getFilteredAccountList(filterValue);
-      return this.accountList;
-    }
-  }
-
-  private filterProjectName(value: string): any[] {
-    const filterValue = value.toLowerCase();
-    if (value.length >= 3) {
-      this.getFilteredProjectList(filterValue);
-      return this.projectList;
-    }
   }
 
   getFilteredAccountList(data: string) {
@@ -372,6 +369,17 @@ export class VoucherDetailComponent implements OnInit {
     doc.href = item.SignedUrl;
     doc.target = '_blank';
     doc.click();
+  }
+
+  pagination(event) {
+    this.transactionPagingModel.PageIndex = event.pageIndex;
+    this.transactionPagingModel.PageSize = event.pageSize;
+    this.getVoucherTransactionsByVoucherNo();
+  }
+
+  navigateToLogisticRequest() {
+    this.router.navigate(['project/my-project/' + this.voucherDetail.PurchaseOrderModel.ProjectId +
+      '/logistic-requests/' + this.voucherDetail.PurchaseOrderModel.PurchaseOrderId]);
   }
 
 }

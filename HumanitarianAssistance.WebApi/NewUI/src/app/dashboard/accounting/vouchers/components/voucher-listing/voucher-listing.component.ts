@@ -31,6 +31,7 @@ export class VoucherListingComponent implements OnInit {
   journalList$: Observable<IDropDownModel[]>;
   operationalTypes$: Observable<IDropDownModel[]>;
   selectedOffices: any[];
+  selectedVoucherNo = 30;
   offices: any[];
   ELEMENT_DATA: any[] = [];
   voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
@@ -173,6 +174,7 @@ export class VoucherListingComponent implements OnInit {
         ) {
           if (response.data.VoucherDetailList.length > 0) {
             this.pagingModel.recordCount = response.data.TotalCount != null ? response.data.TotalCount : 0;
+            this.selectedVoucherNo = response.data.VoucherDetailList[0].VoucherNo;
             response.data.VoucherDetailList.forEach(element => {
               this.ELEMENT_DATA.push({
                 VoucherNo: element.VoucherNo,
@@ -308,6 +310,7 @@ export class VoucherListingComponent implements OnInit {
   //#endregion
 
   navigateToDetails(detail) {
+    this.selectedVoucherNo = detail.VoucherNo;
     this.router.navigate(['../' + detail.VoucherNo], { relativeTo: this.routeActive });
   }
 

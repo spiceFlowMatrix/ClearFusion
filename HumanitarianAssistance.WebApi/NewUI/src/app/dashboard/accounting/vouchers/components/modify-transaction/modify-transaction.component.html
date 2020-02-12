@@ -64,6 +64,42 @@
       </tr>
     </table>
   </div>
+  <div class="row container-fluid" *ngIf="voucherDetail.OperationalType == VoucherTypeEnum.Store || voucherDetail.OperationalType == VoucherTypeEnum.Logistics">
+    <div class="col-sm-12">
+      <h4>Purchase Order Details</h4>
+    </div>
+    <div class="col-sm-12">
+      <span class="margin_left_25" style="font-size: 14px;color: gray;">
+        <i class="fas fa-info-circle icon_color_yellow"></i> This is a Purchase order voucher for the below purchase order.<br>
+      You cannot delete this voucher</span>
+    </div>
+    <table class="table table-striped margin_top_20" style="width: 35%;">
+      <tr>
+        <td><strong>Project Id</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.ProjectId}}</td>
+      </tr>
+      <tr>
+        <td><strong>PurchaseOrderId</strong></td>
+        <td><a (click)="navigateToLogisticRequest()">{{voucherDetail.PurchaseOrderModel.PurchaseOrderId}}</a></td>
+      </tr>
+      <tr>
+        <td><strong>Code</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.Code}}</td>
+      </tr>
+      <tr>
+        <td><strong>Description</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.Description}}</td>
+      </tr>
+      <tr>
+        <td><strong>Approved By</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.ApprovedBy}}</td>
+      </tr>
+      <tr>
+        <td><strong>Approved On</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.ApprovedOn}}</td>
+      </tr>
+    </table>
+  </div>
   <div class="row">
     <div class="col-sm-1">
       <h4>Transactions</h4>
@@ -82,11 +118,13 @@
       <hum-button [type]="'add'" [text]="'ADD'" (click)="btnSubmit.click()"></hum-button>
       <hum-button (click)='cancelTransactionBtnClicked()' [type]="'cancel'" [text]="'CANCEL'"></hum-button>
     </div>
-    <form [formGroup]="addEditTransactionForm" (ngSubmit)="addTransaction()">
+  </div>
+    <form [formGroup]="addEditTransactionForm" (ngSubmit)="addTransaction()" *ngIf="showAddTransaction">
       <div class="row container-fluid">
+        <div class="col-sm-12">
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Select Account" aria-label="Number" matInput formControlName="AccountId"
+            <input type="text" placeholder="Search Accounts" aria-label="Number" matInput formControlName="AccountId"
               name="AccountId" [matAutocomplete]="matAutocomplete1">
             <mat-autocomplete #matAutocomplete1="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeAccountValue($event,item.AccountId)"
@@ -98,19 +136,19 @@
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <mat-label>Description</mat-label>
-            <input formControlName="Description" matInput placeholder="Description">
+            <textarea matInput rows="1" formControlName="Description" placeholder="Description"></textarea>
           </mat-form-field>
         </div>
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <mat-label>Amount</mat-label>
-            <input formControlName="Amount" matInput placeholder="Amount" type="number">
+            <input formControlName="Amount" (blur)="onAmountEvent($event.target.value)" matInput placeholder="Amount" type="number">
             <mat-error *ngIf="addEditTransactionForm.controls['Amount'].hasError('min')">Amount can not be 0</mat-error>
           </mat-form-field>
         </div>
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Select Project" aria-label="Number" matInput formControlName="ProjectId"
+            <input type="text" placeholder="Search Projects" aria-label="Number" matInput formControlName="ProjectId"
               name="ProjectId" [matAutocomplete]="matAutocomplete2">
             <mat-autocomplete #matAutocomplete2="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeProjectValue($event,item.ProjectId)"
@@ -119,18 +157,11 @@
             </mat-autocomplete>
           </mat-form-field>
         </div>
+      </div>
         <div class="col-sm-12">
           <div class="col-sm-3">
-            <!-- <mat-form-field>
-              <mat-label>Budget Line</mat-label>
-              <mat-select formControlName="BudgetLine">
-                <mat-option *ngFor="let bline of budgetLineList" [value]="bline.Id">
-                  {{bline.Name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field> -->
             <mat-form-field class="example-full-width">
-              <input type="text" placeholder="Select BudgetLine" aria-label="Number" matInput
+              <input type="text" placeholder="Search BudgetLines" aria-label="Number" matInput
                 formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
               <mat-autocomplete #matAutocomplete3="matAutocomplete">
                 <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
@@ -140,7 +171,7 @@
               </mat-autocomplete>
             </mat-form-field>
           </div>
-          <div class="col-sm-3">
+          <div class="col-sm-3 padding_top_20">
             <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
           </div>
           <div class="col-sm-3">
@@ -157,7 +188,6 @@
       </div>
       <button type="submit" style="display: none;" #btnSubmit></button>
     </form>
-  </div>
 
   <table mat-table [dataSource]="transactionDataSource" class="mat-elevation-z8">
     <!-- Checkbox Column -->
@@ -220,5 +250,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
     </tr>
   </table>
+  <mat-paginator [length]="recordCount" [pageSize]="transactionPagingModel.PageSize" [pageIndex]="transactionPagingModel.PageIndex"
+  [pageSizeOptions]="[5, 10, 20]" (page)="pagination($event)">
+</mat-paginator>
 
 </div>

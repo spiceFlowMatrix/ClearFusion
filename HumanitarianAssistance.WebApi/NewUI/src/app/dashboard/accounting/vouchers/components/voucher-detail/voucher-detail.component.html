@@ -63,6 +63,43 @@
       </tr>
     </table>
   </div>
+
+  <div class="row container-fluid" *ngIf="voucherDetail.OperationalType == VoucherTypeEnum.Store || voucherDetail.OperationalType == VoucherTypeEnum.Logistics">
+    <div class="col-sm-12">
+      <h4>Purchase Order Details</h4>
+    </div>
+    <div class="col-sm-12">
+      <span class="margin_left_25" style="font-size: 14px;color: gray;">
+        <i class="fas fa-info-circle icon_color_yellow"></i> This is a Purchase order voucher for the below purchase order.<br>
+      You cannot delete this voucher</span>
+    </div>
+    <table class="table table-striped margin_top_20" style="width: 35%;">
+      <tr>
+        <td><strong>Project Id</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.ProjectId}}</td>
+      </tr>
+      <tr>
+        <td><strong>PurchaseOrderId</strong></td>
+        <td><a (click)="navigateToLogisticRequest()">{{voucherDetail.PurchaseOrderModel.PurchaseOrderId}}</a></td>
+      </tr>
+      <tr>
+        <td><strong>Code</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.Code}}</td>
+      </tr>
+      <tr>
+        <td><strong>Description</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.Description}}</td>
+      </tr>
+      <tr>
+        <td><strong>Approved By</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.ApprovedBy}}</td>
+      </tr>
+      <tr>
+        <td><strong>Approved On</strong></td>
+        <td>{{voucherDetail.PurchaseOrderModel.ApprovedOn}}</td>
+      </tr>
+    </table>
+  </div>
   <div class="row">
     <div class="col-sm-1">
       <h4>Transactions</h4>
@@ -76,7 +113,7 @@
     </div>
   </div>
 
-  <table mat-table [dataSource]="transactionDataSource" class="mat-elevation-z8">
+  <table mat-table [dataSource]="transactionDataSource">
 
     <!-- Checkbox Column -->
     <ng-container matColumnDef="select" *ngIf="isModifyTransactions">
@@ -138,6 +175,9 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
     </tr>
   </table>
+  <mat-paginator [length]="recordCount" [pageSize]="transactionPagingModel.pageSize" [pageIndex]="transactionPagingModel.pageIndex"
+                    [pageSizeOptions]="[5, 10, 20]" (page)="pagination($event)">
+                  </mat-paginator>
   <div class="row">
     <div class="col-md-12">
       <h4 style="padding-left: 0px !important">Documents

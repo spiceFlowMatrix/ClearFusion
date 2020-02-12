@@ -29,12 +29,12 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                List<VoucherTransactionsModel> voucherTransactionsList = await _dbContext.VoucherTransactions
+                var query =  _dbContext.VoucherTransactions
                                    .Include(x => x.ProjectJobDetail)
                                    .Include(x=> x.ChartOfAccountDetail)
                                    .Include(x => x.ProjectDetail)
                                    .Include(x => x.ProjectBudgetLineDetail)
-                                   .Where(x => x.IsDeleted == false && x.VoucherNo == request.VoucherId)
+                                   .Where(x => x.IsDeleted == false && x.VoucherNo == request.VoucherNo)
                                    .Select(x => new VoucherTransactionsModel
                                    {
                                        AccountNo = x.ChartOfAccountNewId,
@@ -52,9 +52,13 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                        JobName = x.ProjectJobDetail!= null? x.ProjectJobDetail.ProjectJobName : "",
                                        Type= (x.Debit != 0 && x.Debit != null) ? "Debit" : "Credit",
                                        AccountCode =(x.ChartOfAccountDetail.ChartOfAccountNewCode +"-"+ x.ChartOfAccountDetail.AccountName)
-                                   }).ToListAsync();
+                                   }).AsQueryable();
 
-                response.data.VoucherTransactions = voucherTransactionsList;
+                int count = await query.CountAsync();
+                var result = await query.Skip(request.PageIndex*request.PageSize).Take(request.PageSize).ToListAsync();
+
+                response.data.VoucherTransactions = result;
+                response.data.TotalCount = count;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }
