@@ -260,6 +260,7 @@ export class VoucherDetailComponent implements OnInit {
     this.voucherService.verifySelectedVouchers(ids).subscribe(x => {
       if (x) {
         this.toastr.success('Verified successfully');
+        this.voucherDetail.IsVoucherVerified = !this.voucherDetail.IsVoucherVerified
       }
     }, error => {
       this.toastr.warning(error);
@@ -358,7 +359,7 @@ export class VoucherDetailComponent implements OnInit {
         .subscribe(response => {
           if (response.StatusCode = 200) {
             const index = this.documentList.findIndex(x => x.DocumentFileId === item.DocumentFileId);
-          this.documentList.splice(index, 1);
+            this.documentList.splice(index, 1);
           }
         });
     }

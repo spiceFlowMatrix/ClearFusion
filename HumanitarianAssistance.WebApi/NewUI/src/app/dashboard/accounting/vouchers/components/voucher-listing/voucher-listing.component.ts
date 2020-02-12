@@ -358,6 +358,13 @@ export class VoucherListingComponent implements OnInit {
 
   resetFilter() {
     this.voucherFilterForm.reset();
+    this.voucherFilterForm = this.fb.group({
+      'Search': [null],
+      'Date': [{ 'begin': null, 'end':  null}],
+      'CurrencyId': [null],
+      'OperationalType': [null],
+      'JournalId': [null]
+    });
     this.getVoucherList();
   }
 }

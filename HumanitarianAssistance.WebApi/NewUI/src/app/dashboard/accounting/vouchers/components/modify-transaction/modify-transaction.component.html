@@ -64,14 +64,16 @@
       </tr>
     </table>
   </div>
-  <div class="row container-fluid" *ngIf="voucherDetail.OperationalType == VoucherTypeEnum.Store || voucherDetail.OperationalType == VoucherTypeEnum.Logistics">
+  <div class="row container-fluid"
+    *ngIf="voucherDetail.OperationalType == VoucherTypeEnum.Store || voucherDetail.OperationalType == VoucherTypeEnum.Logistics">
     <div class="col-sm-12">
       <h4>Purchase Order Details</h4>
     </div>
     <div class="col-sm-12">
       <span class="margin_left_25" style="font-size: 14px;color: gray;">
-        <i class="fas fa-info-circle icon_color_yellow"></i> This is a Purchase order voucher for the below purchase order.<br>
-      You cannot delete this voucher</span>
+        <i class="fas fa-info-circle icon_color_yellow"></i> This is a Purchase order voucher for the below purchase
+        order.<br>
+        You cannot delete this voucher</span>
     </div>
     <table class="table table-striped margin_top_20" style="width: 35%;">
       <tr>
@@ -115,13 +117,13 @@
       <h5>New Transaction Details</h5>
     </div>
     <div class="col-sm-10">
-      <hum-button [type]="'add'" [text]="'ADD'" (click)="btnSubmit.click()"></hum-button>
+      <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCreditDebit()"></hum-button>
       <hum-button (click)='cancelTransactionBtnClicked()' [type]="'cancel'" [text]="'CANCEL'"></hum-button>
     </div>
   </div>
-    <form [formGroup]="addEditTransactionForm" (ngSubmit)="addTransaction()" *ngIf="showAddTransaction">
-      <div class="row container-fluid">
-        <div class="col-sm-12">
+  <form [formGroup]="addEditTransactionForm" (ngSubmit)="addTransaction()" *ngIf="showAddTransaction">
+    <div class="row container-fluid">
+      <div class="col-sm-12">
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search Accounts" aria-label="Number" matInput formControlName="AccountId"
@@ -131,6 +133,7 @@
                 *ngFor="let item of filterdOptionsAccountList | async" [value]="item.AccountName">{{item.AccountName}}
               </mat-option>
             </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
           </mat-form-field>
         </div>
         <div class="col-sm-3">
@@ -141,11 +144,24 @@
         </div>
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
-            <mat-label>Amount</mat-label>
-            <input formControlName="Amount" (blur)="onAmountEvent($event.target.value)" matInput placeholder="Amount" type="number">
-            <mat-error *ngIf="addEditTransactionForm.controls['Amount'].hasError('min')">Amount can not be 0</mat-error>
+            <mat-label>Credit</mat-label>
+            <input formControlName="Credit" (input)="checkAmount(1)" (blur)="onAmountEvent($event.target.value, 1)" matInput placeholder="Credit"
+              type="number">
+            <mat-error *ngIf="addEditTransactionForm.controls['Credit'].hasError('min')">Amount can not be 0</mat-error>
+          </mat-form-field>
+
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <mat-label>Debit</mat-label>
+            <input formControlName="Debit" (input)="checkAmount(2)" (blur)="onAmountEvent($event.target.value, 2)" matInput placeholder="Debit"
+              type="number">
+            <mat-error *ngIf="addEditTransactionForm.controls['Debit'].hasError('min')">Amount can not be 0</mat-error>
           </mat-form-field>
         </div>
+      
+      </div>
+      <div class="col-sm-12">
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search Projects" aria-label="Number" matInput formControlName="ProjectId"
@@ -155,39 +171,39 @@
                 *ngFor="let item of filterdOptionsProjectList | async" [value]="item.ProjectName">{{item.ProjectName}}
               </mat-option>
             </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
           </mat-form-field>
         </div>
-      </div>
-        <div class="col-sm-12">
-          <div class="col-sm-3">
-            <mat-form-field class="example-full-width">
-              <input type="text" placeholder="Search BudgetLines" aria-label="Number" matInput
-                formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
-              <mat-autocomplete #matAutocomplete3="matAutocomplete">
-                <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
-                  *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">
-                  {{item.BudgetLineName}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-          </div>
-          <div class="col-sm-3 padding_top_20">
-            <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
-          </div>
-          <div class="col-sm-3">
-            <mat-form-field>
-              <mat-label>Transaction Type</mat-label>
-              <mat-select formControlName="Type">
-                <mat-option *ngFor="let type of typeList" [value]="type.value">
-                  {{type.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div>
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Search BudgetLines" aria-label="Number" matInput
+              formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
+            <mat-autocomplete #matAutocomplete3="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
+                *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">
+                {{item.BudgetLineName}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+          </mat-form-field>
         </div>
+        <!-- <div class="col-sm-3 padding_top_20">
+          <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field>
+            <mat-label>Transaction Type</mat-label>
+            <mat-select formControlName="Type">
+              <mat-option *ngFor="let type of typeList" [value]="type.value">
+                {{type.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
       </div>
-      <button type="submit" style="display: none;" #btnSubmit></button>
-    </form>
+    </div>
+    <button type="submit" style="display: none;" #btnSubmit></button>
+  </form>
 
   <table mat-table [dataSource]="transactionDataSource" class="mat-elevation-z8">
     <!-- Checkbox Column -->
@@ -205,10 +221,10 @@
     </ng-container>
 
     <!-- Type Column -->
-    <ng-container matColumnDef="Type">
+    <!-- <ng-container matColumnDef="Type">
       <th mat-header-cell *matHeaderCellDef> Type </th>
       <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
-    </ng-container>
+    </ng-container> -->
 
     <!-- Account Column -->
     <ng-container matColumnDef="AccountCode">
@@ -223,9 +239,14 @@
     </ng-container>
 
     <!-- Amount Column -->
-    <ng-container matColumnDef="Amount">
-      <th mat-header-cell *matHeaderCellDef> Amount </th>
-      <td mat-cell *matCellDef="let element"> {{element.Amount}} </td>
+    <ng-container matColumnDef="CreditAmount">
+      <th mat-header-cell *matHeaderCellDef> Credit Amount </th>
+      <td mat-cell *matCellDef="let element"> {{element.Credit}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="DebitAmount">
+      <th mat-header-cell *matHeaderCellDef> Debit Amount </th>
+      <td mat-cell *matCellDef="let element"> {{element.Debit}} </td>
     </ng-container>
 
     <!-- Project Column -->
@@ -250,8 +271,8 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
     </tr>
   </table>
-  <mat-paginator [length]="recordCount" [pageSize]="transactionPagingModel.PageSize" [pageIndex]="transactionPagingModel.PageIndex"
-  [pageSizeOptions]="[5, 10, 20]" (page)="pagination($event)">
-</mat-paginator>
+  <mat-paginator [length]="recordCount" [pageSize]="transactionPagingModel.PageSize"
+    [pageIndex]="transactionPagingModel.PageIndex" [pageSizeOptions]="[5, 10, 20]" (page)="pagination($event)">
+  </mat-paginator>
 
 </div>

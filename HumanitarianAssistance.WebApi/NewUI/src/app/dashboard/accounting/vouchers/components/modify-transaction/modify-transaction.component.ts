@@ -3,7 +3,7 @@ import { TransactionType, VoucherType } from 'src/app/shared/enum';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { IResponseData } from '../../models/status-code.model';
 import { MatTableDataSource } from '@angular/material';
-import {MatSort} from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -32,7 +32,7 @@ export class ModifyTransactionComponent implements OnInit {
 
   voucherNo: any;
   voucherDetail: any;
-  displayedColumns: string[] = ['select', 'Type', 'AccountCode', 'Description', 'Amount', 'ProjectName', 'BudgetLineName', 'JobName'];
+  displayedColumns: string[] = ['select', 'AccountCode', 'Description', 'CreditAmount', 'DebitAmount', 'ProjectName', 'BudgetLineName', 'JobName'];
   ELEMENT_DATA: any[] = [];
   isModifyTransactions = false;
   transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
@@ -134,12 +134,13 @@ export class ModifyTransactionComponent implements OnInit {
       'AccountId': ['', [Validators.required]],
       'AccountName': [null],
       'Description': [null, [Validators.required]],
-      'Amount': [null, [Validators.required]],
+      'Credit': [0.00],
+      'Debit': [0.00],
       'ProjectId': [''],
       'BudgetLine': [null],
       'JobId': [null],
       'JobName': [''],
-      'Type': [null, [Validators.required]],
+      'Type': [null],
     });
   }
 
@@ -306,7 +307,7 @@ export class ModifyTransactionComponent implements OnInit {
     if (id !== undefined && id != null) {
       this.selectedBudgetLineId = id;
       this.selectedBudgetLineName = event.source.value;
-       this.getProjectJobDetailByBudgetLineId(id);
+      this.getProjectJobDetailByBudgetLineId(id);
     }
   }
 
@@ -315,7 +316,7 @@ export class ModifyTransactionComponent implements OnInit {
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.addEditTransactionForm.controls['JobName'].setValue(response.data.ProjectJobCode + '-' +
-                            response.data.ProjectJobName);
+            response.data.ProjectJobName);
           this.addEditTransactionForm.controls['JobId'].setValue(response.data.ProjectJobId);
         } else if (response.statusCode === 400) {
           this.toastr.warning(response.message);
@@ -328,17 +329,24 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   addTransaction() {
+
     if (!this.addEditTransactionForm.valid) {
       this.errorMessage = 'Please correct form errors and try again';
       return;
     }
-    const amount = Number(this.addEditTransactionForm.value.Amount);
+    const creditamount = Number(this.addEditTransactionForm.value.Credit);
+    const debitamount = Number(this.addEditTransactionForm.value.Debit);
+    if (creditamount == 0) {
+      this.addEditTransactionForm.controls.Type.setValue(TransactionType.Debit)
+    } else {
+      this.addEditTransactionForm.controls.Type.setValue(TransactionType.Credit)
+    }
     // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.value.Job);
     const model = {
       AccountNo: this.selectedAccountNo,
-      Debit: this.addEditTransactionForm.value.Type === TransactionType.Debit ? amount.toFixed(2) : 0,
-      Credit: this.addEditTransactionForm.value.Type === TransactionType.Credit ? amount.toFixed(2) : 0,
-      Amount: amount.toFixed(2),
+      Debit: debitamount.toFixed(2),
+      Credit: creditamount.toFixed(2),
+      Amount: 0,
       ProjectId: this.selectedProjectId,
       ProjectName: this.selectedProjectName,
       BudgetLineName: this.selectedBudgetLineName,
@@ -355,9 +363,9 @@ export class ModifyTransactionComponent implements OnInit {
     this.voucherDetail.TotalDebit = this.voucherDetail.TotalDebit === undefined ? 0 : this.voucherDetail.TotalDebit;
 
     if (this.addEditTransactionForm.value.Type === TransactionType.Debit) {
-      this.voucherDetail.TotalDebit += parseFloat(amount.toFixed(2));
+      this.voucherDetail.TotalDebit += parseFloat(debitamount.toFixed(2));
     } else {
-      this.voucherDetail.TotalCredit += parseFloat(amount.toFixed(2));
+      this.voucherDetail.TotalCredit += parseFloat(creditamount.toFixed(2));
     }
 
     this.selectedAccountNo = null;
@@ -407,17 +415,19 @@ export class ModifyTransactionComponent implements OnInit {
     const debitsTotal = this.ELEMENT_DATA.filter(x => x.Type === 'Debit');
 
     if (creditsTotal.length === 0 || debitsTotal.length === 0) {
-      this.errorMessage = 'Credits and Debits must be equal';
-      this.isFormSubmitted = false;
-      return;
+      // this.errorMessage = 'Credits and Debits must be equal';
+      // this.isFormSubmitted = false;
+      // return;
+    } else {
+      if (creditsTotal.map(item => item.Credit).reduce((prev, next) => prev + next) !==
+        debitsTotal.map(item => item.Debit).reduce((prev, next) => prev + next)) {
+        this.errorMessage = 'Credits and Debits must be equal';
+        this.isFormSubmitted = false;
+        return;
+      }
     }
 
-    if (creditsTotal.map(item => item.Credit).reduce((prev, next) => prev + next) !==
-      debitsTotal.map(item => item.Debit).reduce((prev, next) => prev + next)) {
-      this.errorMessage = 'Credits and Debits must be equal';
-      this.isFormSubmitted = false;
-      return;
-    }
+
 
     this.errorMessage = '';
 
@@ -452,13 +462,26 @@ export class ModifyTransactionComponent implements OnInit {
     });
   }
 
-  onAmountEvent(val) {
+  onAmountEvent(val, type) {
     if (val && val !== 0) {
       const value = Number(val);
-      this.addEditTransactionForm.get('Amount').setValue(value.toFixed(2));
+      if (type == 2) {
+        this.addEditTransactionForm.get('Debit').setValue(value.toFixed(2));
+        this.addEditTransactionForm.get('Credit').setValue(0);
+      } else {
+        this.addEditTransactionForm.get('Credit').setValue(value.toFixed(2));
+        this.addEditTransactionForm.get('Debit').setValue(0);
+      }
+    }
+
+  }
+  checkAmount(val) {
+    if (val == 1) {
+      this.addEditTransactionForm.get('Debit').setValue(0);
+    } else {
+      this.addEditTransactionForm.get('Credit').setValue(0);
     }
   }
-
   pagination(event) {
     this.transactionPagingModel.PageIndex = event.pageIndex;
     this.transactionPagingModel.PageSize = event.pageSize;
@@ -468,6 +491,10 @@ export class ModifyTransactionComponent implements OnInit {
   navigateToLogisticRequest() {
     this.router.navigate(['project/my-project/' + this.voucherDetail.PurchaseOrderModel.ProjectId +
       '/logistic-requests/' + this.voucherDetail.PurchaseOrderModel.PurchaseOrderId]);
+  }
+  addNewCreditDebit() {
+    //  this.showAddTransaction = false;
+    this.addTransaction();
   }
 
 }
