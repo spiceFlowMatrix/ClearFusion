@@ -17,4 +17,3 @@
 //  hubUrl: 'http://localhost:5000/notifyhub/',
 //  uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
 //  };
-
