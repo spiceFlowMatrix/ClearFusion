@@ -13,6 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		[Column(Order = 1)]
 		public int EmployeeAppraisalDetailsId { get; set; }
 		public int EmployeeId { get; set; }
+		[ForeignKey("EmployeeId")]
 		public EmployeeDetail EmployeeDetail { get; set; }
 		public string EmployeeCode { get; set; }
 		public string EmployeeName { get; set; }
@@ -28,5 +29,12 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		public bool AppraisalStatus { get; set; }
 		public int? TotalScore { get; set; }
         public double? AppraisalScore { get; set; }  
+		public List<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions{get;set;}
+		public List<EmployeeAppraisalTeamMember> EmployeeAppraisalTeamMember{get;set;}
+		public List<StrongandWeakPoints> StrongandWeakPoints{get;set;}
+		public EmployeeEvaluation EmployeeEvaluation{get;set;}
+		public List<EmployeeEvaluationTraining> EmployeeEvaluationTraining{get;set;}
+
+
     }
 }

@@ -14,5 +14,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int EmployeeAppraisalTeamMemberId { get; set; }
         public int EmployeeId { get; set; }
         public int EmployeeAppraisalDetailsId { get; set; }
+        [ForeignKey("EmployeeAppraisalDetailsId")]
+        public EmployeeAppraisalDetails EmployeeAppraisalDetails { get; set; }
     }
 }

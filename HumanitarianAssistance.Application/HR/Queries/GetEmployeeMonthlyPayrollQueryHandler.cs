@@ -149,7 +149,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 model.IsSalaryApproved = false;
 
                 var bonusAndFines = _dbContext.EmployeeBonusFineSalaryHead.Where(x => x.EmployeeId == request.EmployeeId
-                                                                            && x.Month == request.Month && x.Year == DateTime.UtcNow.Year).ToList();
+                                                                            && x.Month == request.Month && x.Year == DateTime.UtcNow.Year && x.IsDeleted == false).ToList();
 
                 double totalBonus = bonusAndFines.Where(x => x.TransactionTypeId == (int)TransactionType.Debit).Select(x => x.Amount).DefaultIfEmpty(0).Sum();
                 double totalFine = bonusAndFines.Where(x => x.TransactionTypeId == (int)TransactionType.Credit).Select(x => x.Amount).DefaultIfEmpty(0).Sum();

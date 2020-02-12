@@ -343,7 +343,9 @@ namespace HumanitarianAssistance.Common.Enums {
         Widow = 4
 
     }
+
     public enum AccumulatedSalaryHead {
+
         Pension = 1,
         GrossSalary = 2,
         SalaryTax = 3,
@@ -360,7 +362,6 @@ namespace HumanitarianAssistance.Common.Enums {
         TheJobItself, [Description ("My Supervisor")]
         MySupervisor, [Description ("The Management")]
         TheManagement
-
     }
 
     public enum ResignationStatus {
@@ -370,22 +371,29 @@ namespace HumanitarianAssistance.Common.Enums {
         Rehired = 3
     }
 
+    public enum AppriasalStorngWeakPointType {
+        Strong = 1,
+        Weak = 2
+    }
+
     public enum ActionType {
         Add = 0,
         Update = 1,
         Delete = 2,
-        Get = 3
+        Download = 3
     }
 
     public enum TypeOfEntity {
-        History = 0,
-        Leave = 1,
-        Attendance = 2,
-        Contract = 3,
-        TaxAndPension = 4,
-        SalaryConfiguration = 5,
-        Resignation = 6,
-        Advance = 7,
+        [Description ("This Action Perform on Employee History")]
+        History = 0, [Description ("This Action Perform on Employee Leave")]
+        Leave = 1, [Description ("This Action Perform on Employee Attendance")]
+        Attendance = 2, [Description ("This Action Perform on Employee Contract")]
+        Contract = 3, [Description ("This Action Perform on Employee TaxAndPension")]
+        TaxAndPension = 4, [Description ("This Action Perform on Employee Salary Configuration")]
+        SalaryConfiguration = 5, [Description ("This Action Perform on Employee Resignation")]
+        Resignation = 6, [Description ("This Action Perform on Employee Advance")]
+        Advance = 7, [Description ("This Action Perform on Employee Analytical Information")]
         AnalyticalInformation = 8
+
     }
 }

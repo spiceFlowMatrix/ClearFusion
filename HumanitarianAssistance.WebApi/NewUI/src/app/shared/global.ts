@@ -342,6 +342,13 @@ export class GLOBAL {
   public static API_VoucherTransaction_VerifyVoucher = 'VoucherTransaction/VerifyVoucher';
   public static API_VoucherTransaction_GetAllTransactionsByVoucherId = 'VoucherTransaction/GetAllTransactionsByVoucherId';
   public static API_VoucherTransaction_AddEditTransactionList = 'VoucherTransaction/AddEditTransactionList';
+  public static API_VoucherTransaction_VerifySelectedVouchers = 'VoucherTransaction/VerifySelectedVouchers';
+  public static API_VoucherTransaction_DeleteSelectedVouchers = 'VoucherTransaction/DeleteSelectedVouchers';
+  public static API_Account_GetFilteredInputLevelAccountList = 'VoucherTransaction/GetFilteredInputLevelAccountList';
+  public static API_Account_GetFilteredProjectList = 'VoucherTransaction/GetFilteredProjectList';
+  public static API_Account_GetFilteredBudgetLineList = 'VoucherTransaction/GetFilteredBudgetLineList';
+  public static API_VoucherTransaction_SaveTransactionList = 'VoucherTransaction/SaveTransactionList';
+
 
   // Exchange Rates
   public static API_ExchangeRates_GetSavedExchangeRates = 'ExchangeRates/GetSavedExchangeRates';
@@ -801,6 +808,13 @@ export class GLOBAL {
   public static API_HRConfiguration_GetAllAuditLogById = 'AuditLog/GetAuditLogDetails';
 
 
+  //#region "employee APPRAISAL"
+  public static API_EmployeeDetail_GetEmployeeAppraisalByEmployeeId = 'EmployeeDetail/GetEmployeeAppraisalByEmployeeId';
+  public static API_Code_GetAppraisalQuestions = 'Code/GetAppraisalQuestions';
+  public static API_EmployeeDetail_GetFilteredEmployeeList = 'EmployeeDetail/GetFilteredEmployeeList';
+  public static API_EmployeeDetail_AddAppraisalDetail = 'EmployeeDetail/AddAppraisalDetail';
+
+  //#endregion
 }
 
 

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.CommonModels;
@@ -27,9 +28,11 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             {
                 var voucherDetail = await _dbContext.VoucherDetail
                                               .Include(o => o.OfficeDetails)
+                                              .Include(x=> x.VoucherTransactionDetails)
                                               .Include(j => j.JournalDetails)
                                               .Include(c => c.CurrencyDetail)
                                               .Include(f => f.FinancialYearDetails)
+                                              .Include(v=> v.VoucherTypes)
                                               .FirstOrDefaultAsync(v => v.IsDeleted == false && v.VoucherNo == request.VoucherId);
 
                 if (voucherDetail != null)
@@ -46,6 +49,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                     obj.JournalName = voucherDetail.JournalDetails?.JournalName ?? null;
                     obj.JournalCode = voucherDetail.JournalDetails?.JournalCode ?? null;
                     obj.VoucherTypeId = voucherDetail.VoucherTypeId;
+                    obj.VoucherTypeName = voucherDetail.VoucherTypes.VoucherTypeName;
                     obj.OfficeId = voucherDetail.OfficeId;
                     obj.ProjectId = voucherDetail.ProjectId;
                     obj.BudgetLineId = voucherDetail.BudgetLineId;
@@ -54,6 +58,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                     obj.FinancialYearName = voucherDetail.FinancialYearDetails?.FinancialYearName ?? null;
                     obj.IsVoucherVerified = voucherDetail.IsVoucherVerified;
                     obj.IsExchangeGainLossVoucher = voucherDetail.IsExchangeGainLossVoucher;
+                    obj.OperationalType = voucherDetail.OperationalType;
+                    obj.TotalCredit = Math.Round((double)voucherDetail.VoucherTransactionDetails.Where(t=> t.IsDeleted == false).Select(x=> x.Credit).DefaultIfEmpty(0).Sum(), 2);
+                    obj.TotalDebit =  Math.Round((double)voucherDetail.VoucherTransactionDetails.Where(t=> t.IsDeleted == false).Select(x=> x.Debit).DefaultIfEmpty(0).Sum(),2);
 
                     response.data.VoucherDetail = obj;
                     response.StatusCode = StaticResource.successStatusCode;

@@ -1,0 +1,130 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main2'">
+  <span class="action_header">Voucher Management Control Panel
+    <hum-button [type]="'add'" [text]="'ADD VOUCHER'" (click)="addVoucher()"></hum-button>
+    <hum-button [type]="'text'" [text]="'VALIDATE SELECTED'" (click)="verifySelectedVouchers()"></hum-button>
+    <hum-button [type]="'pdf'" [text]="'EXPORT SELECTED'" (click)="exportSelectedVouchers()"></hum-button>
+    <hum-button [type]="'remove'" [text]="'DELETED SELECTED'" (click)="deleteSelectedVouchers()"></hum-button>
+    <!-- <button mat-button [matMenuTriggerFor]="MonthMenu">
+      <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i>
+      </h5>
+  </button>
+    <mat-menu #MonthMenu="matMenu">
+      <button (click)="selectedMonthChanged(month)" *ngFor="let month of monthsList$ | async"
+          mat-menu-item>{{month.name}}</button>
+  </mat-menu> -->
+    <!-- <mat-list-item class="primary-imenu-item" role="listitem"> -->
+    <mat-form-field>
+      <mat-select placeholder="Offices" name="office" class="filter-select" [(ngModel)]="selectedOffices"
+        [compareWith]="equals" multiple (openedChange)="onOpenedChange($event)" #yearSelect="ngModel">
+        <mat-option *ngFor="let office of offices" [value]="office">
+          {{office.OfficeName}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- </mat-list-item> -->
+  </span>
+  <div class="action_section">
+  </div>
+
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-sm-8">
+      <h4>Filters</h4>
+    </div>
+    <div class="col-sm-2 padding_right_10">
+      <hum-button class="pull-right" [type]="'reset'" [text]="'RESET FILTER'" (click)="resetFilter()"></hum-button>
+    </div>
+    <div class="col-sm-2 padding_right_10">
+
+      <hum-button [type]="'filter'" [text]="'APPLY FILTERS'" (click)="applyFilter()"></hum-button>
+    </div>
+  </div>
+
+  <div class="row">
+    <form [formGroup]="voucherFilterForm">
+      <div class="col-sm-2">
+        <mat-form-field class="example-full-width">
+          <input matInput formControlName="Search" placeholder="Search">
+        </mat-form-field>
+      </div>
+      <div class="col-sm-3">
+        <mat-form-field>
+          <input matInput [satDatepicker]="resultPicker" formControlName="Date" placeholder="Date Range">
+          <sat-datepicker #resultPicker [rangeMode]="true">
+          </sat-datepicker>
+          <sat-datepicker-toggle matSuffix [for]="resultPicker"></sat-datepicker-toggle>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-2">
+        <lib-hum-dropdown [validation]="voucherFilterForm.controls['CurrencyId'].hasError('required')"
+          [options]="currency$" formControlName='CurrencyId' [placeHolder]="'Currency'"></lib-hum-dropdown>
+      </div>
+      <div class="col-sm-2">
+        <lib-hum-dropdown [options]="operationalTypes$" formControlName='OperationalType'
+          [placeHolder]="'Operational Type'"></lib-hum-dropdown>
+      </div>
+      <div class="col-sm-2">
+        <lib-hum-dropdown [options]="journalList$" formControlName='JournalId' [placeHolder]="'Journal'">
+        </lib-hum-dropdown>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div humAddScroll [height]="250">
+  <table mat-table [dataSource]="voucherDataSource" class="mat-elevation-z8">
+
+    <!-- Checkbox Column -->
+    <ng-container matColumnDef="select">
+      <th mat-header-cell *matHeaderCellDef>
+        <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+          [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+        </mat-checkbox>
+      </th>
+      <td mat-cell *matCellDef="let row">
+        <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+          [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+        </mat-checkbox>
+      </td>
+    </ng-container>
+
+    <!-- Position Column -->
+    <ng-container matColumnDef="ReferenceNo">
+      <th mat-header-cell *matHeaderCellDef> Reference No </th>
+      <td mat-cell *matCellDef="let element"> {{element.ReferenceNo}} </td>
+    </ng-container>
+
+    <!-- Name Column -->
+    <ng-container matColumnDef="Description">
+      <th mat-header-cell *matHeaderCellDef> Description </th>
+      <td mat-cell *matCellDef="let element"> {{element.Description}} </td>
+    </ng-container>
+
+    <!-- Weight Column -->
+    <ng-container matColumnDef="Journal">
+      <th mat-header-cell *matHeaderCellDef> Journal </th>
+      <td mat-cell *matCellDef="let element"> {{element.Journal}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="VoucherDate">
+      <th mat-header-cell *matHeaderCellDef> Voucher Date </th>
+      <td mat-cell *matCellDef="let element"> {{element.VoucherDate}} </td>
+    </ng-container>
+
+    <!-- Symbol Column -->
+    <ng-container matColumnDef="Status">
+      <th mat-header-cell *matHeaderCellDef> Status </th>
+      <td mat-cell *matCellDef="let element"> {{element.Status}} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToDetails(row)">
+    </tr>
+  </table>
+  <mat-paginator [length]="pagingModel.recordCount" [pageSize]="pagingModel.pageSize"
+    [pageSizeOptions]="[10, 5, 25, 100]" (page)="pageEvent($event)">
+  </mat-paginator>
+</div>

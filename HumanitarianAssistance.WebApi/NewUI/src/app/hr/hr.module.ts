@@ -39,6 +39,8 @@ import {
   MatTableModule,
   MatCheckboxModule,
   MatRadioModule,
+  MatAutocompleteModule,
+  MatSpinner,
   MatProgressSpinnerModule
 } from '@angular/material';
 import { AddHistoricalLogComponent } from './components/employee-history/add-historical-log/add-historical-log.component';
@@ -74,6 +76,13 @@ import { AddOpeningPensionComponent } from './components/add-employee/add-openin
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
 import { AddHistoryOutsideOrganizationComponent } from './components/employee-history/add-history-outside-organization/add-history-outside-organization.component';
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
+import { AddEmployeeAppraisalComponent } from './components/employee-appraisal/add-employee-appraisal/add-employee-appraisal.component';
+import { EmployeeAppraisalComponent } from './components/employee-appraisal/employee-appraisal.component';
+import { AddAppraisalMembersComponent } from './components/employee-appraisal/add-appraisal-members/add-appraisal-members.component';
+import { EmployeeTrainingComponent } from './components/employee-appraisal/employee-training/employee-training.component';
+import { AddStrongPointsComponent } from './components/employee-appraisal/add-strong-points/add-strong-points.component';
+import { AddWeakPointsComponent } from './components/employee-appraisal/add-weak-points/add-weak-points.component';
+import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import { AuditLogsComponent } from './components/audit-logs/audit-logs.component';
 import { AdministerPayrollComponent } from './components/administer-payroll/administer-payroll.component';
@@ -119,6 +128,12 @@ import { EmployeeTerminationComponent } from './components/employee-termination/
     IncrementDecrementSalaryComponent,
     AddHistoryOutsideOrganizationComponent,
     EditEmployeeAttendanceComponent,
+    EmployeeAppraisalComponent,
+    AddEmployeeAppraisalComponent,
+    AddAppraisalMembersComponent,
+    EmployeeTrainingComponent,
+    AddStrongPointsComponent,
+    AddWeakPointsComponent,
     EmployeeTerminationComponent,
     AuditLogsComponent,
     AdministerPayrollComponent,
@@ -163,6 +178,9 @@ import { EmployeeTerminationComponent } from './components/employee-termination/
     MatRadioModule,
     MatProgressSpinnerModule,
     NgxMaterialTimepickerModule,
+    MatAutocompleteModule,
+    MatProgressSpinnerModule,
+
     MatTooltipModule,
     TranslateModule.forRoot({
       loader: {
@@ -199,6 +217,10 @@ import { EmployeeTerminationComponent } from './components/employee-termination/
     AddAdvanceRecoveryComponent,
     AddHistoryOutsideOrganizationComponent,
     EditEmployeeAttendanceComponent,
+    AddAppraisalMembersComponent,
+    EmployeeTrainingComponent,
+    AddWeakPointsComponent,
+    AddStrongPointsComponent,
     EmployeeTerminationComponent,
     AdministerPayrollComponent
   ]

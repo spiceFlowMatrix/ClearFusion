@@ -67,7 +67,7 @@ export class AddOfficeMasterComponent implements OnInit {
   addDepartment() {
     (<FormArray>this.addOfficeForm.get('Department')).push(
       this.fb.group({
-        DepartmentId: [''],
+        DepartmentId: [0],
         DepartmentName: ['', Validators.required]
       })
     );
