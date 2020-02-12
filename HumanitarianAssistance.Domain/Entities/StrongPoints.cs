@@ -15,7 +15,7 @@ namespace HumanitarianAssistance.Domain.Entities
         public int StrongPointsId { get; set; }
         public DateTime CurrentAppraisalDate { get; set; }
         public int EmployeeId { get; set; }
-        public int EmployeeAppraisalDetailsId { get; set; }
+        public int? EmployeeAppraisalDetailsId { get; set; }
         [ForeignKey("EmployeeAppraisalDetailsId")]
         public EmployeeAppraisalDetails EmployeeAppraisalDetails { get; set; }
         public string Point { get; set; }

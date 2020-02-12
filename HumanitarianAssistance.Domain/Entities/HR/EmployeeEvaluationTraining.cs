@@ -19,7 +19,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int CatchLevel { get; set; }
         public int RefresherTrm { get; set; }
         public string OthRecommendation { get; set; }
-        public int EmployeeAppraisalDetailsId { get; set; }
+        public int? EmployeeAppraisalDetailsId { get; set; }
         [ForeignKey("EmployeeAppraisalDetailsId")]
         public EmployeeAppraisalDetails EmployeeAppraisalDetails { get; set; }
     }
