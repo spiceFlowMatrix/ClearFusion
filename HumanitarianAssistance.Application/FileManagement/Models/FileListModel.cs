@@ -11,6 +11,7 @@ namespace HumanitarianAssistance.Application.FileManagement.Models
         public string FilePath { get; set; }
         public long? DocumentFileId { get; set; }
         public int? DocumentTypeId { get; set; }
+        public string Date {get; set;}
         public string StorageDirectoryPath { get; set; }
     }
 }

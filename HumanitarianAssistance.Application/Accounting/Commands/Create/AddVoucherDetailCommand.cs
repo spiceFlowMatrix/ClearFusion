@@ -24,6 +24,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Create
         public string FinancialYearName { get; set; }
         public bool? IsVoucherVerified { get; set; }
         public int? TimezoneOffset { get; set; }
+        public int? OperationalType { get; set; }
         public bool IsExchangeGainLossVoucher { get; set; } = false;
     }
 }

@@ -17,6 +17,7 @@ export class OfficeMasterComponent implements OnInit {
 
   officeList$: Observable<any[]>;
   officeHeaders$ = of(['Id', 'Office Code', 'Office Name', 'Supervisor Name', 'Phone No', 'Fax No']);
+  subListHeaders$ = of(['Id', 'Department']);
 
   actions: TableActionsModel;
   pageModel = {
@@ -58,7 +59,13 @@ export class OfficeMasterComponent implements OnInit {
           OfficeName: element.OfficeName,
           SupervisorName: element.SupervisorName,
           PhoneNo: element.PhoneNo,
-          FaxNo: element.FaxNo
+          FaxNo: element.FaxNo,
+          subItems: element.DepartmentList ? (element.DepartmentList.map((r) => {
+            return {
+              DepartmentId: r.DepartmentId,
+              DepartmentName: r.DepartmentName
+            };
+          })) : null
         };
       }));
       this.RecordCount = x.RecordCount;
@@ -69,7 +76,7 @@ export class OfficeMasterComponent implements OnInit {
 
   addOffice() {
     const dialogRef = this.dialog.open(AddOfficeMasterComponent, {
-      width: '450px',
+      width: '650px',
     });
 
     dialogRef.afterClosed().subscribe(x => {
@@ -92,7 +99,7 @@ export class OfficeMasterComponent implements OnInit {
     }
     if (event.type === 'edit') {
       const dialogRef = this.dialog.open(AddOfficeMasterComponent, {
-        width: '450px',
+        width: '650px',
         data: event.item
       });
 
