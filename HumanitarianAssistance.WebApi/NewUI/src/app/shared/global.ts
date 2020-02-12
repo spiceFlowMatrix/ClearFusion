@@ -211,6 +211,7 @@ export class GLOBAL {
   public static API_EmployeePayroll_GetEmployeeAdvanceHistoryDetail = 'EmployeePayroll/GetEmployeeAdvanceHistoryDetail';
   public static API_EmployeePayroll_AddAdvanceRecovery = 'EmployeePayroll/AddAdvanceRecovery';
   public static API_EmployeePayroll_GetEmployeePayrollAdvanceDetail = 'EmployeePayroll/GetEmployeePayrollAdvanceDetail';
+  public static API_HR_GetPayrollAdministrationDetailById = 'EmployeePayroll/GetPayrollAdministrationDetailById';
 
   public static API_EmployeeDetail_GetEmployeeDetailById = 'EmployeeDetail/GetEmployeeDetailById';
   public static API_HR_GetAllEmployeeAssignLeave = 'Attendance/GetAllEmployeeAssignLeave';
@@ -796,7 +797,9 @@ export class GLOBAL {
 
   //#endregion
 // salary config
-public static API_Pdf_GetMonthlyPaySlipPdf = 'Pdf/GetMonthlyPaySlipPdf';
+  public static API_Pdf_GetMonthlyPaySlipPdf = 'Pdf/GetMonthlyPaySlipPdf';
+  public static API_HRConfiguration_GetAllAuditLogById = 'AuditLog/GetAuditLogDetails';
+
 
   //#region "employee APPRAISAL"
   public static API_EmployeeDetail_GetEmployeeAppraisalByEmployeeId = 'EmployeeDetail/GetEmployeeAppraisalByEmployeeId';
