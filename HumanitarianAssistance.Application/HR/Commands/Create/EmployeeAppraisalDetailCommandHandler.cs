@@ -56,6 +56,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                                 eaq.CurrentAppraisalDate = request.CurrentAppraisalDate;
                                 eaq.CreatedDate = DateTime.Now;
                                 eaq.CreatedById = request.CreatedById;
+                                eaq.EmployeeAppraisalDetailsId = empArraidalDetial.EmployeeAppraisalDetailsId;
                                 appraisalQues.Add(eaq);
                             }
                             await _dbContext.EmployeeAppraisalQuestions.AddRangeAsync(appraisalQues);

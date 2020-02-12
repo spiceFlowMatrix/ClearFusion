@@ -35,11 +35,12 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 {
                     EmployeeAppraisalDetailsId = x.EmployeeAppraisalDetailsId,
                     EmployeeId = x.EmployeeId,
-                    EmployeeCode = x.EmployeeCode,
-                    EmployeeName = x.EmployeeName,
-                    FatherName = x.FatherName,
-                    Position = x.Position,
-                    Department = x.Department,
+                    // EmployeeCode = x.EmployeeEvaluation.EmployeeDetail.EmployeeCode,
+                    // EmployeeName = x.EmployeeEvaluation.EmployeeDetail.EmployeeName,
+                    // FatherName = x.EmployeeEvaluation.EmployeeDetail.FatherName,
+                    // Position = x.EmployeeEvaluation.EmployeeDetail.Position,
+                    // DepartmentId = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId,
+                    // DepartmentName = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentName,
                     Qualification = x.Qualification,
                     DutyStation = x.DutyStation,
                     RecruitmentDate = x.RecruitmentDate,
@@ -73,13 +74,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         EmployeeEvaluationTrainingId = z.EmployeeEvaluationTrainingId,
 
                     }).ToList(),
-                    AppraisalStrongPoints = x.StrongandWeakPoints.Select(a => new AppraisalStrongPointsListModel
+                    AppraisalStrongPoints = x.StrongandWeakPoints.Where(s => s.Status == (int)AppriasalStorngWeakPointType.Strong).Select(a => new AppraisalStrongPointsListModel
                     {
                         StrongPoints = a.Point,
                         AppraisalStrongPointsId = a.StrongPointsId,
 
                     }).ToList(),
-                    AppraisalWeakPoints = x.StrongandWeakPoints.Select(s => new AppraisalWeakPointsListModel
+                    AppraisalWeakPoints = x.StrongandWeakPoints.Where(w => w.Status == (int)AppriasalStorngWeakPointType.Weak).Select(s => new AppraisalWeakPointsListModel
                     {
                         WeakPoints = s.Point,
                         AppraisalWeakPointsId = s.StrongPointsId

@@ -657,7 +657,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         this.addAppraisalForm(form);
       }
     } else {
-      this.editAppraisalForm(form);
+     // this.editAppraisalForm(form);
       console.log('invalid');
     }
   }

@@ -15,8 +15,8 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         }
 
         public int EmployeeEvaluationId { get; set; }
-        public int EmployeeAppraisalDetailsId { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeAppraisalDetailsId { get; set; }
+        public int? EmployeeId { get; set; }
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public string FatherName { get; set; }
