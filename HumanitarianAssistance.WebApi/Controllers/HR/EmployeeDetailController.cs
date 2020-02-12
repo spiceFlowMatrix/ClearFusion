@@ -810,6 +810,35 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             return Ok(result);
         }
 
+
+
+        #region "employee appraisal"
+        [HttpPost]
+        public async Task<IActionResult> GetEmployeeAppraisalByEmployeeId([FromBody] int EmployeeId)
+        {
+            var result = await _mediator.Send(new GetEmployeeAppraisalByEmployeeIdQuery { EmployeeId = EmployeeId });
+            return Ok(result);
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> GetFilteredEmployeeList([FromBody] GetFilteredEmployeeeListQuery model)
+        {
+            var result = await _mediator.Send(model);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddAppraisalDetail([FromBody] EmployeeAppraisalDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.CreatedById = userId;
+            command.CreatedDate = DateTime.UtcNow;
+            return  Ok(await _mediator.Send(command));
+        }
+
+        #endregion
         [HttpGet]
         public async Task<IActionResult> CreateAllEmployeeTouser()
         {

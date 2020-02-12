@@ -12,17 +12,19 @@ import { AppUrlService } from '../../../shared/services/app-url.service';
 import { GLOBAL } from '../../../shared/global';
 import { map } from 'rxjs/internal/operators/map';
 import { IResponseData } from './models/status-code.model';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Injectable()
 export class VoucherService {
   //#endregion
   constructor(
     private globalService: GlobalService,
-    private appurl: AppUrlService
+    private appurl: AppUrlService,
+    private globalSharedService: GlobalSharedService
   ) {}
 
   //#region "GetVoucherList"
-  GetVoucherList(data: IVoucherListFilterModel) {
+  GetVoucherList(data) {
     return this.globalService.post(
       this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllVoucherList,
       data
@@ -244,15 +246,16 @@ export class VoucherService {
   //#endregion
 
   //#region "GetTransactionByVoucherId"
-  GetTransactionByVoucherId(id: number): any {
+  GetTransactionByVoucherId(data): any {
     return this.globalService
-      .getListById(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllTransactionsByVoucherId, id)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllTransactionsByVoucherId, data)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
             data: x.data.VoucherTransactions,
             statusCode: x.StatusCode,
-            message: x.Message
+            message: x.Message,
+            total: x.data.TotalCount
           };
           return responseData;
         })
@@ -316,4 +319,85 @@ export class VoucherService {
   }
   //#endregion
 
+   //#region "VerifySelectedVouchers"
+   verifySelectedVouchers(data) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_VerifySelectedVouchers,
+        data
+      );
+  }
+  //#endregion
+
+  //#region "deleteSelectedVouchers"
+  deleteSelectedVouchers(data) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_DeleteSelectedVouchers,
+        data
+      );
+  }
+  //#endregion
+
+  //#region "GetFilteredInputLevelAccountList"
+  GetFilteredInputLevelAccountList(data): any {
+    return this.globalService
+      .getList(
+        this.appurl.getApiUrl() + GLOBAL.API_Account_GetFilteredInputLevelAccountList + '?data=' + data
+      );
+  }
+  //#endregion
+
+  //#region "GetFilteredProjectList"
+  GetFilteredProjectList(data): any {
+    return this.globalService
+      .getList(
+        this.appurl.getApiUrl() + GLOBAL.API_Account_GetFilteredProjectList + '?data=' + data
+      );
+  }
+  //#endregion
+
+  //#region "getFilteredBudgetLineList"
+  getFilteredBudgetLineList(data): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Account_GetFilteredBudgetLineList, data
+      );
+  }
+  //#endregion
+
+   //#region "getProjectJobDetailByBudgetLineId"
+   getProjectJobDetailByBudgetLineId(id): any {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectJobDetailByBudgetLineId, id
+      ).pipe(
+        map(x => {
+          const responseData: IResponseData = {
+            data: x.data.ProjectJobModel,
+            statusCode: x.StatusCode,
+            message: x.Message
+          };
+          return responseData;
+        })
+      );
+  }
+  //#endregion
+
+
+  //#region "saveTransactions"
+  saveTransactions(data): any {
+    return this.globalService
+      .post(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_SaveTransactionList, data)
+  }
+  //#endregion
+
+   //#region "exportPdf"
+   exportPdf(data): any {
+    this.globalSharedService
+    .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetAllVoucherSummaryReportPdf,
+    data
+    );
+   }
+  //#endregion
 }

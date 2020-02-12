@@ -29,37 +29,36 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                List<VoucherTransactionsModel> voucherTransactionsList = await _dbContext.VoucherTransactions
+                var query =  _dbContext.VoucherTransactions
                                    .Include(x => x.ProjectJobDetail)
+                                   .Include(x=> x.ChartOfAccountDetail)
                                    .Include(x => x.ProjectDetail)
-                                   .ThenInclude(x => x.ProjectBudgetLineDetails)
-                                   .Where(x => x.IsDeleted == false && x.VoucherNo == request.VoucherId)
+                                   .Include(x => x.ProjectBudgetLineDetail)
+                                   .Where(x => x.IsDeleted == false && x.VoucherNo == request.VoucherNo)
                                    .Select(x => new VoucherTransactionsModel
                                    {
                                        AccountNo = x.ChartOfAccountNewId,
-                                       Debit = (x.Debit != 0 && x.Debit != null) ? x.Debit : 0,
-                                       Credit = (x.Credit != 0 && x.Credit != null) ? x.Credit : 0,
+                                       Debit = (double)((x.Debit != 0 && x.Debit != null) ? Math.Round((decimal)x.Debit.Value, 2) : 0),
+                                       Credit = (double)((x.Credit != 0 && x.Credit != null) ? Math.Round((decimal)x.Credit.Value, 2) : 0),
+                                       Amount = (double)((x.Debit != 0 && x.Debit != null) ? Math.Round((decimal)x.Debit.Value,2 ) : Math.Round((decimal)x.Credit.Value, 2)),
                                        BudgetLineId = x.BudgetLineId,
                                        ProjectId = x.ProjectId,
+                                       ProjectName= x.ProjectDetail != null ? x.ProjectDetail.ProjectName : "",
+                                       BudgetLineName =(x.ProjectBudgetLineDetail != null ? (x.ProjectBudgetLineDetail.BudgetCode + "-"+x.ProjectBudgetLineDetail.BudgetName) :""),
                                        Description = x.Description,
                                        TransactionId = x.TransactionId,
                                        VoucherNo = x.VoucherNo,
                                        JobId = x.JobId,
-                                       JobName = x.ProjectJobDetail.ProjectJobName,
-                                       BudgetLineList = x.ProjectDetail.ProjectBudgetLineDetails
-                                                                    .Select(s => new ProjectBudgetLineDetailModel{
-                                                                        Id = s.BudgetLineId,
-                                                                        Name = s.BudgetCode + '-' + s.BudgetName
-                                                                    }).ToList()
-                                        /* BudgetLineList = x.ProjectDetail.ProjectBudgetLineDetails
-                                                                    .Select(s => new ProjectBudgetLineDetailModel
-                                                                    {
-                                                                        BudgetLineId = s.BudgetLineId,
-                                                                        BudgetName = s.BudgetCodeName
-                                                                    }).ToList() */
-                                   }).ToListAsync();
+                                       JobName = x.ProjectJobDetail!= null? x.ProjectJobDetail.ProjectJobName : "",
+                                       Type= (x.Debit != 0 && x.Debit != null) ? "Debit" : "Credit",
+                                       AccountCode =(x.ChartOfAccountDetail.ChartOfAccountNewCode +"-"+ x.ChartOfAccountDetail.AccountName)
+                                   }).AsQueryable();
 
-                response.data.VoucherTransactions = voucherTransactionsList;
+                int count = await query.CountAsync();
+                var result = await query.Skip(request.PageIndex*request.PageSize).Take(request.PageSize).ToListAsync();
+
+                response.data.VoucherTransactions = result;
+                response.data.TotalCount = count;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = StaticResource.SuccessText;
             }

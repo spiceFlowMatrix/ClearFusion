@@ -1,0 +1,128 @@
+<lib-sub-header-template>
+  <span class="action_header">Voucher Form
+    <hum-button *ngIf="!isFormSubmitted" (click)="btnSubmit.click()" [type]="'save'" [text]="'save'">
+    </hum-button>
+    <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='cancelButtonClicked()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+
+  </span>
+  <div class="action_section">
+  </div>
+</lib-sub-header-template>
+<mat-divider></mat-divider>
+
+<div class="alert alert-warning" *ngIf="errorMessage != '' && errorMessage != null" role="alert">
+  <p class="txt-center-align">{{errorMessage}}</p>
+</div>
+<div class="container-fluid">
+  <form
+    [formGroup]="addVoucherForm"
+    (ngSubmit)="onAddVoucher(addVoucherForm)"
+    role="form"
+    action="POST"
+  >
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="row">
+            <mat-form-field class="example-full-width">
+              <textarea
+                matInput
+                placeholder="Description"
+                name="Description"
+                formControlName="Description"
+              ></textarea>
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <input
+                  matInput
+                  [matDatepicker]="voucherDatePicker"
+                  placeholder="Voucher Date"
+                  formControlName="VoucherDate"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="voucherDatePicker"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #voucherDatePicker></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Currency"
+                  name="CurrencyId"
+                  formControlName="CurrencyId"
+                >
+                  <mat-option
+                    *ngFor="let item of currencyList"
+                    [value]="item.CurrencyId"
+                  >
+                    {{ item.CurrencyName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Office"
+                  name="OfficeId"
+                  formControlName="OfficeId"
+                >
+                  <mat-option
+                    *ngFor="let item of officeList"
+                    [value]="item.OfficeId"
+                  >
+                    {{ item.OfficeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Journal"
+                  name="JournalCode"
+                  formControlName="JournalCode"
+                >
+                  <mat-option
+                    *ngFor="let item of journalList"
+                    [value]="item.JournalCode"
+                  >
+                    {{ item.JournalName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+              <mat-form-field class="example-full-width">
+                <mat-select
+                  placeholder="Voucher Type"
+                  name="VoucherTypeId"
+                  formControlName="VoucherTypeId"
+                >
+                  <mat-option
+                    *ngFor="let item of voucherTypeList"
+                    [value]="item.VoucherTypeId"
+                  >
+                    {{ item.VoucherTypeName }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <mat-form-field class="example-form-field">
+                <input
+                  matInput
+                  type="text"
+                  placeholder="Cheque No"
+                  name="ChequeNo"
+                  formControlName="ChequeNo"
+                />
+              </mat-form-field>
+            </div>
+          </div>
+        </div>
+        <button type="submit" style="display:none" #btnSubmit></button>
+      </div>
+  </form>
+</div>
+
