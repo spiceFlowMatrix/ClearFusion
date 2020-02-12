@@ -78,7 +78,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 }
                 else
                 {
-                    var existrecord = await _dbContext.HolidayDetails.FirstOrDefaultAsync(x => x.Date.Date == request.Date.Date);
+                    var existrecord = await _dbContext.HolidayDetails.FirstOrDefaultAsync(x => x.Date.Date == request.Date.Date && x.IsDeleted == false);
 
                     if (existrecord == null)
                     {
