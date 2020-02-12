@@ -414,16 +414,26 @@ export class ModifyTransactionComponent implements OnInit {
     const creditsTotal = this.ELEMENT_DATA.filter(x => x.Type === 'Credit');
     const debitsTotal = this.ELEMENT_DATA.filter(x => x.Type === 'Debit');
 
-    if (creditsTotal.length === 0 || debitsTotal.length === 0) {
+    if (creditsTotal.length === 0 && debitsTotal.length === 0) {
       // this.errorMessage = 'Credits and Debits must be equal';
       // this.isFormSubmitted = false;
       // return;
     } else {
-      if (creditsTotal.map(item => item.Credit).reduce((prev, next) => prev + next) !==
-        debitsTotal.map(item => item.Debit).reduce((prev, next) => prev + next)) {
+      if (creditsTotal.length === 0 || debitsTotal.length === 0) {
         this.errorMessage = 'Credits and Debits must be equal';
         this.isFormSubmitted = false;
         return;
+      }
+      else {
+        let credit = 0;
+        let debit = 0;
+        creditsTotal.map(item => item.Credit).reduce((prev, next) => credit = Number(prev) + Number(next));
+        debitsTotal.map(item => item.Debit).reduce((prev, next) => debit = Number(prev) + Number(next))
+        if (credit !== debit) {
+          this.errorMessage = 'Credits and Debits must be equal';
+          this.isFormSubmitted = false;
+          return;
+        }
       }
     }
 
@@ -467,10 +477,10 @@ export class ModifyTransactionComponent implements OnInit {
       const value = Number(val);
       if (type == 2) {
         this.addEditTransactionForm.get('Debit').setValue(value.toFixed(2));
-        this.addEditTransactionForm.get('Credit').setValue(0);
+        // this.addEditTransactionForm.get('Credit').setValue(0);
       } else {
         this.addEditTransactionForm.get('Credit').setValue(value.toFixed(2));
-        this.addEditTransactionForm.get('Debit').setValue(0);
+        // this.addEditTransactionForm.get('Debit').setValue(0);
       }
     }
 
