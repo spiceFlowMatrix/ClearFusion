@@ -246,15 +246,16 @@ export class VoucherService {
   //#endregion
 
   //#region "GetTransactionByVoucherId"
-  GetTransactionByVoucherId(id: number): any {
+  GetTransactionByVoucherId(data): any {
     return this.globalService
-      .getListById(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllTransactionsByVoucherId, id)
+      .post(this.appurl.getApiUrl() + GLOBAL.API_VoucherTransaction_GetAllTransactionsByVoucherId, data)
       .pipe(
         map(x => {
           const responseData: IResponseData = {
             data: x.data.VoucherTransactions,
             statusCode: x.StatusCode,
-            message: x.Message
+            message: x.Message,
+            total: x.data.TotalCount
           };
           return responseData;
         })

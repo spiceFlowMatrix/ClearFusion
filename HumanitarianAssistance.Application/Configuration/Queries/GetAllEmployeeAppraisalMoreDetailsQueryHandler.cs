@@ -73,7 +73,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                             objTraining.Participated = ele.Participated;
                             objTraining.OthRecommendation = ele.OthRecommendation;
                             objTraining.EmployeeEvaluationTrainingId = ele.EmployeeEvaluationTrainingId;
-                            // objTraining.EmployeeAppraisalDetailsId = ele.EmployeeAppraisalDetailsId; //pk
+                            // objTraining.EmployeeAppraisalDetailsId = ele.EmployeeAppraisalDetailsId;
                             objTraining.CatchLevel = ele.CatchLevel;
 
                             trainingList.Add(objTraining);
@@ -86,7 +86,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
 
                         foreach (var teamElement in appraisalTeamMemberData)
                         {      
-                            // appraisalTeamMemberList.Add(teamElement.EmployeeId);// pk
+                            // appraisalTeamMemberList.Add(teamElement.EmployeeId);
                         }
 
                         //Strong n Weak

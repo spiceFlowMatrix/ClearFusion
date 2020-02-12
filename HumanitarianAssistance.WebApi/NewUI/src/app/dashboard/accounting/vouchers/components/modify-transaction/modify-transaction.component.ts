@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { TransactionType } from 'src/app/shared/enum';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TransactionType, VoucherType } from 'src/app/shared/enum';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { IResponseData } from '../../models/status-code.model';
 import { MatTableDataSource } from '@angular/material';
+import {MatSort} from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -18,6 +19,16 @@ import { of } from 'rxjs/internal/observable/of';
   styleUrls: ['./modify-transaction.component.scss']
 })
 export class ModifyTransactionComponent implements OnInit {
+
+  constructor(private routeActive: ActivatedRoute,
+    private router: Router, private voucherService: VoucherService,
+    private toastr: ToastrService, private fb: FormBuilder) {
+    this.routeActive.url.subscribe(params => {
+      this.voucherNo = +params[0].path;
+    });
+  }
+
+  transactionPagingModel: any;
 
   voucherNo: any;
   voucherDetail: any;
@@ -45,22 +56,22 @@ export class ModifyTransactionComponent implements OnInit {
   filterdOptionsProjectList: Observable<any[]>;
   filterdOptionsBudgetLineList: Observable<any[]>;
   errorMessage: string;
-
-  constructor(private routeActive: ActivatedRoute,
-    private router: Router, private voucherService: VoucherService,
-    private toastr: ToastrService, private fb: FormBuilder,
-    private budgetLineService: BudgetLineService) {
-    this.routeActive.url.subscribe(params => {
-      this.voucherNo = +params[0].path;
-    });
-  }
+  recordCount = 0;
+  VoucherTypeEnum = VoucherType;
 
   ngOnInit() {
+    this.transactionPagingModel = {
+      PageSize: 10,
+      PageIndex: 0,
+      VoucherNo: this.voucherNo
+    };
+
     this.onFormInIt();
     this.getDetailsByVoucherNo();
     this.getVoucherTransactionsByVoucherNo();
     this.setAutoComplete();
   }
+
   setAutoComplete() {
 
     this.filterdOptionsAccountList = this.addEditTransactionForm.controls[
@@ -106,7 +117,15 @@ export class ModifyTransactionComponent implements OnInit {
       IsVoucherVerified: null,
       IsExchangeGainLos: null,
       TotalCredit: 0,
-      TotalDebit: 0
+      TotalDebit: 0,
+      PurchaseOrderModel: {
+        ProjectId: null,
+        Code: null,
+        PurchaseOrderId: null,
+        Description: null,
+        ApprovedBy: null,
+        ApprovedOn: null
+      }
     };
   }
 
@@ -157,10 +176,11 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   getVoucherTransactionsByVoucherNo() {
-    this.voucherService.GetTransactionByVoucherId(this.voucherNo).subscribe(x => {
+    this.voucherService.GetTransactionByVoucherId(this.transactionPagingModel).subscribe(x => {
       this.ELEMENT_DATA = [];
       if (x.statusCode === 200) {
         this.ELEMENT_DATA = x.data;
+        this.recordCount = x.total;
         this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
         this.selection.clear();
       }
@@ -312,13 +332,13 @@ export class ModifyTransactionComponent implements OnInit {
       this.errorMessage = 'Please correct form errors and try again';
       return;
     }
-
+    const amount = Number(this.addEditTransactionForm.value.Amount);
     // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.value.Job);
     const model = {
       AccountNo: this.selectedAccountNo,
-      Debit: this.addEditTransactionForm.value.Type === TransactionType.Debit ? this.addEditTransactionForm.value.Amount.toFixed(2) : 0,
-      Credit: this.addEditTransactionForm.value.Type === TransactionType.Credit ? this.addEditTransactionForm.value.Amount.toFixed(2) : 0,
-      Amount: this.addEditTransactionForm.value.Amount.toFixed(2),
+      Debit: this.addEditTransactionForm.value.Type === TransactionType.Debit ? amount.toFixed(2) : 0,
+      Credit: this.addEditTransactionForm.value.Type === TransactionType.Credit ? amount.toFixed(2) : 0,
+      Amount: amount.toFixed(2),
       ProjectId: this.selectedProjectId,
       ProjectName: this.selectedProjectName,
       BudgetLineName: this.selectedBudgetLineName,
@@ -335,9 +355,9 @@ export class ModifyTransactionComponent implements OnInit {
     this.voucherDetail.TotalDebit = this.voucherDetail.TotalDebit === undefined ? 0 : this.voucherDetail.TotalDebit;
 
     if (this.addEditTransactionForm.value.Type === TransactionType.Debit) {
-      this.voucherDetail.TotalDebit += parseFloat(this.addEditTransactionForm.value.Amount.toFixed(2));
+      this.voucherDetail.TotalDebit += parseFloat(amount.toFixed(2));
     } else {
-      this.voucherDetail.TotalCredit += parseFloat(this.addEditTransactionForm.value.Amount.toFixed(2));
+      this.voucherDetail.TotalCredit += parseFloat(amount.toFixed(2));
     }
 
     this.selectedAccountNo = null;
@@ -423,7 +443,7 @@ export class ModifyTransactionComponent implements OnInit {
         this.toastr.success('Saved Successfully');
         this.isFormSubmitted = false;
       } else {
-        this.errorMessage ='Something went wrong. Please try again';
+        this.errorMessage = 'Something went wrong. Please try again';
         this.isFormSubmitted = false;
       }
     }, error => {
@@ -431,6 +451,25 @@ export class ModifyTransactionComponent implements OnInit {
       this.isFormSubmitted = false;
     });
   }
+
+  onAmountEvent(val) {
+    if (val && val !== 0) {
+      const value = Number(val);
+      this.addEditTransactionForm.get('Amount').setValue(value.toFixed(2));
+    }
+  }
+
+  pagination(event) {
+    this.transactionPagingModel.PageIndex = event.pageIndex;
+    this.transactionPagingModel.PageSize = event.pageSize;
+    this.getVoucherTransactionsByVoucherNo();
+  }
+
+  navigateToLogisticRequest() {
+    this.router.navigate(['project/my-project/' + this.voucherDetail.PurchaseOrderModel.ProjectId +
+      '/logistic-requests/' + this.voucherDetail.PurchaseOrderModel.PurchaseOrderId]);
+  }
+
 }
 
 export interface ITransaction {

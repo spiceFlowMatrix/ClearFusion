@@ -80,7 +80,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                           OfficeName = x.OfficeDetails.OfficeName,
                                           IsVoucherVerified = x.IsVoucherVerified,
                                           OperationalType = x.OperationalType
-                                      })
+                                      }).OrderByDescending(x=> x.CreatedDate)
                                       .Skip(request.PageSize.Value * request.PageIndex.Value)
                                       .Take(request.PageSize.Value)
                                       .AsNoTracking()

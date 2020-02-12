@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                                                                   .Include(x => x.EmployeeDetails.EmployeeProfessionalDetail)
                                                                                                   .Where(x => x.EmployeeId == request.EmployeeId &&
                                                                                                   x.Date.Month == request.Month && x.Date.Year == financialYear.StartDate.Year
-                                                                                                  && x.IsDeleted == false && x.EmployeeDetails.IsDeleted == false).ToListAsync();
+                                                                                                  && x.IsDeleted == false && x.EmployeeDetails.IsDeleted == false && x.AttendanceTypeId == (int)AttendanceType.P).ToListAsync();
 
                 if (!empPayrollAttendance.Any())
                 {
