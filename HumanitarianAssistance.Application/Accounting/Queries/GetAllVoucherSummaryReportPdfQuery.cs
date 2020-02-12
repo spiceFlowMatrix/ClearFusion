@@ -14,6 +14,6 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
         // public List<long> ProjectJobs { get; set; }
         // public List<long> Projects { get; set; }
         // public int RecordType { get; set; }
-        public long VoucherId { get; set; }
+        public List<long> VoucherIdList { get; set; }
     }
 }

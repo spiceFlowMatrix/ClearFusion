@@ -784,6 +784,12 @@ export enum AdvanceBtnStatus {
   EDIT= 4
 }
 
+
+export enum VoucherType {
+  'Store' = 1,
+  'Direct Voucher'= 2,
+  'Logistics'= 3,
+}
 export enum AppraisalTrainingProgram {
   'Organization vision & Objectives' = 1,
   'Employee\'s Work' = 2
