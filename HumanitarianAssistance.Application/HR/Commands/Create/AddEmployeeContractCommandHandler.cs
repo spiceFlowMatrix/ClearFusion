@@ -54,7 +54,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
                         TypeOfEntity = (int) TypeOfEntity.Contract,
                         EntityId = null,
                         ActionTypeId = (int) ActionType.Add,
-                        ActionDescription = "this is added",
+                        ActionDescription = (TypeOfEntity.Contract).GetDescription(),
                     };
                     bool isLoged = await _actionLog.AuditLog (logs);
 
