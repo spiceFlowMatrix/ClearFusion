@@ -16,6 +16,7 @@
       </lib-sub-header-template>
     </div>
   </div>
+  <div class="alert alert-warning" *ngIf="err!==null">{{err}}</div>
   <div class="row">
     <form class="example-form" [formGroup]="employeeAppraisalForm" (ngSubmit) ="onFormSubmit(this.employeeAppraisalForm.value)"
     >
@@ -176,7 +177,7 @@
       </div>
       <div class="col-sm-8" colspan="4">
         <mat-form-field class="example-full-width">
-          <textarea matInput placeholder="Employee comment?" formControlName="FinalResultQues6">
+          <textarea matInput placeholder="Employee comment?" formControlName="CommentsByEmployee">
                      </textarea>
         </mat-form-field>
       </div>

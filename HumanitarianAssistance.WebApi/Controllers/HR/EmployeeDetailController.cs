@@ -752,12 +752,13 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
         }
 
         [HttpPost]
-        public async Task<IActionResult> TerminateEmployeeByEmployeeId ([FromBody] TerminateEmployeeByEmployeeIdCommand model) {
-            var userId = User.FindFirst (ClaimTypes.NameIdentifier).Value;
+        public async Task<IActionResult> TerminateEmployeeByEmployeeId([FromBody] TerminateEmployeeByEmployeeIdCommand model)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             model.ModifiedById = userId;
             model.ModifiedDate = DateTime.UtcNow;
-            var result = await _mediator.Send (model);
-            return Ok (result);
+            var result = await _mediator.Send(model);
+            return Ok(result);
         }
 
         [HttpPost]
@@ -835,7 +836,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
             command.CreatedById = userId;
             command.CreatedDate = DateTime.UtcNow;
-            return  Ok(await _mediator.Send(command));
+            return Ok(await _mediator.Send(command));
         }
 
         #endregion
@@ -845,5 +846,43 @@ namespace HumanitarianAssistance.WebApi.Controllers.HR
             var result = await _mediator.Send(new CreateBulkUserCommand { });
             return Ok(result);
         }
+
+
+        [HttpPost]
+        public async Task<IActionResult> EditAppraisalDetail([FromBody] EditNewAppraisalDetailCommand command)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            command.ModifiedById = userId;
+            command.ModifiedDate = DateTime.UtcNow;
+            return Ok(await _mediator.Send(command));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveAppraisalDetail([FromBody] int id)
+        {
+            var result = await _mediator.Send(new ApproveAppraisalCommand 
+            {
+                EmployeeAppraisalDetailsId = id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            });
+
+
+            return Ok(result);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RejectAppraisalDetail([FromBody] int id)
+        {
+            var result = await _mediator.Send(new RejectAppraisalCommand
+            {
+                EmployeeAppraisalDetailsId = id,
+                ModifiedById = User.FindFirst(ClaimTypes.NameIdentifier).Value,
+                ModifiedDate = DateTime.UtcNow
+            });
+
+
+            return Ok(result);
+        }
+
     }
 }

@@ -26,8 +26,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails
                                                         .Include(x => x.EmployeeEvaluation)
                                                         .Include(x => x.EmployeeAppraisalQuestions)
-                                                        .Include(x => x.EmployeeAppraisalTeamMember).
-                                                        Include(x => x.StrongandWeakPoints)
+                                                        .ThenInclude(x => x.AppraisalGeneralQuestions)
+                                                        .Include(x => x.EmployeeAppraisalTeamMember)
+                                                        .ThenInclude(x => x.EmployeeDetail)
+                                                        .Include(x => x.StrongandWeakPoints)
                                                         .Include(x => x.EmployeeEvaluationTraining)
                 .Where(x => x.EmployeeId == request.EmployeeId && x.IsDeleted == false)
                 .OrderByDescending(x => x.CurrentAppraisalDate)
@@ -41,15 +43,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     // Position = x.EmployeeEvaluation.EmployeeDetail.Position,
                     // DepartmentId = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId,
                     // DepartmentName = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentName,
-                    Qualification = x.Qualification,
-                    DutyStation = x.DutyStation,
+                    // Qualification = x.Qualification,
+                    // DutyStation = x.DutyStation,
                     RecruitmentDate = x.RecruitmentDate,
                     AppraisalPeriod = x.AppraisalPeriod,
                     CurrentAppraisalDate = x.CurrentAppraisalDate,
                     OfficeId = x.OfficeId,
-                    // TotalScore = x.TotalScore,
                     AppraisalStatus = x.AppraisalStatus,
-                    AppraisalScore = (x.AppraisalScore != null ? Math.Round((double)x.AppraisalScore) : 0) + " - " + ((MarkedScores)(x.AppraisalScore != null ? Math.Round((double)x.AppraisalScore) : 0)).ToString(),
                     EvaluationDisplayDate = x.CurrentAppraisalDate.ToShortDateString(),
                     FinalResultQues1 = x.EmployeeEvaluation.FinalResultQues1,
                     FinalResultQues2 = x.EmployeeEvaluation.FinalResultQues2,
@@ -60,7 +60,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     AppraisalMembers = x.EmployeeAppraisalTeamMember.Select(y => new AppraisalMemberListModel
                     {
                         EmployeeId = y.EmployeeId,
-                        EmployeeAppraisalTeamMemberId = y.EmployeeAppraisalTeamMemberId
+                        EmployeeAppraisalTeamMemberId = y.EmployeeAppraisalTeamMemberId,
+                        EmployeeName = y.EmployeeDetail.EmployeeName,
+                        Type = y.EmployeeDetail.EmployeeProfessionalDetail.Designation,
+                        EmployeeCode = y.EmployeeDetail.EmployeeCode
 
                     }).ToList(),
                     AppraisalTraining = x.EmployeeEvaluationTraining.Select(z => new AppraisalTrainingListModel
@@ -90,47 +93,16 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         AppraisalGeneralQuestionsId = d.AppraisalGeneralQuestionsId,
                         Score = d.Score.Value,
                         Remarks = d.Remarks,
-                        // CurrentAppraisalDate = d.CurrentAppraisalDate,
-                    }).ToList()
+                        SequenceNumber = d.AppraisalGeneralQuestions.SequenceNo,
+                        QuestionEnglish = d.AppraisalGeneralQuestions.Question,
 
+                        // CurrentAppraisalDate = d.CurrentAppraisalDate,
+                    }).ToList(),
+                   AppraisalScore = x.EmployeeAppraisalQuestions.Count> 0 ? (x.EmployeeAppraisalQuestions.Sum(sc => sc.Score.Value)) : 0,
+                   TotalScore = (double)(x.EmployeeAppraisalQuestions.Count> 0 ? Math.Round((decimal)(x.EmployeeAppraisalQuestions.Average(av=>av.Score.Value)),2) : 0)
                 })
                 .ToListAsync();
-
-                // if (empAppraisalDetails != null)
-                // {
-                //     EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
-                //     var quesLst = await _dbContext.EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.CurrentAppraisalDate == empAppraisalDetails.CurrentAppraisalDate && x.EmployeeId == empAppraisalDetails.EmployeeId && x.IsDeleted == false).ToListAsync();
-                //     model.EmployeeAppraisalDetailsId = empAppraisalDetails.EmployeeAppraisalDetailsId;
-                //     model.EmployeeId = empAppraisalDetails.EmployeeId;
-                //     model.EmployeeCode = empAppraisalDetails.EmployeeCode;
-                //     model.EmployeeName = empAppraisalDetails.EmployeeName;
-                //     model.FatherName = empAppraisalDetails.FatherName;
-                //     model.Position = empAppraisalDetails.Position;
-                //     model.Department = empAppraisalDetails.Department;
-                //     model.Qualification = empAppraisalDetails.Qualification;
-                //     model.DutyStation = empAppraisalDetails.DutyStation;
-                //     model.RecruitmentDate = empAppraisalDetails.RecruitmentDate;
-                //     model.AppraisalPeriod = empAppraisalDetails.AppraisalPeriod;
-                //     model.CurrentAppraisalDate = empAppraisalDetails.CurrentAppraisalDate;
-                //     model.OfficeId = empAppraisalDetails.OfficeId;
-                //     model.TotalScore = empAppraisalDetails.TotalScore;
-                //     model.AppraisalStatus = empAppraisalDetails.AppraisalStatus;
-                //     var scorePoint = empAppraisalDetails.AppraisalScore != null ? Math.Round((double)empAppraisalDetails.AppraisalScore) : 0;
-                //     if (empAppraisalDetails.AppraisalScore != null)
-                //     {
-                //         model.AppraisalScore = scorePoint + " - " + ((MarkedScores)scorePoint).ToString();
-                //     }
-                //     foreach (var element in quesLst)
-                //     {
-                //         EmployeeAppraisalQuestionModel questions = new EmployeeAppraisalQuestionModel();
-                //         questions.QuestionEnglish = element.AppraisalGeneralQuestions.Question;
-                //         questions.QuestionDari = element.AppraisalGeneralQuestions.DariQuestion;
-                //         questions.SequenceNo = element.AppraisalGeneralQuestions.SequenceNo.Value;
-                //         questions.AppraisalGeneralQuestionsId = element.AppraisalGeneralQuestionsId;
-                //         questions.Score = element.Score;
-                //         questions.Remarks = element.Remarks;
-                //         model.EmployeeAppraisalQuestionList.Add(questions);
-                //     }
+              
                 response.Add("AppraisalList", empAppraisalDetails);
             }
             catch (Exception ex)

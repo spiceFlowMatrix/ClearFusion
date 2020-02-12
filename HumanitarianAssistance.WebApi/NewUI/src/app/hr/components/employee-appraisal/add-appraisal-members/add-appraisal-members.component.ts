@@ -58,7 +58,7 @@ export class AddAppraisalMembersComponent implements OnInit {
 
   private _filter(value: string): IEmployeeListModel[] {
     const filterValue = value.toLowerCase();
-    if (value.length >= 3) {
+    if (value.length >= 2) {
       this.getFilteredEmployeeList(filterValue);
       return this.employeeList.filter(
         x => x.EmployeeName.toLowerCase().indexOf(filterValue) === 0

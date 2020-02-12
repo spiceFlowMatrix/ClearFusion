@@ -30,8 +30,8 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public DateTime RecruitmentDate { get; set; }
 
         public int OfficeId { get; set; }
-        public double TotalScore { get; set; }
-        public string AppraisalScore { get; set; }
+        public double? TotalScore { get; set; }
+        public int AppraisalScore { get; set; }
         public bool AppraisalStatus { get; set; }
         public string EvaluationDisplayDate { get; set; }
 
@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public string Type { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
     }
     public class AppraisalTrainingListModel
     {
@@ -84,7 +84,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
 
     public class GeneralProfessionalIndicatorQuestionListModel
     {
-        public int SequenceNumber { get; set; }
+        public int? SequenceNumber { get; set; }
         public string QuestionEnglish { get; set; }
         public int Score { get; set; }
         public string Remarks { get; set; }

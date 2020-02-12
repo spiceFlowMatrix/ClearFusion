@@ -8,15 +8,17 @@
       <div class="col-sm-6">
         <div class="autoComplete">
           <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Select Member"  aria-label="Number" matInput
+            <input type="text" placeholder="Search Member"  aria-label="Number" matInput
               formControlName="EmployeeId" name="EmployeeId" [matAutocomplete]="matAutocomplete">
             <mat-autocomplete #matAutocomplete="matAutocomplete" >
               <mat-option (onSelectionChange)="onChangeEmployeeValue($event,item.EmployeeId)"
                 *ngFor="let item of filterdOptionsEmployeeList | async" [value]="item.EmployeeName">{{item.EmployeeName}}
               </mat-option>
             </mat-autocomplete>
+
             <!-- <mat-spinner class="center_loader custom_load" *ngIf="sectorListFlag;" diameter="20"></mat-spinner> -->
           </mat-form-field>
+          <span style="color: red;">Please enter atleast 3 characters to search.</span>
 
         </div>
       </div>

@@ -37,7 +37,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                     EmployeeAppraisalDetailsModel model = new EmployeeAppraisalDetailsModel();
                     var quesLst = await _dbContext.EmployeeAppraisalQuestions.Include(x => x.AppraisalGeneralQuestions).Where(x => x.EmployeeId == item.EmployeeId && x.CurrentAppraisalDate == item.CurrentAppraisalDate).ToListAsync();
                     model.EmployeeAppraisalDetailsId = item.EmployeeAppraisalDetailsId;
-                    model.EmployeeId = item.EmployeeId;
+                    // model.EmployeeId = item.EmployeeId; //pk
                     model.EmployeeCode = item.EmployeeCode;
                     model.EmployeeName = item.EmployeeName;
                     model.FatherName = item.FatherName;

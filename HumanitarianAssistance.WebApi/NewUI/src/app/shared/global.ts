@@ -813,6 +813,9 @@ export class GLOBAL {
   public static API_Code_GetAppraisalQuestions = 'Code/GetAppraisalQuestions';
   public static API_EmployeeDetail_GetFilteredEmployeeList = 'EmployeeDetail/GetFilteredEmployeeList';
   public static API_EmployeeDetail_AddAppraisalDetail = 'EmployeeDetail/AddAppraisalDetail';
+  public static API_EmployeeDetail_EditAppraisalDetail = 'EmployeeDetail/EditAppraisalDetail';
+  public static API_EmployeeDetail_ApproveAppraisalDetail = 'EmployeeDetail/ApproveAppraisalDetail';
+  public static API_EmployeeDetail_RejectAppraisalDetail = 'EmployeeDetail/RejectAppraisalDetail';
 
   //#endregion
 }

@@ -20,6 +20,7 @@ export interface IAppraisalMemberList {
   EmployeeName: string;
   Type: string;
   EmployeeId?: number;
+  EmployeeAppraisalTeamMemberId: number;
 }
 
 export interface IEmployeeDetailModel {
@@ -63,7 +64,7 @@ export interface IAppraisalDetailModel {
   FinalResultQues3: string;
   FinalResultQues4: string;
   FinalResultQues5: string;
-  FinalResultQues6: string;
+  CommentsByEmployee: string;
   AppraisalMembers: IAppraisalMemberList[];
   AppraisalTraining: ITrainigDetailModel[];
   AppraisalStrongPoints: IAppraisalStrongPoints[];

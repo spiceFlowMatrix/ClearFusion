@@ -30,6 +30,7 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
   styleUrls: ['./add-employee-appraisal.component.scss']
 })
 export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
+  err = null;
   employeeId: number;
   employeeAppraisalPeriod: any[];
   employeeAppraisalForm: FormGroup;
@@ -45,6 +46,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   appraisalTrainingList$: Observable<ITrainigDetailModel[]> = of([]);
   strongPointsList$: Observable<IAppraisalStrongPoints[]> = of([]);
   weakPointsList$: Observable<IAppraisalWeakPoints[]> = of([]);
+  employeeAppraisalId: number;
+  appraisalList: IAppraisalDetailModel[] = [];
 
   appraisalPeriodDataSource$ = of([
     { value: 1, name: 'Annual' },
@@ -147,9 +150,21 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     debugger;
-    this.routeActive.params.subscribe(params => {
-      this.employeeId = +params['id'];
+    this.initForm();
+    this.routeActive.url.subscribe(params => {
+      this.employeeId = +params[1].path;
+      this.employeeAppraisalId = +params[3].path;
+      console.log(params);
+      console.log(this.employeeAppraisalId);
+      if (
+        this.employeeAppraisalId != undefined &&
+        this.employeeAppraisalId != null
+      ) {
+        // this.setEmployeeAppraisalDetail(this.employeeAppraisalId);
+      }
+      this.getAllAppraisalList();
     });
+
     console.log(this.employeeId);
     this.employeeAppraisalPeriod = [
       {
@@ -161,7 +176,12 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         PeriodDuration: 'Probationary'
       }
     ];
-    this.initForm();
+    // if (
+    //   this.employeeAppraisalId == undefined &&
+    //   this.employeeAppraisalId == null
+    // ) {
+
+    // }
   }
 
   ngOnChanges() {
@@ -181,23 +201,208 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       EmployeeAppraisalDetailsId: [null],
       AppraisalPeriod: [null, Validators.required],
       CurrentAppraisalDate: [null, Validators.required],
-      GeneralProfessionalIndicatorQuestion: this.fb.array(
-        [],
-        Validators.required
-      ),
-      AppraisalMembers: this.fb.array([]),
-      AppraisalTraining: this.fb.array([]),
-      AppraisalStrongPoints: this.fb.array([]),
-      AppraisalWeakPoints: this.fb.array([]),
+      GeneralProfessionalIndicatorQuestion: new FormArray([]),
+      AppraisalMembers: new FormArray([]),
+      AppraisalTraining: new FormArray([]),
+      AppraisalStrongPoints: new FormArray([]),
+      AppraisalWeakPoints: new FormArray([]),
       FinalResultQues1: [null, Validators.required],
       FinalResultQues2: [null, Validators.required],
       FinalResultQues3: [null, Validators.required],
       FinalResultQues4: [null, Validators.required],
       FinalResultQues5: [null, Validators.required],
-      FinalResultQues6: [null, Validators.required],
+      CommentsByEmployee: [null, Validators.required],
       EmployeeId: this.employeeId
     });
   }
+  setEmployeeAppraisalDetail(id: number, filterData: any) {
+    debugger;
+    if (id != undefined && id != null) {
+      filterData.forEach(element => {
+        this.employeeAppraisalForm = this.fb.group({
+          EmployeeAppraisalDetailsId: [element.EmployeeAppraisalDetailsId],
+          AppraisalPeriod: [element.AppraisalPeriod],
+          CurrentAppraisalDate: [element.CurrentAppraisalDate],
+
+          FinalResultQues1: [element.FinalResultQues1],
+          FinalResultQues2: [element.FinalResultQues2],
+          FinalResultQues3: [element.FinalResultQues3],
+          FinalResultQues4: [element.FinalResultQues4],
+          FinalResultQues5: [element.FinalResultQues5],
+          CommentsByEmployee: [element.CommentsByEmployee],
+          EmployeeId: this.employeeId
+        });
+        this.setProfessionalIndicatorQuestion(
+          element.GeneralProfessionalIndicatorQuestion
+        );
+        this.setAppraisalMembersList(element.AppraisalMembers);
+        this.setAppraisalTrainingList(element.AppraisalTraining);
+        this.setAppraisalStrongPointList(element.AppraisalStrongPoints);
+        this.setAppraisalWeakPointList(element.AppraisalWeakPoints);
+
+        this.employeeDetailList = element.AppraisalMembers;
+        this.appraisalMembersList$ = of(
+          this.employeeDetailList.map(y => {
+            return {
+              EmployeeCode: y.EmployeeCode,
+              EmployeeName: y.EmployeeName,
+              Type: y.Type,
+              EmployeeId: y.EmployeeId,
+              EmployeeAppraisalTeamMemberId: y.EmployeeAppraisalTeamMemberId
+            };
+          })
+        );
+
+        // this.appraisalTrainingList$ = element.AppraisalTraining;
+        this.trainingDetailList = element.AppraisalTraining;
+        this.appraisalTrainingList$ = of(
+          this.trainingDetailList.map(y => {
+            return {
+              TrainingProgramBasedOn: y.TrainingProgramBasedOn,
+              TrainingProgramBasedOnName:
+                AppraisalTrainingProgram[y.TrainingProgramBasedOn],
+              Program: y.Program,
+              Participated: y.Participated,
+              ParticipatedName: AppraisalYesNoType[y.Participated],
+              CatchLevel: y.CatchLevel,
+              CatchLevelName: AppraisalCatchLevelType[y.CatchLevel],
+              RefresherTrm: y.RefresherTrm,
+              RefresherTrmName: AppraisalYesNoType[y.RefresherTrm],
+              OtherRecommemenedTraining: y.OtherRecommemenedTraining,
+              EmployeeEvaluationTrainingId: y.EmployeeEvaluationTrainingId
+            };
+          })
+        );
+        this.strongPontsDetailList = element.AppraisalStrongPoints;
+        this.strongPointsList$ = of(
+          this.strongPontsDetailList.map(y => {
+            return {
+              StrongPoints: y.StrongPoints,
+              AppraisalStrongPointsId: y.AppraisalStrongPointsId
+            };
+          })
+        );
+        this.weakPontsDetailList = element.AppraisalWeakPoints;
+        this.weakPointsList$ = of(
+          this.weakPontsDetailList.map(y => {
+            return {
+              WeakPoints: y.WeakPoints,
+              AppraisalWeakPointsId: y.AppraisalWeakPointsId
+            };
+          })
+        );
+      });
+    }
+  }
+
+  setProfessionalIndicatorQuestion(item: any[]) {
+    debugger;
+    const formArray = new FormArray([]);
+    for (const x of item) {
+      formArray.push(
+        this.fb.group({
+          AppraisalGeneralQuestionsId: x.AppraisalGeneralQuestionsId,
+          SequenceNumber: x.SequenceNumber,
+          QuestionEnglish: x.QuestionEnglish,
+          Score: x.Score,
+          Remarks: x.Remarks
+        })
+      );
+    }
+    this.employeeAppraisalForm.setControl(
+      'GeneralProfessionalIndicatorQuestion',
+      formArray
+    );
+  }
+
+  setAppraisalMembersList(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const x of item) {
+      formArray.push(
+        this.fb.group({
+          EmployeeId: x.EmployeeId,
+          EmployeeCode: x.EmployeeCode,
+          Type: x.Type,
+          EmployeeName: x.EmployeeName
+        })
+      );
+    }
+    this.employeeAppraisalForm.setControl('AppraisalMembers', formArray);
+  }
+
+  setAppraisalTrainingList(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const y of item) {
+      formArray.push(
+        this.fb.group({
+          TrainingProgramBasedOn: y.TrainingProgramBasedOn,
+          Program: y.Program,
+          Participated: y.Participated,
+          CatchLevel: y.CatchLevel,
+          RefresherTrm: y.RefresherTrm,
+          OtherRecommemenedTraining: y.OtherRecommemenedTraining,
+          EmployeeEvaluationTrainingId: y.EmployeeEvaluationTrainingId
+        })
+      );
+    }
+    this.employeeAppraisalForm.setControl('AppraisalTraining', formArray);
+  }
+
+  setAppraisalStrongPointList(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const y of item) {
+      formArray.push(
+        this.fb.group({
+          StrongPoints: y.StrongPoints,
+          AppraisalStrongPointsId: y.AppraisalStrongPointsId
+        })
+      );
+    }
+    this.employeeAppraisalForm.setControl('AppraisalStrongPoints', formArray);
+  }
+
+  setAppraisalWeakPointList(item: any[]) {
+    const formArray = new FormArray([]);
+    for (const y of item) {
+      formArray.push(
+        this.fb.group({
+          WeakPoints: y.WeakPoints,
+          AppraisalWeakPointsId: y.AppraisalWeakPointsId
+        })
+      );
+    }
+    this.employeeAppraisalForm.setControl('AppraisalWeakPoints', formArray);
+  }
+
+  //#region "get appraisal list"
+  getAllAppraisalList() {
+    debugger;
+    if (this.employeeId !== undefined && this.employeeId != null) {
+      this.appraisalService
+        .getAllAppraisalListEmployeeId(this.employeeId)
+        .subscribe(
+          res => {
+            if (
+              res &&
+              res.AppraisalList !== undefined &&
+              res.AppraisalList.length > 0
+            ) {
+              this.appraisalList = res.AppraisalList;
+              const filteredRecord = res.AppraisalList.filter(
+                x => x.EmployeeAppraisalDetailsId == this.employeeAppraisalId
+              );
+              this.setEmployeeAppraisalDetail(
+                this.employeeAppraisalId,
+                filteredRecord
+              );
+            }
+          },
+          err => {}
+        );
+    }
+  }
+  //#endregion
+
   // if apprasial question list is not null
   setAppraisalQuestion() {
     this.employeeAppraisalForm.setControl(
@@ -250,6 +455,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       res.forEach(s => {
         formArray.push(
           this.fb.group({
+            EmployeeAppraisalTeamMemberId: s.EmployeeAppraisalTeamMemberId,
             EmployeeId: s.EmployeeId,
             EmployeeCode: s.EmployeeCode,
             Type: s.Type,
@@ -266,7 +472,12 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   backClick() {
     debugger;
-    this.router.navigate(['/hr/employee/' + this.employeeId]);
+    this.router.navigate([
+      '../'
+    ], {
+      relativeTo: this.routeActive
+    });
+    // this.router.navigate(['/hr/employee/' + this.employeeId]);
     // this.router.navigate(['/hr/employee/' + this.employeeId + '/employeeAppraisal']);
   }
 
@@ -342,7 +553,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
             EmployeeCode: y.EmployeeCode,
             EmployeeName: y.EmployeeName,
             Type: y.Type,
-            EmployeeId: y.EmployeeId
+            EmployeeId: y.EmployeeId,
+            EmployeeAppraisalTeamMemberId: y.EmployeeAppraisalTeamMemberId
           };
         })
       );
@@ -396,7 +608,20 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
           CatchLevelName: AppraisalCatchLevelType[element.CatchLevel],
           RefresherTrm: element.RefresherTrm,
           RefresherTrmName: AppraisalYesNoType[element.RefresherTrm],
-          OtherRecommemenedTraining: element.OtherRecommemenedTraining
+          OtherRecommemenedTraining: element.OtherRecommemenedTraining,
+          EmployeeEvaluationTrainingId: element.EmployeeEvaluationTrainingId
+
+          // TrainingProgramBasedOn: y.TrainingProgramBasedOn,
+          // TrainingProgramBasedOnName: AppraisalTrainingProgram[y.TrainingProgramBasedOn],
+          // Program: y.Program,
+          // Participated: y.Participated,
+          // ParticipatedName: AppraisalYesNoType[y.Participated],
+          // CatchLevel: y.CatchLevel,
+          // CatchLevelName: AppraisalCatchLevelType[y.CatchLevel],
+          // RefresherTrm: y.RefresherTrm,
+          // RefresherTrmName: AppraisalYesNoType[y.RefresherTrm],
+          // OtherRecommemenedTraining: y.OtherRecommemenedTraining,
+          // EmployeeEvaluationTrainingId: y.EmployeeEvaluationTrainingId
         });
       }
     });
@@ -407,14 +632,15 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         this.trainingDetailList.map(y => {
           return {
             TrainingProgramBasedOn: y.TrainingProgramBasedOn,
-            TrainingProgramBasedOnName: y.TrainingProgramBasedOnName,
+            TrainingProgramBasedOnName:
+              AppraisalTrainingProgram[y.TrainingProgramBasedOn],
             Program: y.Program,
             Participated: y.Participated,
-            ParticipatedName: y.ParticipatedName,
+            ParticipatedName: AppraisalYesNoType[y.Participated],
             CatchLevel: y.CatchLevel,
-            CatchLevelName: y.CatchLevelName,
+            CatchLevelName: AppraisalCatchLevelType[y.CatchLevel],
             RefresherTrm: y.RefresherTrm,
-            RefresherTrmName: y.RefresherTrmName,
+            RefresherTrmName: AppraisalYesNoType[y.RefresherTrm],
             OtherRecommemenedTraining: y.OtherRecommemenedTraining,
             EmployeeEvaluationTrainingId: y.EmployeeEvaluationTrainingId
           };
@@ -642,22 +868,48 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   //#region "onFormSubmit"
   onFormSubmit(form: IAppraisalDetailModel) {
+    this.err = null;
+    if (
+      (this.employeeAppraisalForm.value
+        .GeneralProfessionalIndicatorQuestion as FormArray).length === 0 ||
+      (this.employeeAppraisalForm.value.AppraisalMembers as FormArray)
+        .length === 0 ||
+      (this.employeeAppraisalForm.value.AppraisalTraining as FormArray)
+        .length === 0 ||
+      (this.employeeAppraisalForm.value.AppraisalStrongPoints as FormArray)
+        .length === 0 ||
+      (this.employeeAppraisalForm.value.AppraisalMembers as FormArray)
+        .length === 0 ||
+      (this.employeeAppraisalForm.value.AppraisalWeakPoints as FormArray)
+        .length === 0
+    ) {
+      this.err = 'Please fill entire form';
+      return;
+    }
     debugger;
     if (this.employeeAppraisalForm.valid) {
       if (
-        this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId']
-          .value !== undefined &&
-        this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId'] !=
+        this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
+          undefined &&
+        this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
           null
       ) {
-        form.CurrentAppraisalDate = StaticUtilities.setLocalDate(
-          form.CurrentAppraisalDate
-        );
-        form.EmployeeId = this.employeeId;
-        this.addAppraisalForm(form);
+        if (
+          this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId']
+            .value !== undefined &&
+          this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId'] !=
+            null
+        ) {
+          form.CurrentAppraisalDate = StaticUtilities.setLocalDate(
+            form.CurrentAppraisalDate
+          );
+          form.EmployeeId = this.employeeId;
+          this.addAppraisalForm(form);
+        }
+      } else {
+        this.editAppraisalForm(form);
       }
     } else {
-     // this.editAppraisalForm(form);
       console.log('invalid');
     }
   }
@@ -665,13 +917,18 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#region "addAppraisalForm"
   addAppraisalForm(form: IAppraisalDetailModel) {
     debugger;
+    this.err = null;
     this.appraisalService.addAppraisalForm(form).subscribe(res => {
       console.log(res);
       if (res === true) {
         this.router.navigate([
-          '/hr/employee/' + this.employeeId + '/employeeAppraisal'
-        ]);
+          '../'
+        ], {
+          relativeTo: this.routeActive
+        });
       }
+    }, err => {
+      this.err = err;
     });
   }
   //#endregion
@@ -679,7 +936,16 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#region "editAppraisalForm"
   editAppraisalForm(form: IAppraisalDetailModel) {
     debugger;
-    this.appraisalService.editAppraisalForm(form).subscribe(res => {});
+    this.err = null;
+    this.appraisalService.editAppraisalForm(form).subscribe(res => {
+      this.router.navigate([
+        '../'
+      ], {
+        relativeTo: this.routeActive
+      });
+    }, err => {
+      this.err = err;
+    });
   }
   //#endregion
 }

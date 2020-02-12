@@ -73,7 +73,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                             objTraining.Participated = ele.Participated;
                             objTraining.OthRecommendation = ele.OthRecommendation;
                             objTraining.EmployeeEvaluationTrainingId = ele.EmployeeEvaluationTrainingId;
-                            objTraining.EmployeeAppraisalDetailsId = ele.EmployeeAppraisalDetailsId;
+                            // objTraining.EmployeeAppraisalDetailsId = ele.EmployeeAppraisalDetailsId; //pk
                             objTraining.CatchLevel = ele.CatchLevel;
 
                             trainingList.Add(objTraining);
@@ -86,7 +86,7 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
 
                         foreach (var teamElement in appraisalTeamMemberData)
                         {      
-                            appraisalTeamMemberList.Add(teamElement.EmployeeId);
+                            // appraisalTeamMemberList.Add(teamElement.EmployeeId);// pk
                         }
 
                         //Strong n Weak
@@ -105,8 +105,8 @@ namespace HumanitarianAssistance.Application.Configuration.Queries
                         }
 
                         objAppraisal.EmployeeEvaluationId = elements.EmployeeEvaluationId;
-                        objAppraisal.EmployeeAppraisalDetailsId = elements.EmployeeAppraisalDetailsId;
-                        objAppraisal.EmployeeId = elements.EmployeeId;
+                        // objAppraisal.EmployeeAppraisalDetailsId = elements.EmployeeAppraisalDetailsId;
+                        // objAppraisal.EmployeeId = elements.EmployeeId;
                         objAppraisal.DepartmentId = elements.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId;
                         objAppraisal.FinalResultQues1 = elements.FinalResultQues1;
                         objAppraisal.FinalResultQues2 = elements.FinalResultQues2;
