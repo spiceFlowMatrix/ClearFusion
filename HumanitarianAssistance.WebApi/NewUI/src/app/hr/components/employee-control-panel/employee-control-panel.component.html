@@ -1,7 +1,7 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
     <span class="action_header"><i class="fas fa-arrow-left" (click)="backClick()"></i> &nbsp;Employee Control Panel
     <hum-button [type]="'edit'" [text]="'EDIT DETAILS'" (click)="editEmployee()"></hum-button>
-    <hum-button [type]="'delete'" [text]="'DELETE'" (click)="deleteEmployee()"></hum-button>
+    <!-- <hum-button [type]="'delete'" [text]="'DELETE'" (click)="deleteEmployee()"></hum-button> -->
     <hum-button [type]="'exclamation'" [text]="(employeeStatus == 3) ? 'TERMINATED': 'TERMINATE'" [disabled]="(employeeStatus == 3)" (click)="terminateEmployee()"></hum-button>
   </span>
     <div class="action_section">
@@ -12,7 +12,7 @@
 
 <div class="row">
     <div class="col-md-12">
-        <mat-tab-group>
+        <mat-tab-group [selectedIndex]="activeTabId">
             <mat-tab label="HISTORY">
                 <ng-template matTabContent>
                     <app-employee-history></app-employee-history>
@@ -53,7 +53,21 @@
                     <app-employee-advance-list></app-employee-advance-list>
                 </ng-template>
             </mat-tab>
-
+            <mat-tab label="APPRAISAL">
+                <ng-template matTabContent>
+                    <app-employee-appraisal></app-employee-appraisal>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="ANALYTICAL INFO">
+                <ng-template matTabContent>
+                    <app-employee-analytical></app-employee-analytical>
+                </ng-template>
+            </mat-tab>
+            <mat-tab label="AUDIT LOG">
+                <ng-template matTabContent>
+                    <app-audit-logs></app-audit-logs>
+                </ng-template>
+            </mat-tab>
         </mat-tab-group>
     </div>
 </div>

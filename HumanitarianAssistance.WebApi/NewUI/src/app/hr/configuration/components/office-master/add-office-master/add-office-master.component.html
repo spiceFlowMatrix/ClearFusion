@@ -1,40 +1,72 @@
 <div>
-  <h1 mat-dialog-title>{{title}}</h1>
-  <hr>
+    <h1 mat-dialog-title>{{title}}</h1>
+    <hr>
 </div>
 <form [formGroup]='addOfficeForm' (ngSubmit)="saveOffice()">
-  <mat-dialog-content>
-    <div class="row">
-      <div class="col-sm-6">
-        <mat-form-field class="example-full-width">
-          <input matInput formControlName="OfficeName" placeholder="Office Name">
-        </mat-form-field>
-      </div>
-      <div class="col-sm-6">
-        <mat-form-field class="example-full-width">
-          <input matInput formControlName="OfficeCode" placeholder="Office Code">
-        </mat-form-field>
-      </div>
-      <div class="col-sm-6">
-        <mat-form-field class="example-full-width">
-          <input matInput formControlName="SupervisorName" placeholder="Supervisor Name">
-        </mat-form-field>
-      </div>
-      <div class="col-sm-6">
-        <mat-form-field class="example-full-width">
-          <input matInput formControlName="FaxNo" placeholder="Fax No">
-        </mat-form-field>
-      </div>
-      <div class="col-sm-6">
-        <mat-form-field class="example-full-width">
-          <input matInput formControlName="PhoneNo" placeholder="Phone No">
-        </mat-form-field>
-      </div>
-    </div>
-  </mat-dialog-content>
-  <mat-dialog-actions class="items-float-right">
-    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true" [disabled]="!addOfficeForm.valid || !addOfficeForm.dirty"></hum-button>
-    <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
-    <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
-  </mat-dialog-actions>
+    <mat-dialog-content>
+        <div class="row">
+            <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                    <input matInput formControlName="OfficeName" placeholder="Office Name">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                    <input matInput formControlName="OfficeCode" placeholder="Office Code">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                    <input matInput formControlName="SupervisorName" placeholder="Supervisor Name">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                    <input matInput formControlName="FaxNo" placeholder="Fax No">
+                </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+                <mat-form-field class="example-full-width">
+                    <input matInput formControlName="PhoneNo" placeholder="Phone No">
+                </mat-form-field>
+            </div>
+        </div>
+
+
+        <mat-divider></mat-divider>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-sm-4">
+                    <h4>Add Department</h4>
+                </div>
+                <div class="col-sm-4">
+                    <hum-button [type]="'add'" [text]="'ADD NEW DEPARTMENT'" (click)="addDepartment()"></hum-button>
+                </div>
+                <div class="col-sm-12" formArrayName="Department">
+                    <div class="row">
+                        <div *ngFor="let item of addOfficeForm.controls['Department'].controls; let i=index">
+                            <div class="col-sm-10" [formGroupName]="i">
+                                <mat-form-field class="example-full-width">
+                                    <input matInput formControlName="DepartmentName" placeholder="Department Name {{i+1}}" />
+                                </mat-form-field>
+                            </div>
+                            <div class="col-sm-2">
+                                <span class="action-span" *ngIf="addOfficeForm.get('Department').length >1">
+                  <i class="fas fa-trash clstrash" (click)='deleteDepartment(i)'></i>
+                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+    </mat-dialog-content>
+    <mat-dialog-actions class="items-float-right">
+        <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+        <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+        <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+    </mat-dialog-actions>
 </form>

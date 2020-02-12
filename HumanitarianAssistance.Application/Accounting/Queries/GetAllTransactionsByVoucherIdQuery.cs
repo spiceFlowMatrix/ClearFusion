@@ -5,6 +5,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 {
     public class GetAllTransactionsByVoucherIdQuery : IRequest<ApiResponse>
     {
-        public long VoucherId { get; set; }
+        public long VoucherNo { get; set; }
+        public int PageSize { get; set; }
+        public int PageIndex { get; set; }
     }
 }
