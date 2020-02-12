@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         [Column(Order = 1)]
         public int EmployeeEvaluationId { get; set; }
         public DateTime CurrentAppraisalDate { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetail { get; set; }
 
@@ -40,7 +40,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public string AppraisalTeamMember2 { get; set; }
         public string CommentsByEmployee { get; set; }
         public string EvaluationStatus { get; set; }
-        public int EmployeeAppraisalDetailsId { get; set; }
+        public int? EmployeeAppraisalDetailsId { get; set; }
 		[ForeignKey("EmployeeAppraisalDetailsId")]
 		public EmployeeAppraisalDetails EmployeeAppraisalDetails { get; set; }
 

@@ -12,7 +12,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		[Column(Order = 1)]
 		public int EmployeeAppraisalDetailsId { get; set; }
-		public int EmployeeId { get; set; }
+		public int? EmployeeId { get; set; }
 		[ForeignKey("EmployeeId")]
 		public EmployeeDetail EmployeeDetail { get; set; }
 		public string EmployeeCode { get; set; }
