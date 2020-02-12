@@ -544,7 +544,7 @@ export class AddEmployeeComponent implements OnInit {
           x => {
             if (x.StatusCode === 200) {
               this.toastr.success('Employee Successfully Added');
-              this.router.navigate(['/hr/employees']);
+              this.routeBackToListing();
             } else {
               this.toastr.warning(x.Message);
             }
@@ -585,7 +585,7 @@ export class AddEmployeeComponent implements OnInit {
           x => {
             if (x.StatusCode === 200) {
               this.toastr.success('Employee Successfully Updated');
-              this.router.navigate(['/hr/employees']);
+              this.routeBackToListing();
             } else {
               this.toastr.warning(x.Message);
             }
@@ -726,6 +726,10 @@ export class AddEmployeeComponent implements OnInit {
     } else if (event.index === 1 && this.IsFormSubmitted) {
       this.employeeProfessionalDetailFormButton.nativeElement.click();
     }
+  }
+
+  routeBackToListing() {
+    this.router.navigate(['/hr/employee/' + this.employeeId]);
   }
 }
 

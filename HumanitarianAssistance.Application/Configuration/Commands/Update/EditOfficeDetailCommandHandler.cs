@@ -40,31 +40,23 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update {
 
             if (request.Department.Any ()) {
 
-              List<int?> departmentToBeRemoved = new List<int?> ();
-              var data = _dbContext.Department.Where (x => x.IsDeleted == false && x.OfficeId == request.OfficeId).Select (x => new {DepartmentId = x.DepartmentId}).ToList ();
-              foreach (var item in request.Department) {
-                var items= data.Where(x=>x.DepartmentId == item.DepartmentId).FirstOrDefault();
-                if(items == null && item.DepartmentId != null)
-                {
-                  departmentToBeRemoved.Add(item.DepartmentId);
-                }
-              }
-
-              foreach (int id in departmentToBeRemoved) {
+              //delete unmached records
+                var diffids = request.Department.Where(x=>x.DepartmentId != 0).Select(s => s.DepartmentId);
+                var results = _dbContext.Department.Where (x => x.IsDeleted == false && x.OfficeId == request.OfficeId && !diffids.Contains(x.DepartmentId)).Select (x=>x.DepartmentId).ToList ();                                                   
+              foreach (int id in results) {
                 Department department = _dbContext.Department.FirstOrDefault (x => x.DepartmentId == id);
-
                 if (department != null) {
                   department.IsDeleted = true;
                   department.ModifiedById = request.ModifiedById;
                   department.ModifiedDate = request.ModifiedDate;
-
                   _dbContext.Department.Update (department);
                   await _dbContext.SaveChangesAsync ();
                 }
-              }              
+              }  
+        
               foreach (var item in request.Department) {
                 // Add new Department
-                if (item.DepartmentId == null) {
+                if (item.DepartmentId == 0) {
                   Department department = new Department () {
                   DepartmentName = item.DepartmentName,
                   OfficeId = request.OfficeId,
@@ -89,7 +81,7 @@ namespace HumanitarianAssistance.Application.Configuration.Commands.Update {
                     await _dbContext.SaveChangesAsync ();
                   }
                 }
-              }
+              } 
             }
 
             response.StatusCode = StaticResource.successStatusCode;
