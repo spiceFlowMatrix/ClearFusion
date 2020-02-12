@@ -423,6 +423,7 @@ namespace HumanitarianAssistance.Common.Enums
         Rehired = 3
     }
 
+
     public enum AppriasalStorngWeakPointType
     {
         Strong = 1,
