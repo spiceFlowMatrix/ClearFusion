@@ -28,8 +28,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 SupervisorName = x.SupervisorName,
                 OfficeName= x.OfficeName,
                 PhoneNo= x.PhoneNo,
-                FaxNo= x.FaxNo
+                FaxNo= x.FaxNo,
+                DepartmentList = _dbContext.Department.OrderByDescending(y=>y.DepartmentId).Where(y => y.IsDeleted == false && y.OfficeId==x.OfficeId).ToList()
             }).AsQueryable();
+
+           // var details = 
 
             long count = await query.CountAsync();
             var queryResult= await query.Skip(request.PageSize * request.PageIndex).Take(request.PageSize).ToListAsync();

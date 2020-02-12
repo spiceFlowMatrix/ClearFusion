@@ -6,7 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EmployeeFilterModel, EmployeeDetailList } from '../../models/employee-list.model';
-import { EmploymentStatus } from 'src/app/shared/enum';
+import { EmploymentStatus, Month } from 'src/app/shared/enum';
 import { MatTableDataSource, MatDatepicker, MatDialog } from '@angular/material';
 import { Router } from '@angular/router';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
@@ -15,6 +15,7 @@ import { AttendanceService } from '../../services/attendance.service';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
 import { AddSalaryConfigurationComponent } from '../employee-salary-config/add-salary-configuration/add-salary-configuration.component';
 import { IncrementDecrementSalaryComponent } from '../employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
+import { AdministerPayrollComponent } from '../administer-payroll/administer-payroll.component';
 
 @Component({
   selector: 'app-employee-list',
@@ -39,9 +40,9 @@ export class EmployeeListComponent implements OnInit {
   employeeDataSource;
   TotalCount = 0;
   isLoading = false;
-
   EmployeeAttendanceList: any[];
-  AttendanceDates: Date[] = []
+  AttendanceDates: Date[] = [];
+  MonthsList$: Observable<IDropDownModel[]>;
 
   constructor(
     private employeeListService: EmployeeListService,
@@ -72,6 +73,7 @@ export class EmployeeListComponent implements OnInit {
 
   ngOnInit() {
     this.getOfficeList();
+    this.getAllMonthList();
   }
 
   getOfficeList() {
@@ -113,6 +115,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   getFilteredEmployeeList(filterModel) {
+    this.selection.clear();
     this.employeeListService.getAllEmployeeList(filterModel).subscribe(res => {
       if (res.EmployeeList) {
         this.employeeList = [];
@@ -333,6 +336,30 @@ export class EmployeeListComponent implements OnInit {
     }, err => {
       this.toastr.success("Something went wrong");
       this.isLoading = false
-    })
+    });
+  }
+
+  getAllMonthList() {
+    const monthDropDown: IDropDownModel[] = [];
+    for (let i = Month['January']; i <= Month['December']; i++) {
+      monthDropDown.push({ name: Month[i], value: i });
+    }
+    this.MonthsList$ = of(monthDropDown);
+  }
+
+  administerPayroll(month, monthName) {
+    const dialogRef = this.dialog.open(AdministerPayrollComponent, {
+      width: '950px',
+      autoFocus: false,
+      data: {
+        SelectedEmployees: this.selection.selected,
+        Month: month,
+        MonthName: monthName,
+        OfficeId: this.selectedOffice.value
+      }
+    });
+    dialogRef.afterClosed().subscribe(() => {
+
+    });
   }
 }

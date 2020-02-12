@@ -14,7 +14,9 @@ import { AddAttendanceGroupComponent } from './add-attendance-group/add-attendan
   styleUrls: ['./attendance-group-master.component.scss']
 })
 export class AttendanceGroupMasterComponent implements OnInit {
-  attendanceGroupList$: Observable<any[]>;
+  attendanceGroupList$;
+  isDetailOpen = false;
+  selectedAttendanceGroup;
   attendanceGroupHeaders$ = of(['Id', 'Attendance Group Name', 'Description']);
 
   actions: TableActionsModel;
@@ -36,8 +38,8 @@ export class AttendanceGroupMasterComponent implements OnInit {
       items: {
         button: { status: false, text: '' },
         download: false,
-        edit: true,
-        delete: true
+        edit: false,
+        delete: false
       },
       subitems: {
         button: { status: false, text: '' },
@@ -51,16 +53,16 @@ export class AttendanceGroupMasterComponent implements OnInit {
     this.commonLoader.showLoader();
     this.hrService.getAttendanceGroupList(this.pageModel).subscribe(
       x => {
+        this.attendanceGroupList$ = [];
         this.commonLoader.hideLoader();
-        this.attendanceGroupList$ = of(
+        this.attendanceGroupList$ =
           x.Result.map(element => {
             return {
               AttendanceGroupId: element.AttendanceGroupId,
               Name: element.Name,
               Description: element.Description
             };
-          })
-        );
+          });
         this.RecordCount = x.RecordCount;
       },
       error => {
@@ -111,4 +113,14 @@ export class AttendanceGroupMasterComponent implements OnInit {
     this.getAttendanceGroupList();
   }
   //#endregion
+
+  onRowClick(attendanceId) {
+    this.selectedAttendanceGroup = attendanceId;
+    this.isDetailOpen = true;
+  }
+
+  onBackClicked(value) {
+    this.isDetailOpen = false;
+    this.getAttendanceGroupList();
+  }
 }

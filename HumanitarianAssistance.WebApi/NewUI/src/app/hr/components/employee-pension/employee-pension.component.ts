@@ -511,6 +511,7 @@ export class EmployeePensionComponent implements OnInit {
     const taxDetail = this.employeeTaxReportData;
     if (taxDetail != null && taxDetail != undefined) {
       const pdfModel: EmployeeTaxReportModel = {
+        EmployeeId: this.employeeId,
         TaxPayerIdentificationNumber: taxDetail.TaxPayerIdentificationNumber,
         NameOfBusiness: taxDetail.NameOfBusiness,
         AddressOfBusiness: taxDetail.AddressOfBusiness,

@@ -3,8 +3,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HumanitarianAssistance.Application.CommonModels;
 using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.HR.Models;
+using HumanitarianAssistance.Common.Enums;
+using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Hosting;
@@ -17,14 +20,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
         private readonly IPdfExportService _pdfExportService;
         private readonly IHostingEnvironment _env;
         private IMapper _mapper;
-
-        public GetEmployeePensionReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper, IPdfExportService pdfExportService, IHostingEnvironment env)
+        private readonly IActionLogService _actionLog;
+        public GetEmployeePensionReportPdfQueryHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper, IPdfExportService pdfExportService, IHostingEnvironment env,IActionLogService actionLog)
         {
             _dbContext = dbContext;
             _pdfExportService = pdfExportService;
             _env = env;
             _mapper = mapper;
-
+            _actionLog = actionLog;
         }
         public async Task<byte[]> Handle(GetEmployeePensionReportPdfQuery request, CancellationToken cancellationToken)
         {
@@ -59,6 +62,14 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 }
 
+                    AuditLogModel logs = new AuditLogModel () {
+                    EmployeeId = (int) request.EmployeeId,
+                    TypeOfEntity = (int) TypeOfEntity.TaxAndPension,
+                    EntityId = null,
+                    ActionTypeId = (int) ActionType.Download,
+                    ActionDescription = (TypeOfEntity.TaxAndPension).GetDescription (),
+                };
+                bool isLoged = await _actionLog.AuditLog (logs);
             }
             catch (Exception ex)
             {
