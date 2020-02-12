@@ -1,13 +1,19 @@
-<div mat-dialog-title><h4>Set Attendance</h4></div>
+<div mat-dialog-title>
+  <h4>Set Attendance</h4>
+</div>
 <mat-dialog-content>
   <div class="row" *ngIf="data.errors">
     <div class="alert alert-warning">{{data.errorMessage}}</div>
   </div>
   <div class="row" *ngIf="!data.errors">
     <p>&nbsp; &nbsp; Please submit the attendance for the selected employees and days .</p>
-    <p *ngFor="let attdate of data.AttendanceDates">&nbsp; &nbsp;{{attdate | date: 'dd/MM/yyyy'}}</p>
+    <p *ngIf="data.AttendanceDates.length>1"> &nbsp; &nbsp; <b>From :- &nbsp;
+        </b>{{data.AttendanceDates[0] | date: 'dd/MM/yyyy'}} &nbsp;<b>To :- &nbsp;
+        </b>{{data.AttendanceDates[data.AttendanceDates.length-1] | date: 'dd/MM/yyyy'}}</p>
+    <p *ngIf="data.AttendanceDates.length==1"> &nbsp; &nbsp;<b>For :-
+        </b>{{data.AttendanceDates[0] | date: 'dd/MM/yyyy'}} &nbsp;</p>
     <div class="col-md-12">
-      <form [formGroup]="attendanceForm" >
+      <form [formGroup]="attendanceForm">
         <table class="table table-striped" style="table-layout: fixed;">
           <tr>
             <th>Employee Name</th>
@@ -17,19 +23,22 @@
             <th>Attendance</th>
           </tr>
           <tbody formArrayName="EmployeeAttendance">
-            <tr *ngFor="let item of attendanceForm.get('EmployeeAttendance')['controls']; let i = index;" [formGroupName]="i">
+            <tr *ngFor="let item of attendanceForm.get('EmployeeAttendance')['controls']; let i = index;"
+              [formGroupName]="i">
               <td>{{item.value.EmployeeName}}</td>
               <!-- <td>{{attendanceForm.value.AttendanceDate | date: 'dd/MM/yyyy'}}</td> -->
               <td width="30%">
                 <mat-form-field style="width: 70%;margin-top: -16px;">
-                    <input matInput aria-label="default time" [ngxTimepicker]="InTime"  [format]="24"  formControlName="InTime" [value]="item.value.InTime"  readonly>
-                    <ngx-material-timepicker #InTime></ngx-material-timepicker>
+                  <input matInput aria-label="default time" [ngxTimepicker]="InTime" [format]="24"
+                    formControlName="InTime" [value]="item.value.InTime" readonly>
+                  <ngx-material-timepicker #InTime></ngx-material-timepicker>
                 </mat-form-field>
               </td>
               <td width="30%">
                 <mat-form-field style="width: 70%;margin-top: -16px;">
-                    <input matInput aria-label="default time" [ngxTimepicker]="OutTime"  [format]="24" formControlName="OutTime" [value]="item.value.OutTime"  readonly>
-                    <ngx-material-timepicker #OutTime></ngx-material-timepicker>
+                  <input matInput aria-label="default time" [ngxTimepicker]="OutTime" [format]="24"
+                    formControlName="OutTime" [value]="item.value.OutTime" readonly>
+                  <ngx-material-timepicker #OutTime></ngx-material-timepicker>
                 </mat-form-field>
               </td>
               <td>
@@ -52,7 +61,8 @@
   </div>
 </mat-dialog-content>
 <mat-dialog-actions>
-    <hum-button [type]="'save'" [text]="'SUBMIT'" *ngIf="!data.errors" (click)="saveEmployeeAttendance(this.attendanceForm.value)"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'CANCEL'" (click)="closeDialog()" *ngIf="!data.errors"></hum-button>
-    <hum-button [type]="'cancel'" [text]="'CLOSE'" (click)="closeDialog()" *ngIf="data.errors"></hum-button>
+  <hum-button [type]="'save'" [text]="'SUBMIT'" *ngIf="!data.errors"
+    (click)="saveEmployeeAttendance(this.attendanceForm.value)"></hum-button>
+  <hum-button [type]="'cancel'" [text]="'CANCEL'" (click)="closeDialog()" *ngIf="!data.errors"></hum-button>
+  <hum-button [type]="'cancel'" [text]="'CLOSE'" (click)="closeDialog()" *ngIf="data.errors"></hum-button>
 </mat-dialog-actions>
