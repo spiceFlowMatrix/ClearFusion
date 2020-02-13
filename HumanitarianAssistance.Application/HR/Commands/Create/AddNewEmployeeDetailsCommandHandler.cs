@@ -74,7 +74,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
                 MaritalStatus = request.EmployeeBasicDetail.MaritalStatus,
                 PassportNo = request.EmployeeBasicDetail.PassportNumber,
                 University = request.EmployeeBasicDetail.University,
-                BirthPlace = request.EmployeeBasicDetail.BirthPlace,
+                BirthPlace = request.EmployeeBasicDetail.BirthPlace.ToString(),
                 IssuePlace = request.EmployeeBasicDetail.IssuePlace,
                 MaritalStatusId = request.EmployeeBasicDetail.MaritalStatus,
                 TinNumber = request.EmployeeBasicDetail.TinNumber,

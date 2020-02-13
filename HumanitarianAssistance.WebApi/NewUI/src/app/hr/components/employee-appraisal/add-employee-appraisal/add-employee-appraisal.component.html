@@ -1,0 +1,365 @@
+<div *ngIf="isViewed; then EditTemplate else ViewTemplate"></div>
+<ng-template #EditTemplate>
+  <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+    <span class="action_header">
+      <i class="fas fa-arrow-left" (click)="backClick()"></i> &nbsp;Appraisal Form
+      <hum-button [type]="'save'" [text]="'Save '" [isSubmit]="true" (click)="btnSubmit.click()   "></hum-button>
+      <hum-button [type]="'cancel'" [text]="'Cancel'" (click)="backClick()"></hum-button>
+    </span>
+    <div class="action_section"></div>
+  </lib-sub-header-template>
+  <div class="container-fluid" humAddScroll>
+    <div class="row">
+      <div class="col-sm-12">
+          <h4 class="header">Appraisal Details
+          </h4>
+      </div>
+    </div>
+    <div id="err" class="alert alert-warning" *ngIf="err!==null">{{err}}</div>
+    <div class="row">
+      <form class="example-form" [formGroup]="employeeAppraisalForm"
+        (ngSubmit)="onFormSubmit(this.employeeAppraisalForm.value)">
+        <div class="col-sm-12">
+          <div class="col-sm-3">
+            <lib-hum-dropdown formControlName="AppraisalPeriod"
+              [validation]="employeeAppraisalForm.controls['AppraisalPeriod'].hasError('required')"
+              [options]="appraisalPeriodDataSource$" [placeHolder]="'Appraisal Period'"></lib-hum-dropdown>
+          </div>
+          <div class="col-sm-3">
+            <mat-form-field class="example-full-width">
+              <input matInput [matDatepicker]="CurrentAppraisalDate" placeholder="Current Appraisal Date"
+                formControlName="CurrentAppraisalDate" />
+              <mat-datepicker-toggle matSuffix [for]="CurrentAppraisalDate"></mat-datepicker-toggle>
+              <mat-datepicker #CurrentAppraisalDate></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <h5 class="header"> General/Professional Indicators Score: {{appraisalQuestionScore}}</h5>
+        </div>
+        <div class="col-sm-12">
+          <table class="table" style="table-layout: fixed;">
+            <thead>
+              <tr>
+                <th width="15%">Sequence No</th>
+                <th width="35%">English Questions</th>
+                <th width="20%">Score</th>
+                <th width="30%">Remarks</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="GeneralProfessionalIndicatorQuestion">
+              <tr
+                *ngFor="let item of employeeAppraisalForm.get('GeneralProfessionalIndicatorQuestion')['controls']; let i = index;"
+                [formGroupName]="i">
+                <td width="15%">
+                  {{item.value.SequenceNumber}}
+                </td>
+                <td width="35%">
+                  {{item.value.QuestionEnglish}}
+                </td>
+                <td width="20%">
+                  <lib-hum-dropdown [options]="appraisalQuestionScore$" [placeHolder]="'Score'" formControlName="Score"
+                    (change)="getQuestionScoreeSelectedValue($event)">
+                  </lib-hum-dropdown>
+                </td>
+                <td width="35%">
+                  <mat-form-field class="example-full-width">
+                    <textarea matInput rows="1" formControlName="Remarks" placeholder="Remarks"></textarea>
+                  </mat-form-field>
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Appraisal Evaluation Team Members
+              <hum-button [type]="'add'" [text]="'ADD'" (click)="addAppraisalMembers()"></hum-button>
+            </span>
+          </lib-sub-header-template>
+        </div>
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalMembersHeader$" [hideColums$]="hideColumsEmployeeDetail$"
+            [isDefaultAction]="false" [items]="appraisalMembersList$" (actionClick)="membersActionEvents($event)"
+            [actions]="actions"></hum-table>
+        </div>
+
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Training
+              <hum-button [type]="'add'" [text]="'ADD'" (click)="addTraining()"></hum-button>
+            </span>
+          </lib-sub-header-template>
+        </div>
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalTrainigHeader$" [hideColums$]="hideColumsTrainigDetails$"
+            [isDefaultAction]="false" [items]="appraisalTrainingList$" (actionClick)="trainingActionEvents($event)"
+            [actions]="actions"></hum-table>
+        </div>
+        <!-- Strongpoint -->
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Strong Points
+              <hum-button [type]="'add'" [text]="'ADD'" (click)="addStrongPoints()"></hum-button>
+            </span>
+          </lib-sub-header-template>
+        </div>
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalStrongPointsHeader$" [hideColums$]="hideColumsStrongPoints$"
+            [isDefaultAction]="false" [items]="strongPointsList$" (actionClick)="strongPointsActionEvents($event)"
+            [actions]="actions"></hum-table>
+        </div>
+
+        <!-- weakPoint -->
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Weak Points
+              <hum-button [type]="'add'" [text]="'ADD'" (click)="addWeakpoints()"></hum-button>
+            </span>
+          </lib-sub-header-template>
+        </div>
+
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalWeakPointsHeader$" [hideColums$]="hideColumsWeakPoints$"
+            [isDefaultAction]="false" [items]="weakPointsList$" (actionClick)="weakPointsActionEvents($event)"
+            [actions]="actions"></hum-table>
+        </div>
+
+        <div class="col-sm-12">
+          <h5>
+            Final Results
+          </h5>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Is there any need to change employee's ToR? If yes. How?"
+              formControlName="FinalResultQues1">
+           </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="What allowances are recommended for employee?"
+              formControlName="FinalResultQues2">
+             </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput
+              placeholder="What training courses are recommended to rise the employee's level of knowledge and skills?"
+              formControlName="FinalResultQues3">
+               </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Is there a need to consider warning for the employee? If yes. How?"
+              formControlName="FinalResultQues4">
+                 </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput
+              placeholder="Is there a need to assign the employee to another position or withdraw contract with him/her?"
+              formControlName="FinalResultQues5">
+                   </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <h5>Comment by employee</h5>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Employee comment?" formControlName="CommentsByEmployee">
+                     </textarea>
+          </mat-form-field>
+        </div>
+        <button type="submit" style="display: none;" #btnSubmit></button>
+
+      </form>
+    </div>
+  </div>
+</ng-template>
+<ng-template #ViewTemplate>
+  <lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+    <span class="action_header">
+      <i class="fas fa-arrow-left" (click)="backClick()"></i> &nbsp;Appraisal Form
+    </span>
+    <div class="action_section"></div>
+  </lib-sub-header-template>
+  <div class="container-fluid" humAddScroll>
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="header">Appraisal Details</h4>
+      </div>
+    </div>
+    <div class="alert alert-warning" *ngIf="err!==null">{{err}}</div>
+    <div class="row">
+      <form class="example-form" [formGroup]="employeeAppraisalForm"
+        (ngSubmit)="onFormSubmit(this.employeeAppraisalForm.value)">
+        <div class="col-sm-12">
+          <div class="col-sm-3">
+            <lib-hum-dropdown formControlName="AppraisalPeriod"
+              [validation]="employeeAppraisalForm.controls['AppraisalPeriod'].hasError('required')"
+              [options]="appraisalPeriodDataSource$" [placeHolder]="'Appraisal Period'" [disabled]="!isViewed">
+            </lib-hum-dropdown>
+          </div>
+          <div class="col-sm-3">
+            <mat-form-field class="example-full-width">
+              <input matInput [matDatepicker]="CurrentAppraisalDate" placeholder="Current Appraisal Date" readonly
+                formControlName="CurrentAppraisalDate" [disabled] ="!isViewed" />
+              <mat-datepicker-toggle matSuffix [for]="CurrentAppraisalDate"></mat-datepicker-toggle>
+              <mat-datepicker #CurrentAppraisalDate></mat-datepicker>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="col-sm-12">
+         <h5 class="header"> General/Professional Indicators Score: {{appraisalQuestionScore}}</h5>
+        </div>
+        <div class="col-sm-12">
+          <table class="table" style="table-layout: fixed;">
+            <thead>
+              <tr>
+                <th width="15%">Sequence No</th>
+                <th width="35%">English Questions</th>
+                <th width="20%">Score</th>
+                <th width="30%">Remarks</th>
+              </tr>
+            </thead>
+            <tbody formArrayName="GeneralProfessionalIndicatorQuestion">
+              <tr
+                *ngFor="let item of employeeAppraisalForm.get('GeneralProfessionalIndicatorQuestion')['controls']; let i = index;"
+                [formGroupName]="i">
+                <td width="15%">
+                  {{item.value.SequenceNumber}}
+                </td>
+                <td width="35%">
+                  {{item.value.QuestionEnglish}}
+                </td>
+                <td width="20%">
+                  <lib-hum-dropdown [options]="appraisalQuestionScore$" [placeHolder]="'Score'" formControlName="Score"
+                    (change)="getQuestionScoreeSelectedValue($event)" [disabled]="!isViewed">
+                  </lib-hum-dropdown>
+                </td>
+                <td width="35%">
+                  <mat-form-field class="example-full-width">
+                    <textarea matInput rows="1" formControlName="Remarks" placeholder="Remarks" readonly></textarea>
+                  </mat-form-field>
+                </td>
+                <td></td>
+              </tr>
+            </tbody>
+
+          </table>
+
+        </div>
+
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Appraisal Evaluation Team Members
+            </span>
+          </lib-sub-header-template>
+        </div>
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalMembersHeader$" [hideColums$]="hideColumsEmployeeDetail$"
+            [isDefaultAction]="false" [items]="appraisalMembersList$"></hum-table>
+        </div>
+
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Training
+            </span>
+          </lib-sub-header-template>
+        </div>
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalTrainigHeader$" [hideColums$]="hideColumsTrainigDetails$"
+            [isDefaultAction]="false" [items]="appraisalTrainingList$"></hum-table>
+        </div>
+        <!-- Strongpoint -->
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Strong Points
+            </span>
+          </lib-sub-header-template>
+        </div>
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalStrongPointsHeader$" [hideColums$]="hideColumsStrongPoints$"
+            [isDefaultAction]="false" [items]="strongPointsList$"></hum-table>
+        </div>
+
+        <!-- weakPoint -->
+        <div class="col-sm-12">
+          <lib-sub-header-template>
+            <span class="action_header">Weak Points
+            </span>
+          </lib-sub-header-template>
+        </div>
+
+        <div class="col-md-12">
+          <hum-table [headers]="appraisalWeakPointsHeader$" [hideColums$]="hideColumsWeakPoints$"
+            [isDefaultAction]="false" [items]="weakPointsList$"></hum-table>
+        </div>
+
+        <div class="col-sm-12">
+          <h5>
+            Final Results
+          </h5>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Is there any need to change employee's ToR? If yes. How?"
+              formControlName="FinalResultQues1" readonly>
+       </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="What allowances are recommended for employee?"
+              formControlName="FinalResultQues2" readonly>
+         </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput
+              placeholder="What training courses are recommended to rise the employee's level of knowledge and skills?"
+              formControlName="FinalResultQues3" readonly>
+           </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Is there a need to consider warning for the employee? If yes. How?"
+              formControlName="FinalResultQues4" readonly>
+             </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput
+              placeholder="Is there a need to assign the employee to another position or withdraw contract with him/her?"
+              formControlName="FinalResultQues5" readonly>
+               </textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-12">
+          <h5>Comment by employee</h5>
+        </div>
+        <div class="col-sm-8" colspan="4">
+          <mat-form-field class="example-full-width">
+            <textarea matInput placeholder="Employee comment?" formControlName="CommentsByEmployee" readonly>
+                 </textarea>
+          </mat-form-field>
+        </div>
+        <button type="submit" style="display: none;" #btnSubmit></button>
+
+      </form>
+    </div>
+  </div>
+</ng-template>

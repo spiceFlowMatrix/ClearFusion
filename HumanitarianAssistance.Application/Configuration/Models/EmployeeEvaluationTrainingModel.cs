@@ -7,11 +7,11 @@ namespace HumanitarianAssistance.Application.Configuration.Models
     public class EmployeeEvaluationTrainingModel
     {
         public int EmployeeEvaluationTrainingId { get; set; }
-        public string TrainingProgram { get; set; }
+        public int TrainingProgram { get; set; }
         public string Program { get; set; }
-        public string Participated { get; set; }
-        public string CatchLevel { get; set; }
-        public string RefresherTrm { get; set; }
+        public int Participated { get; set; }
+        public int CatchLevel { get; set; }
+        public int RefresherTrm { get; set; }
         public string OthRecommendation { get; set; }
         public int EmployeeAppraisalDetailsId { get; set; }
     }
