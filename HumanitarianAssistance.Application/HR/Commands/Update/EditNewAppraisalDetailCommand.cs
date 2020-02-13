@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public string FinalResultQues3 { get; set; }
         public string FinalResultQues4 { get; set; }
         public string FinalResultQues5 { get; set; }
-        public string CommnetByEmployee { get; set; }
+        public string CommentsByEmployee { get; set; }
         public List<EditAppraisalMemberList> AppraisalMembers { get; set; }
         public List<EditAppraisalTrainingList> AppraisalTraining { get; set; }
         public List<EditAppraisalStrongPointsList> AppraisalStrongPoints { get; set; }

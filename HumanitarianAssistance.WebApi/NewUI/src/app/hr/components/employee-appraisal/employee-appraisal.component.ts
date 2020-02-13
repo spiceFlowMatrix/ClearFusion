@@ -83,8 +83,9 @@ export class EmployeeAppraisalComponent implements OnInit {
                     AppraisalScore: y.AppraisalScore,
                     TotalAppraisalScore: y.TotalScore,
                     DirectSupervisor: y.Position == null ? '' : y.Position,
-                    AppraisalStatus: y.AppraisalStatus === false ? 'Pending' : 'Approved',
-                    itemAction: (!y.AppraisalStatus)
+                    AppraisalStatus: (y.AppraisalStatus == true ) ? 'Approved' : ( y.AppraisalStatus == false ? 'Rejected' : 'Pending'),
+
+                    itemAction: !y.AppraisalStatus
                       ? [
                           {
                             button: {
@@ -126,20 +127,19 @@ export class EmployeeAppraisalComponent implements OnInit {
                             download: false,
                             edit: true
                           }
-
                         ]
                       : [
-                        {
-                          button: {
-                            status: true,
-                            text: 'VIEW',
-                            type: 'text'
+                          {
+                            button: {
+                              status: true,
+                              text: 'VIEW',
+                              type: 'text'
+                            },
+                            delete: false,
+                            download: false,
+                            edit: false
                           },
-                          delete: false,
-                          download: false,
-                          edit: false
-                        },
-                        {
+                          {
                             button: {
                               status: true,
                               text: 'APPROVED',
@@ -165,7 +165,6 @@ export class EmployeeAppraisalComponent implements OnInit {
     this.router.navigate(['addAppraisal'], { relativeTo: this.routeActive });
   }
   ActionEvents(event: any) {
-    debugger;
     if (event.type === 'edit') {
       this.editAppraisalList(event.item.EmployeeAppraisalDetailsId);
     }
@@ -205,7 +204,7 @@ export class EmployeeAppraisalComponent implements OnInit {
     if (id !== undefined) {
       this.router.navigate(['addAppraisal', id], {
         relativeTo: this.routeActive,
-        queryParams: {isViewed: 'false'}
+        queryParams: { isViewed: 'false' }
       });
     }
   }

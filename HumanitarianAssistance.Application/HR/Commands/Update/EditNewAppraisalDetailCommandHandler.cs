@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         ifExistEmpRecord.EmployeeId = request.EmployeeId;
                         ifExistEmpRecord.AppraisalPeriod = request.AppraisalPeriod;
                         ifExistEmpRecord.CurrentAppraisalDate = request.CurrentAppraisalDate;
-                        ifExistEmpRecord.AppraisalStatus = false;
+                        ifExistEmpRecord.AppraisalStatus = null;
                         ifExistEmpRecord.ModifiedById = request.ModifiedById;
                         ifExistEmpRecord.ModifiedDate = request.ModifiedDate;
                         // await _dbContext.EmployeeAppraisalDetails.AddAsync(empArraidalDetial);
@@ -99,7 +99,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         obj.FinalResultQues3 = request.FinalResultQues3;
                         obj.FinalResultQues4 = request.FinalResultQues4;
                         obj.FinalResultQues5 = request.FinalResultQues5;
-                        obj.CommentsByEmployee = request.CommnetByEmployee;
+                        obj.CommentsByEmployee = request.CommentsByEmployee;
                         obj.CreatedById = request.CreatedById;
                         obj.CreatedDate = request.CreatedDate;
                         obj.CurrentAppraisalDate = DateTime.Now;

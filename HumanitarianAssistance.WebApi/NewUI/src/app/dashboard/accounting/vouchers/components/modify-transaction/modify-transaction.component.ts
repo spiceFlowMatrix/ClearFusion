@@ -207,7 +207,6 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   private filterAccountName(value: string): any[] {
-    debugger;
     if (value) {
       const filterValue = value.toLowerCase();
       if (value.length > 2) {
@@ -311,7 +310,6 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onChangeProjectValue(event: any, id: number) {
-    debugger;
     if (id !== undefined && id != null) {
       this.selectedProjectId = id;
       this.selectedProjectName = event.source.value;
@@ -493,7 +491,6 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onAmountEvent(value, type) {
-    debugger;
     const val = Number(value);
     //if (val && val !== 0) {
       if (type === 2 && val !== 0) {

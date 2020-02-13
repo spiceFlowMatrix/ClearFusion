@@ -32,7 +32,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public int OfficeId { get; set; }
         public double? TotalScore { get; set; }
         public int? AppraisalScore { get; set; }
-        public bool AppraisalStatus { get; set; }
+        public bool? AppraisalStatus { get; set; }
         public string EvaluationDisplayDate { get; set; }
 
         public string FinalResultQues2 { get; set; }

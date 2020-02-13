@@ -35,7 +35,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                             EmployeeId = request.EmployeeId,
                             AppraisalPeriod = request.AppraisalPeriod,
                             CurrentAppraisalDate = request.CurrentAppraisalDate,
-                            AppraisalStatus = false,
+                            AppraisalStatus = null,
                             CreatedById = request.CreatedById,
                             CreatedDate = request.CreatedDate,
                         };
@@ -88,7 +88,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                         obj.FinalResultQues3 = request.FinalResultQues3;
                         obj.FinalResultQues4 = request.FinalResultQues4;
                         obj.FinalResultQues5 = request.FinalResultQues5;
-                        obj.CommentsByEmployee = request.CommnetByEmployee;
+                        obj.CommentsByEmployee = request.CommentsByEmployee;
                         obj.CreatedById = request.CreatedById;
                         obj.CreatedDate = request.CreatedDate;
                         obj.CurrentAppraisalDate = DateTime.Now;
