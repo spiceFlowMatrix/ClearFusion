@@ -85,71 +85,95 @@ export class EmployeeAppraisalComponent implements OnInit {
                     DirectSupervisor: y.Position == null ? '' : y.Position,
                     AppraisalStatus: (y.AppraisalStatus == true ) ? 'Approved' : ( y.AppraisalStatus == false ? 'Rejected' : 'Pending'),
 
-                    itemAction: !y.AppraisalStatus
+                    itemAction: (y.AppraisalStatus === true)
                       ? [
-                          {
-                            button: {
-                              status: true,
-                              text: 'VIEW',
-                              type: 'text'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
+                        {
+                          button: {
+                            status: true,
+                            text: 'VIEW',
+                            type: 'text'
                           },
-                          {
-                            button: {
-                              status: true,
-                              text: 'REJECT',
-                              type: 'cancel'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'APPROVED',
+                            type: 'text'
                           },
-                          {
-                            button: {
-                              status: true,
-                              text: 'APPROVE',
-                              type: 'save'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
+                      :
+                     (  (y.AppraisalStatus === false) ?
+                      [
+                        {
+                          button: {
+                            status: true,
+                            text: 'VIEW',
+                            type: 'text'
                           },
-                          {
-                            button: {
-                              status: false,
-                              text: 'APPROVE',
-                              type: 'save'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: true
-                          }
-                        ]
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'REJECTED',
+                            type: 'text'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
                       : [
-                          {
-                            button: {
-                              status: true,
-                              text: 'VIEW',
-                              type: 'text'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
+                        {
+                          button: {
+                            status: true,
+                            text: 'VIEW',
+                            type: 'text'
                           },
-                          {
-                            button: {
-                              status: true,
-                              text: 'APPROVED',
-                              type: 'text'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
-                          }
-                        ]
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'REJECT',
+                            type: 'cancel'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'APPROVE',
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: false,
+                            text: 'APPROVE',
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: true
+                        }
+                      ])
                   };
                 })
               );
