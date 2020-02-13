@@ -2,7 +2,10 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HumanitarianAssistance.Application.CommonModels;
+using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Domain.Entities.HR;
 using HumanitarianAssistance.Persistence;
@@ -12,9 +15,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
     public class AddEmployeeContractCommandHandler : IRequestHandler<AddEmployeeContractCommand, ApiResponse> {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IMapper _mapper;
-        public AddEmployeeContractCommandHandler (HumanitarianAssistanceDbContext dbContext, IMapper mapper) {
+        private readonly IActionLogService _actionLog;
+        public AddEmployeeContractCommandHandler (HumanitarianAssistanceDbContext dbContext, IMapper mapper, IActionLogService actionLog) {
             _dbContext = dbContext;
             _mapper = mapper;
+            _actionLog = actionLog;
         }
 
         public async Task<ApiResponse> Handle (AddEmployeeContractCommand request, CancellationToken cancellationToken) {
@@ -43,6 +48,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
                     };
                     await _dbContext.EmployeeContract.AddAsync (obj);
                     await _dbContext.SaveChangesAsync ();
+
+                    AuditLogModel logs = new AuditLogModel () {
+                        EmployeeId = request.EmployeeId,
+                        TypeOfEntity = (int) TypeOfEntity.Contract,
+                        EntityId = null,
+                        ActionTypeId = (int) ActionType.Add,
+                        ActionDescription = (TypeOfEntity.Contract).GetDescription(),
+                    };
+                    bool isLoged = await _actionLog.AuditLog (logs);
 
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";

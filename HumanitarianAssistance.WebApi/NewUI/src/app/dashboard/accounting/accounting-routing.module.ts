@@ -78,7 +78,7 @@ const routes: Routes = [
       {
         path: 'exchange-gain-loss-report',
         component: ExchangeGainLossReportComponent
-      },
+      }
 
       // {
       //   path: 'voucher-summary-report',

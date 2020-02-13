@@ -26,61 +26,38 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             ApiResponse response = new ApiResponse();
 
-            DateTime parsedDateTime;
-            string voucherNoValue = null;
-            string referenceNoValue = null;
-            string descriptionValue = null;
-            string journalNameValue = null;
-            string dateValue = null;
-            string formattedDate = null;
-
-            if (!string.IsNullOrEmpty(request.FilterValue))
-            {
-                voucherNoValue = request.VoucherNoFlag ? request.FilterValue.ToLower().Trim() : null;
-                referenceNoValue = request.ReferenceNoFlag ? request.FilterValue.ToLower().Trim() : null;
-                descriptionValue = request.DescriptionFlag ? request.FilterValue.ToLower().Trim() : null;
-                journalNameValue = request.JournalNameFlag ? request.FilterValue.ToLower().Trim() : null;
-                dateValue = request.DateFlag ? request.FilterValue.ToLower().Trim() : null;
-                if(DateTime.TryParseExact(dateValue, "dd/mm/yyyy", 
-                    CultureInfo.InvariantCulture, 
-                    DateTimeStyles.None, 
-                    out parsedDateTime))
-                {
-                    formattedDate = parsedDateTime.ToString("yyyy-mm-dd");
-                }
-                else
-                {
-                    formattedDate =dateValue;
-                }
-            }
-
             try
             {
 
-                int totalCount = await _dbContext.VoucherDetail
-                                       .Where(v => v.IsDeleted == false &&
-                                               !string.IsNullOrEmpty(request.FilterValue) ? (
-                                               v.VoucherNo.ToString().Trim().Contains(voucherNoValue) ||
-                                               v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue) ||
-                                               v.Description.Trim().ToLower().Contains(descriptionValue) ||
-                                               v.JournalDetails.JournalName.Trim().ToLower().Contains(journalNameValue) ||
-                                               v.VoucherDate.ToString().Trim().Contains(formattedDate)
-                                               ) : true
-                                       )
-                                      .AsNoTracking()
-                                      .CountAsync();
-
-                var voucherList = await _dbContext.VoucherDetail
-                                      .Where(v => v.IsDeleted == false &&
-                                                 !string.IsNullOrEmpty(request.FilterValue) ? (
-                                                   v.VoucherNo.ToString().Trim().Contains(voucherNoValue) ||
-                                                   v.ReferenceNo.Trim().ToLower().Contains(referenceNoValue) ||
-                                                   v.Description.Trim().ToLower().Contains(descriptionValue) ||
-                                                   v.JournalDetails.JournalName.Trim().ToLower().Contains(journalNameValue) ||
-                                                   v.VoucherDate.ToString().Trim().Contains(formattedDate)
-                                                   ) : true
-                                       )
+                var query = _dbContext.VoucherDetail
+                                       .Where(v => v.IsDeleted == false && request.OfficeIds.Contains(v.OfficeId))
                                       .OrderByDescending(x => x.CreatedDate)
+                                      .AsQueryable();
+
+                if (request.CurrencyId.HasValue)
+                {
+                    query = query.Where(x => x.CurrencyId == request.CurrencyId);
+                }
+                if (request.JournalId.HasValue)
+                {
+                    query = query.Where(x => x.JournalCode == request.JournalId);
+                }
+                if (request.StartDate.HasValue && request.EndDate.HasValue)
+                {
+                    query = query.Where(x => x.VoucherDate.Date >= request.StartDate.Value.Date && x.VoucherDate.Date <= request.EndDate.Value.Date);
+                }
+                if (!string.IsNullOrEmpty(request.FilterValue))
+                {
+                    query = query.Where(x => request.FilterValue.Trim().ToLower().Contains(x.ReferenceNo.Trim().ToLower()) ||
+                            request.FilterValue.Trim().ToLower().Contains(x.Description.Trim().ToLower()));
+                }           
+                if(request.OperationalType.HasValue) 
+                {
+                    query = query.Where(x => x.OperationalType == request.OperationalType);
+                }
+
+                int totalCount = await query.CountAsync();
+                var voucherList = await query
                                       .Select(x => new VoucherDetailModel
                                       {
                                           VoucherNo = x.VoucherNo,
@@ -97,11 +74,14 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                           ProjectId = x.ProjectId,
                                           BudgetLineId = x.BudgetLineId,
                                           OfficeName = x.OfficeDetails.OfficeName,
-                                      })
-                                      .Skip(request.pageSize.Value * request.pageIndex.Value)
-                                      .Take(request.pageSize.Value)
+                                          IsVoucherVerified = x.IsVoucherVerified,
+                                          OperationalType = x.OperationalType
+                                      }).OrderByDescending(x=> x.CreatedDate)
+                                      .Skip(request.PageSize.Value * request.PageIndex.Value)
+                                      .Take(request.PageSize.Value)
                                       .AsNoTracking()
                                       .ToListAsync();
+
                 response.data.VoucherDetailList = voucherList;
                 response.data.TotalCount = totalCount;
                 response.StatusCode = StaticResource.successStatusCode;
