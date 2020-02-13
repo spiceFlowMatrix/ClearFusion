@@ -23,6 +23,7 @@ import {
   AppraisalCatchLevelType
 } from 'src/app/shared/enum';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 
 @Component({
   selector: 'app-add-employee-appraisal',
@@ -132,7 +133,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     private router: Router,
     private fb: FormBuilder,
     private appraisalService: EmployeeAppraisalService,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private loader: CommonLoaderService
   ) {
     this.getAllAppraisalQuestions();
     this.actions = {
@@ -379,6 +381,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   //#region "get appraisal list"
   getAllAppraisalList() {
+    this.loader.showLoader();
     if (this.employeeId !== undefined && this.employeeId != null) {
       this.appraisalService
         .getAllAppraisalListEmployeeId(this.employeeId)
@@ -398,8 +401,9 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
                 filteredRecord
               );
             }
+            this.loader.hideLoader();
           },
-          err => {}
+          err => { this.loader.hideLoader();}
         );
     }
   }
@@ -890,15 +894,15 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     if (this.employeeAppraisalForm.valid) {
       if (
         this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
-          undefined &&
+        undefined &&
         this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
-          null
+        null
       ) {
         if (
           this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId']
             .value !== undefined &&
           this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId'] !=
-            null
+          null
         ) {
           form.CurrentAppraisalDate = StaticUtilities.setLocalDate(
             form.CurrentAppraisalDate
