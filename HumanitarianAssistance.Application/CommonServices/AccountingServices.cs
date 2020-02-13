@@ -102,6 +102,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                 obj.CreatedById = request.CreatedById;
                 obj.VoucherDate = request.VoucherDate;
                 obj.CreatedDate = DateTime.UtcNow;
+                obj.OperationalType = request.OperationalType;
                 obj.IsDeleted = false;
 
                 // Pattern: Office Code - Currency Code - Month Number - voucher count on selected month - Year

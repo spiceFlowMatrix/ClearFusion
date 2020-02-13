@@ -2,7 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using HumanitarianAssistance.Application.CommonModels;
+using HumanitarianAssistance.Application.CommonServicesInterface;
 using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -14,11 +17,12 @@ namespace HumanitarianAssistance.Application.HR.Commands.Delete
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
         private readonly IMapper _mapper;
-
-        public DeleteEmployeeRelativeInformationCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper)
+        private readonly IActionLogService _actionLog;
+        public DeleteEmployeeRelativeInformationCommandHandler(HumanitarianAssistanceDbContext dbContext, IMapper mapper,IActionLogService actionLog)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _actionLog = actionLog;
         }
 
         public async Task<ApiResponse> Handle(DeleteEmployeeRelativeInformationCommand request, CancellationToken cancellationToken)
@@ -37,6 +41,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Delete
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
+
+                    AuditLogModel logs = new AuditLogModel () {
+                    EmployeeId = (int) existRecord.EmployeeID,
+                    TypeOfEntity = (int) TypeOfEntity.History,
+                    EntityId = null,
+                    ActionTypeId = (int) ActionType.Delete,
+                    ActionDescription = (TypeOfEntity.History).GetDescription (),
+                };
+                bool isLoged = await _actionLog.AuditLog (logs);
                 }
                 else
                 {

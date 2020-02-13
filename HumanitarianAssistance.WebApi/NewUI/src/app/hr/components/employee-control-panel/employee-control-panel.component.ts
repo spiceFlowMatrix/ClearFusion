@@ -15,6 +15,7 @@ import { MatDialog } from '@angular/material';
 export class EmployeeControlPanelComponent implements OnInit {
   @ViewChild(EmployeeDetailComponent) employeeDetail: EmployeeDetailComponent;
 
+  activeTabId = 0;
   employeeId: number;
   employeeStatus = 0;
   constructor(private activatedRoute: ActivatedRoute, private router: Router,
@@ -24,6 +25,9 @@ export class EmployeeControlPanelComponent implements OnInit {
     public dialog: MatDialog) {
     this.activatedRoute.params.subscribe(params => {
       this.employeeId = +params['id'];
+    });
+    this.activatedRoute.queryParams.subscribe(params => {
+      this.activeTabId = +params['tabId'];
     });
   }
 

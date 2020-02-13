@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { VouchersComponent } from './vouchers.component';
-import { VoucherListingComponent } from './voucher-listing/voucher-listing.component';
 import { VoucherDetailsComponent } from './voucher-details/voucher-details.component';
 import { VoucherAddComponent } from './voucher-add/voucher-add.component';
 import { VoucherSummaryComponent } from './voucher-details/voucher-summary/voucher-summary.component';
@@ -25,10 +24,18 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatMenuModule } from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { TooltipModule } from 'primeng/primeng';
-import { LibraryModule } from 'projects/library/src/public_api';
+import { LibraryModule, SubHeaderTemplateModule } from 'projects/library/src/public_api';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { DocumentListingComponent } from 'projects/library/src/lib/components/document-listing/document-listing.component';
 import { AngularSplitModule } from 'angular-split';
+import { VoucherListingComponent } from './components/voucher-listing/voucher-listing.component';
+import { MatDividerModule, MatTableModule, MatListModule, MatAutocompleteModule, MatSortModule } from '@angular/material';
+import { SatDatepickerModule } from 'saturn-datepicker';
+import { AddVoucherComponent } from './components/add-voucher/add-voucher.component';
+import { VoucherDetailComponent } from './components/voucher-detail/voucher-detail.component';
+import { ModifyTransactionComponent } from './components/modify-transaction/modify-transaction.component';
+import { DocumentUploadComponent } from 'src/app/store/components/document-upload/document-upload.component';
+import { AddDocumentsComponent } from './components/add-documents/add-documents.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +45,11 @@ import { AngularSplitModule } from 'angular-split';
     VoucherDetailsComponent,
     VoucherAddComponent,
     VoucherSummaryComponent,
-
+    AddVoucherComponent,
+    VoucherDetailComponent,
+    ModifyTransactionComponent,
+    DocumentUploadComponent,
+    AddDocumentsComponent,
   ],
   imports: [
     CommonModule,
@@ -65,7 +76,13 @@ import { AngularSplitModule } from 'angular-split';
     MatMenuModule,
     MatProgressSpinnerModule,
     TooltipModule,
-
+    SubHeaderTemplateModule,
+    MatDividerModule,
+    SatDatepickerModule,
+    MatTableModule,
+    MatListModule,
+    MatAutocompleteModule,
+    MatSortModule,
     AngularSplitModule.forChild(),
   ],
   providers: [
@@ -73,7 +90,8 @@ import { AngularSplitModule } from 'angular-split';
   ],
   entryComponents: [
     VoucherAddComponent,
-    DocumentListingComponent
+    DocumentListingComponent,
+    AddDocumentsComponent
   ]
 })
 export class VouchersModule { }
