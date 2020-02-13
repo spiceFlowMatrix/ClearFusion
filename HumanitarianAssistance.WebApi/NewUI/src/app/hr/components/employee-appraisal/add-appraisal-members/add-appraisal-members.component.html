@@ -1,0 +1,32 @@
+<div>
+  <h1 mat-dialog-title>{{title}}</h1>
+  <hr>
+</div>
+<form [formGroup]='addAppraisalMembersForm' (ngSubmit)="saveForm()">
+  <mat-dialog-content>
+    <div class="row">
+      <div class="col-sm-6">
+        <div class="autoComplete">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Search Member"  aria-label="Number" matInput
+              formControlName="EmployeeId" name="EmployeeId" [matAutocomplete]="matAutocomplete">
+            <mat-autocomplete #matAutocomplete="matAutocomplete" >
+              <mat-option (onSelectionChange)="onChangeEmployeeValue($event,item.EmployeeId)"
+                *ngFor="let item of filterdOptionsEmployeeList | async" [value]="item.EmployeeName">{{item.EmployeeName}}
+              </mat-option>
+            </mat-autocomplete>
+
+            <mat-spinner class="center_loader custom_load" *ngIf="addMemberLoaderFlag;" diameter="20"></mat-spinner>
+          </mat-form-field>
+          <span style="color: red;">Please enter atleast 3 characters to search.</span>
+
+        </div>
+      </div>
+    </div>
+  </mat-dialog-content>
+  <mat-dialog-actions class="items-float-right">
+    <hum-button *ngIf="!isFormSubmitted" [type]="'save'" [text]="'save'" [isSubmit]="true"></hum-button>
+    <hum-button *ngIf="isFormSubmitted" [type]="'loading'" [text]="'Saving....'"></hum-button>
+    <hum-button (click)='onCancelPopup()' [type]="'cancel'" [text]="'cancel'"></hum-button>
+  </mat-dialog-actions>
+</form>

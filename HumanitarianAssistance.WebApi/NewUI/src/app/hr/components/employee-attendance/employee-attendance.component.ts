@@ -212,4 +212,5 @@ export class EmployeeAttendanceComponent implements OnInit {
     }
     return minutes;
   }
+
 }
