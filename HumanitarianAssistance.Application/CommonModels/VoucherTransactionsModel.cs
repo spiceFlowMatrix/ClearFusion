@@ -19,6 +19,11 @@ namespace HumanitarianAssistance.Application.CommonModels
         public double? Debit { get; set; }
         public long? VoucherNo { get; set; }
         public bool? IsDeleted { get; set; }
+        public double? Amount { get; set; }
+        public string ProjectName { get; set; }
+        public string BudgetLineName { get; set; }
+        public string Type { get; set; }
+        public string AccountCode { get; set; }
         public List<ProjectBudgetLineDetailModel> BudgetLineList { get; set; }
     }
 }

@@ -34,7 +34,9 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
     { Id: 2, Name: 'EOI' },
     { Id: 3, Name: 'Budget' },
     { Id: 4, Name: 'Concept' },
-    { Id: 5, Name: 'Presentation' }
+    { Id: 5, Name: 'Presentation' },
+    { Id: 6, Name: 'Reporting' },
+    { Id: 7, Name: 'Contract' }
   ];
 
   // flag

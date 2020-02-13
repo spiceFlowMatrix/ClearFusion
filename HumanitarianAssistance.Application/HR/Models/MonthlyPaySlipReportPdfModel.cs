@@ -22,7 +22,7 @@ namespace HumanitarianAssistance.Application.HR.Models {
         public string SalaryPercentage { get; set; }
         public string AnalyticalSalary { get; set; }
 
-        public string BasicSalary { get; set; }
+        public double? BasicSalary { get; set; }
         public string CurrencyCode { get; set; }
         public string Attendance { get; set; }
         public string Absentess { get; set; }
@@ -34,16 +34,16 @@ namespace HumanitarianAssistance.Application.HR.Models {
         public string AllowanceOther { get; set; }
         public string AllowanceOther1 { get; set; }
         public string AllowanceOther2 { get; set; }
-        public string GrossSalary { get; set; }
+        public double? GrossSalary { get; set; }
 
-        public string Advance { get; set; }
-        public string SalaryTax { get; set; }
+        public double? Advance { get; set; }
+        public double? SalaryTax { get; set; }
         public string Fine { get; set; }
         public string DeductionOther { get; set; }
         public string Pension { get; set; }
-        public string Cb { get; set; }
-        public string Security { get; set; }
-        public string Net { get; set; }
+        public double? Cb { get; set; }
+        public double? Security { get; set; }
+        public double? Net { get; set; }
         public string AFN { get; set; }
 
         public string Other1Desc { get; set; }

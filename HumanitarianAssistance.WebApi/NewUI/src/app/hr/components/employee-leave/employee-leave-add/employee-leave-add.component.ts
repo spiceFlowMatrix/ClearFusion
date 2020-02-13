@@ -111,7 +111,6 @@ export class EmployeeLeaveAddComponent implements OnInit {
     };
 
     this.hrLeaveService.getAppliedLeaveHours(model).subscribe(x => {
-      debugger;
       if (x && x.AppliedHours !== undefined && x.AppliedHours !== null) {
         this.errorMessage = '';
         this.applyLeaveForm.controls['LeaveApplied'].setValue(x.AppliedHours);
@@ -134,14 +133,12 @@ export class EmployeeLeaveAddComponent implements OnInit {
   }
 
   getAppliedLeaveDates() {
-    debugger;
     const model = {
       LeaveReasonId: this.data.LeaveReasonId,
       EmployeeId: this.data.EmployeeId
     };
 
     this.hrLeaveService.getAppliedLeaveDates(model).subscribe(x => {
-      debugger;
       if (x && x.LeaveDates) {
         this.disabledDates = x.LeaveDates;
       } else {

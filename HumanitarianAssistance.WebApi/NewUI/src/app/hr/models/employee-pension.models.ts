@@ -39,6 +39,7 @@ export interface PensionDetailModel {
   Amount: any;
 }
 export class EmployeeTaxReportModel {
+  EmployeeId?: number;
   TaxPayerIdentificationNumber: any;
   NameOfBusiness: any;
   AddressOfBusiness: any;
