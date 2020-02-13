@@ -103,7 +103,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                     },
                     delete: false,
                     download: false,
-                    edit: false
+                    edit: true
                   },
                   {
                     button: {
@@ -113,7 +113,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                     },
                     delete: false,
                     download: false,
-                    edit: false
+                    edit: true
                   },
                   {
                     button: {

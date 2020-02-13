@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
 
         public int OfficeId { get; set; }
         public double? TotalScore { get; set; }
-        public int AppraisalScore { get; set; }
+        public int? AppraisalScore { get; set; }
         public bool AppraisalStatus { get; set; }
         public string EvaluationDisplayDate { get; set; }
 
@@ -39,7 +39,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public string FinalResultQues3 { get; set; }
         public string FinalResultQues4 { get; set; }
         public string FinalResultQues5 { get; set; }
-        public string CommnetByEmployee { get; set; }
+        public string CommentsByEmployee { get; set; }
         public int EmployeeEvaluationId { get; set; }
         public string DirectSupervisor { get; set; }
         public string EvaluationStatus { get; set; }

@@ -27,6 +27,7 @@ export class AddAppraisalMembersComponent implements OnInit {
   employeeDetailList: IEmployeeDetailModel[] = [];
 
   employeeListEmit = new EventEmitter<any>();
+  addMemberLoaderFlag = false;
   constructor(
     private fb: FormBuilder,
     private appraisalService: EmployeeAppraisalService,
@@ -58,7 +59,7 @@ export class AddAppraisalMembersComponent implements OnInit {
 
   private _filter(value: string): IEmployeeListModel[] {
     const filterValue = value.toLowerCase();
-    if (value.length >= 2) {
+    if (value.length > 2) {
       this.getFilteredEmployeeList(filterValue);
       return this.employeeList.filter(
         x => x.EmployeeName.toLowerCase().indexOf(filterValue) === 0
@@ -67,6 +68,7 @@ export class AddAppraisalMembersComponent implements OnInit {
   }
 
   getFilteredEmployeeList(data: string) {
+    this.addMemberLoaderFlag = true;
     if (data !== undefined && data != null) {
       this.employeeDetailModel.EmployeeName = data;
       this.appraisalService
@@ -85,10 +87,13 @@ export class AddAppraisalMembersComponent implements OnInit {
                 EmployeeId: element.EmployeeId,
                 EmployeeCode: element.EmployeeCode,
                 EmployeeName: element.EmployeeName,
-                Type: element.Type
+                Type: element.Type == null ? '' :element.Type
               });
             });
           }
+          this.addMemberLoaderFlag = false;
+        }, error => {
+          this.addMemberLoaderFlag = false;
         });
     }
   }

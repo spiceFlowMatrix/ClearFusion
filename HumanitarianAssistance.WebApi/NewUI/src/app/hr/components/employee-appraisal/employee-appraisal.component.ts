@@ -82,8 +82,8 @@ export class EmployeeAppraisalComponent implements OnInit {
                     EvaluationDate: y.EvaluationDisplayDate,
                     AppraisalScore: y.AppraisalScore,
                     TotalAppraisalScore: y.TotalScore,
-                    DirectSupervisor: y.Position,
-                    AppraisalStatus: y.AppraisalStatus,
+                    DirectSupervisor: y.Position == null ? '' : y.Position,
+                    AppraisalStatus: y.AppraisalStatus === false ? 'Pending' : 'Approved',
                     itemAction: (!y.AppraisalStatus)
                       ? [
                           {
@@ -115,10 +115,31 @@ export class EmployeeAppraisalComponent implements OnInit {
                             delete: false,
                             download: false,
                             edit: false
+                          },
+                          {
+                            button: {
+                              status: false,
+                              text: 'APPROVE',
+                              type: 'save'
+                            },
+                            delete: false,
+                            download: false,
+                            edit: true
                           }
+
                         ]
                       : [
-                          {
+                        {
+                          button: {
+                            status: true,
+                            text: 'VIEW',
+                            type: 'text'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
                             button: {
                               status: true,
                               text: 'APPROVED',
@@ -154,6 +175,9 @@ export class EmployeeAppraisalComponent implements OnInit {
     if (event.type === 'REJECT') {
       this.RejectAppraisal(event.item.EmployeeAppraisalDetailsId);
     }
+    if (event.type === 'VIEW') {
+      this.ViewAppraisal(event.item.EmployeeAppraisalDetailsId);
+    }
   }
   editAppraisalList(id: any) {
     console.log(id);
@@ -175,5 +199,14 @@ export class EmployeeAppraisalComponent implements OnInit {
       console.log(res);
       this.getAllAppraisalList();
     });
+  }
+
+  ViewAppraisal(id: any) {
+    if (id !== undefined) {
+      this.router.navigate(['addAppraisal', id], {
+        relativeTo: this.routeActive,
+        queryParams: {isViewed: 'false'}
+      });
+    }
   }
 }

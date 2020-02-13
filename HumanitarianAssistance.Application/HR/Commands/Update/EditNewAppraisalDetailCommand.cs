@@ -67,6 +67,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public int Score { get; set; }
         public string Remarks { get; set; }
         public int AppraisalGeneralQuestionsId { get; set; }
+        
+        public int EmployeeId { get; set; }
 
     }
 }

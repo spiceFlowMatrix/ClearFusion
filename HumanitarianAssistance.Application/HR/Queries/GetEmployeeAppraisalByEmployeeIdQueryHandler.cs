@@ -24,6 +24,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
             try
             {
                 var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails
+                                                        .Include(x => x.EmployeeDetail)
+                                                        .ThenInclude(x=> x.EmployeeProfessionalDetail)
                                                         .Include(x => x.EmployeeEvaluation)
                                                         .Include(x => x.EmployeeAppraisalQuestions)
                                                         .ThenInclude(x => x.AppraisalGeneralQuestions)
@@ -40,7 +42,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     // EmployeeCode = x.EmployeeEvaluation.EmployeeDetail.EmployeeCode,
                     // EmployeeName = x.EmployeeEvaluation.EmployeeDetail.EmployeeName,
                     // FatherName = x.EmployeeEvaluation.EmployeeDetail.FatherName,
-                    // Position = x.EmployeeEvaluation.EmployeeDetail.Position,
+                    Position = x.EmployeeDetail.EmployeeProfessionalDetail.DesignationDetails.Designation,
                     // DepartmentId = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId,
                     // DepartmentName = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentName,
                     // Qualification = x.Qualification,
@@ -56,13 +58,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     FinalResultQues3 = x.EmployeeEvaluation.FinalResultQues3,
                     FinalResultQues4 = x.EmployeeEvaluation.FinalResultQues4,
                     FinalResultQues5 = x.EmployeeEvaluation.FinalResultQues5,
-                    CommnetByEmployee = x.EmployeeEvaluation.CommentsByEmployee,
+                    CommentsByEmployee = x.EmployeeEvaluation.CommentsByEmployee,
                     AppraisalMembers = x.EmployeeAppraisalTeamMember.Select(y => new AppraisalMemberListModel
                     {
                         EmployeeId = y.EmployeeId,
                         EmployeeAppraisalTeamMemberId = y.EmployeeAppraisalTeamMemberId,
                         EmployeeName = y.EmployeeDetail.EmployeeName,
-                        Type = y.EmployeeDetail.EmployeeProfessionalDetail.Designation,
+                        Type = y.EmployeeDetail.EmployeeProfessionalDetail.DesignationDetails.Designation,
                         EmployeeCode = y.EmployeeDetail.EmployeeCode
 
                     }).ToList(),
@@ -98,11 +100,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                         // CurrentAppraisalDate = d.CurrentAppraisalDate,
                     }).ToList(),
-                   AppraisalScore = x.EmployeeAppraisalQuestions.Count> 0 ? (x.EmployeeAppraisalQuestions.Sum(sc => sc.Score.Value)) : 0,
-                   TotalScore = (double)(x.EmployeeAppraisalQuestions.Count> 0 ? Math.Round((decimal)(x.EmployeeAppraisalQuestions.Average(av=>av.Score.Value)),2) : 0)
+                   AppraisalScore = x.EmployeeAppraisalQuestions.Count> 0 ? (x.EmployeeAppraisalQuestions.Select(sc => sc.Score).DefaultIfEmpty(0).Sum()) : 0,
+                   TotalScore = (double)(x.EmployeeAppraisalQuestions.Count> 0 ? Math.Round((decimal)(x.EmployeeAppraisalQuestions.Select(sc => sc.Score).DefaultIfEmpty(0).Average()),2) : 0)
                 })
                 .ToListAsync();
-              
+
                 response.Add("AppraisalList", empAppraisalDetails);
             }
             catch (Exception ex)
