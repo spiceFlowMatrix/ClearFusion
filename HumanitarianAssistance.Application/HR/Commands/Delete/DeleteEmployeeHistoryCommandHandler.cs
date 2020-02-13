@@ -1,4 +1,7 @@
-﻿using HumanitarianAssistance.Application.Infrastructure;
+﻿using HumanitarianAssistance.Application.CommonModels;
+using HumanitarianAssistance.Application.CommonServicesInterface;
+using HumanitarianAssistance.Application.Infrastructure;
+using HumanitarianAssistance.Common.Enums;
 using HumanitarianAssistance.Common.Helpers;
 using HumanitarianAssistance.Persistence;
 using MediatR;
@@ -11,10 +14,11 @@ namespace HumanitarianAssistance.Application.HR.Commands.Delete
     public class DeleteEmployeeHistoryCommandHandler : IRequestHandler<DeleteEmployeeHistoryCommand, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
-
-        public DeleteEmployeeHistoryCommandHandler(HumanitarianAssistanceDbContext dbContext)
+        private readonly IActionLogService _actionLog;
+        public DeleteEmployeeHistoryCommandHandler(HumanitarianAssistanceDbContext dbContext,IActionLogService actionLog)
         {
             _dbContext = dbContext;
+            _actionLog = actionLog;
         }
         public async Task<ApiResponse> Handle(DeleteEmployeeHistoryCommand request, CancellationToken cancellationToken)
         {
@@ -30,6 +34,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Delete
                     await _dbContext.SaveChangesAsync();
                     response.StatusCode = StaticResource.successStatusCode;
                     response.Message = "Success";
+                    
+                    AuditLogModel logs = new AuditLogModel () {
+                    EmployeeId = (int) historyinfo.EmployeeID,
+                    TypeOfEntity = (int) TypeOfEntity.History,
+                    EntityId = null,
+                    ActionTypeId = (int) ActionType.Delete,
+                    ActionDescription = (TypeOfEntity.History).GetDescription (),
+                };
+                bool isLoged = await _actionLog.AuditLog (logs);
                 }
             }
             catch (Exception ex)
