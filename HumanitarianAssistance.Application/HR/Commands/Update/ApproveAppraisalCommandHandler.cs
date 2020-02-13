@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
 
             try
             {
-                EmployeeAppraisalDetails ifExistEmpRecord = await _dbContext.EmployeeAppraisalDetails.Where(x => x.IsDeleted == false && x.EmployeeAppraisalDetailsId == request.EmployeeAppraisalDetailsId && x.AppraisalStatus == false).FirstOrDefaultAsync();
+                EmployeeAppraisalDetails ifExistEmpRecord = await _dbContext.EmployeeAppraisalDetails.Where(x => x.IsDeleted == false && x.EmployeeAppraisalDetailsId == request.EmployeeAppraisalDetailsId ).FirstOrDefaultAsync();
                 if (ifExistEmpRecord != null)
                 {
                     ifExistEmpRecord.AppraisalStatus = true;

@@ -21,6 +21,8 @@
           <span style="color: red;">Please enter atleast 3 characters to search.</span>
 
         </div>
+        <div class="alert alert-warning" *ngIf="err!==null">{{err}}</div>
+
       </div>
     </div>
   </mat-dialog-content>

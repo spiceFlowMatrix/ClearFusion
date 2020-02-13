@@ -151,7 +151,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   }
 
   ngOnInit() {
-    debugger;
     this.initForm();
     this.routeActive.url.subscribe(params => {
       this.employeeId = +params[1].path;
@@ -188,7 +187,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   }
 
   ngOnChanges() {
-    debugger;
     console.log(this.questionSourceData);
     if (
       this.questionSourceData.length > 0 &&
@@ -204,11 +202,11 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       EmployeeAppraisalDetailsId: [null],
       AppraisalPeriod: [null, Validators.required],
       CurrentAppraisalDate: [null, Validators.required],
-      GeneralProfessionalIndicatorQuestion: new FormArray([]),
-      AppraisalMembers: new FormArray([]),
-      AppraisalTraining: new FormArray([]),
-      AppraisalStrongPoints: new FormArray([]),
-      AppraisalWeakPoints: new FormArray([]),
+      GeneralProfessionalIndicatorQuestion: new FormArray([], Validators.required),
+      AppraisalMembers: new FormArray([], Validators.required),
+      AppraisalTraining: new FormArray([], Validators.required),
+      AppraisalStrongPoints: new FormArray([], Validators.required),
+      AppraisalWeakPoints: new FormArray([], Validators.required),
       FinalResultQues1: [null, Validators.required],
       FinalResultQues2: [null, Validators.required],
       FinalResultQues3: [null, Validators.required],
@@ -220,7 +218,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     });
   }
   setEmployeeAppraisalDetail(id: number, filterData: any) {
-    debugger;
     if (id != undefined && id != null) {
       filterData.forEach(element => {
         this.employeeAppraisalForm = this.fb.group({
@@ -303,7 +300,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   }
 
   setProfessionalIndicatorQuestion(item: any[]) {
-    debugger;
     const formArray = new FormArray([]);
     for (const x of item) {
       formArray.push(
@@ -383,7 +379,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   //#region "get appraisal list"
   getAllAppraisalList() {
-    debugger;
     if (this.employeeId !== undefined && this.employeeId != null) {
       this.appraisalService
         .getAllAppraisalListEmployeeId(this.employeeId)
@@ -421,7 +416,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   setGeneralProfessionalQuestion(
     sources: EmployeeAppraisalQuestionList[]
   ): FormArray {
-    debugger;
     const formArray = new FormArray([]);
     sources.forEach(s => {
       formArray.push(
@@ -449,7 +443,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   }
   //#region "set appraisal members"
   setAppraisalMembers() {
-    debugger;
     this.employeeAppraisalForm.setControl(
       'AppraisalMembers',
       this.setAppraisalMemeberList(this.appraisalMembersList$)
@@ -459,7 +452,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   setAppraisalMemeberList(
     sources: Observable<IAppraisalMemberList[]>
   ): FormArray {
-    debugger;
     const formArray = new FormArray([], [Validators.required]);
     this.appraisalMembersList$.subscribe(res => {
       res.forEach(s => {
@@ -495,20 +487,17 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         queryParams: { tabId: 8 }
       });
     }
-    debugger;
 
     // this.router.navigate(['/hr/employee/' + this.employeeId]);
     // this.router.navigate(['/hr/employee/' + this.employeeId + '/employeeAppraisal']);
   }
 
   getQuestionScoreeSelectedValue(event: any) {
-    debugger;
     console.log(event);
     this.score = this.score + event;
   }
   //#region "Get All Appraisal Questions"
   getAllAppraisalQuestions() {
-    debugger;
     // tslint:disable-next-line:radix
     this.appraisalService.GetAppraisalQuestions().subscribe(
       data => {
@@ -618,7 +607,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     // refresh the list after new request created
 
     dialogRef.componentInstance.trainingformDataEmit.subscribe(element => {
-      debugger;
       if (element !== undefined && element != null) {
         dialogRef.componentInstance.isFormSubmitted = false;
         this.trainingDetailList.push({
@@ -651,7 +639,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      debugger;
       this.appraisalTrainingList$ = of(
         this.trainingDetailList.map(y => {
           return {
@@ -685,7 +672,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   setAppraisalTrainigList(
     sources: Observable<ITrainigDetailModel[]>
   ): FormArray {
-    debugger;
     const formArray = new FormArray([]);
     this.appraisalTrainingList$.subscribe(res => {
       res.forEach(y => {
@@ -708,14 +694,12 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   //#region "Delete apraisal trianing"
   trainingActionEvents(event: any) {
-    debugger;
     if (event.type === 'delete') {
       this.deleteAppraisalTraining(event.item);
     }
   }
 
   deleteAppraisalTraining(data: any) {
-    debugger;
     if (data != undefined && data != null) {
       let index;
       this.appraisalTrainingList$.subscribe(res => {
@@ -738,7 +722,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     // refresh the list after new request created
 
     dialogRef.componentInstance.strongPointDataEmit.subscribe(element => {
-      debugger;
       if (element !== undefined && element != null) {
         dialogRef.componentInstance.isFormSubmitted = false;
         this.strongPontsDetailList.push({
@@ -749,7 +732,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      debugger;
       this.strongPointsList$ = of(
         this.strongPontsDetailList.map(y => {
           return {
@@ -772,7 +754,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   setAppraisalStrongPointsList(
     sources: Observable<IAppraisalStrongPoints[]>
   ): FormArray {
-    debugger;
     const formArray = new FormArray([]);
     this.strongPointsList$.subscribe(res => {
       res.forEach(y => {
@@ -795,7 +776,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   }
 
   deleteStrongPoint(data: any) {
-    debugger;
     if (data != undefined && data != null) {
       let index;
       this.strongPointsList$.subscribe(res => {
@@ -820,7 +800,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     // refresh the list after new request created
 
     dialogRef.componentInstance.weakPointDataEmit.subscribe(element => {
-      debugger;
       if (element !== undefined && element != null) {
         dialogRef.componentInstance.isFormSubmitted = false;
         this.weakPontsDetailList.push({
@@ -831,7 +810,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     });
 
     dialogRef.afterClosed().subscribe(() => {
-      debugger;
       this.weakPointsList$ = of(
         this.weakPontsDetailList.map(y => {
           return {
@@ -853,7 +831,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   setAppraisalWeakPointsList(
     sources: Observable<IAppraisalWeakPoints[]>
   ): FormArray {
-    debugger;
     const formArray = new FormArray([]);
     this.weakPointsList$.subscribe(res => {
       res.forEach(y => {
@@ -876,7 +853,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   }
 
   deleteWeakPoint(data: any) {
-    debugger;
     if (data != undefined && data != null) {
       let index;
       this.weakPointsList$.subscribe(res => {
@@ -911,7 +887,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       document.getElementById('err').scrollIntoView();
       return;
     }
-    debugger;
     if (this.employeeAppraisalForm.valid) {
       if (
         this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
@@ -941,7 +916,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#endregion
   //#region "addAppraisalForm"
   addAppraisalForm(form: IAppraisalDetailModel) {
-    debugger;
     this.err = null;
     this.appraisalService.addAppraisalForm(form).subscribe(
       res => {
@@ -963,7 +937,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   //#region "editAppraisalForm"
   editAppraisalForm(form: IAppraisalDetailModel) {
-    debugger;
     this.err = null;
     this.appraisalService.editAppraisalForm(form).subscribe(
       res => {

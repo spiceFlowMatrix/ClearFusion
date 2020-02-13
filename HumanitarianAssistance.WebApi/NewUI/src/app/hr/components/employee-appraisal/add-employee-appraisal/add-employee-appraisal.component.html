@@ -244,7 +244,7 @@
                 </td>
                 <td width="20%">
                   <lib-hum-dropdown [options]="appraisalQuestionScore$" [placeHolder]="'Score'" formControlName="Score"
-                    (change)="getQuestionScoreeSelectedValue($event)" [disabled]="!isViewed">
+                    (change)="getQuestionScoreeSelectedValue($event)" [disabled]="!isViewed" [validation]="employeeAppraisalForm.controls['Score'].hasError('required')">
                   </lib-hum-dropdown>
                 </td>
                 <td width="35%">

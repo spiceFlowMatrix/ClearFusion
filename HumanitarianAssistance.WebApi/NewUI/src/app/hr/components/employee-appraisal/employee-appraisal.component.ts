@@ -166,7 +166,7 @@ export class EmployeeAppraisalComponent implements OnInit {
                         {
                           button: {
                             status: false,
-                            text: 'APPROVE',
+                            text: '',
                             type: 'save'
                           },
                           delete: false,
@@ -189,6 +189,7 @@ export class EmployeeAppraisalComponent implements OnInit {
     this.router.navigate(['addAppraisal'], { relativeTo: this.routeActive });
   }
   ActionEvents(event: any) {
+    debugger;
     if (event.type === 'edit') {
       this.editAppraisalList(event.item.EmployeeAppraisalDetailsId);
     }
@@ -211,6 +212,7 @@ export class EmployeeAppraisalComponent implements OnInit {
     }
   }
   AddApprovedAppraisal(id: any) {
+    debugger;
     this.appraisalService.approveAppraisaldetail(id).subscribe(res => {
       this.getAllAppraisalList();
       console.log(res);
