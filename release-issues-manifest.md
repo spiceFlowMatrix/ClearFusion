@@ -8,7 +8,7 @@
 
 ## Issue transcripts
 
-Following are all the issues that had work done in the milestone and transcripts for which are maintained here:
+Following are all the issues that had work done in the milestone and transcripts for which are maintained here.
 
 ### Payroll administration in HRM Resources Control Panel - 370
 
@@ -638,3 +638,194 @@ Below is a list of all the changes made to the scope of this issue and the exact
 > ### Logs/Screenshots:
 >
 > ![image](/uploads/51b40be3bfa15ba7bef6be15e0b6b64b/image.png)
+
+### Bulk user creation function for existing employees - 369
+
+| **Planning Detail Type** | Planning Detail Value                       |
+| ------------------------ | ------------------------------------------- |
+| **Labels**               | ~enhancement ~"module:hrm" ~"release:minor" |
+| **Start Date**           | 6 Feb, 2020                                 |
+| **Due Date**             | 10 Feb, 2020                                |
+
+#### Transcript
+
+> This function as approved as a solution by the HR department for the problem of employees (which were imported via CSV file) not having associated user accounts.
+>
+> It was also specified to make this a high priority **urgent** issue for which we decided to plan a minor release of the application on 8th February.
+
+### Attendance helper functionality is not working properly in Salary Config - 359
+
+| **Planning Detail Type** | Planning Detail Value                       |
+| ------------------------ | ------------------------------------------- |
+| **Labels**               | ~enhancement ~"module:hrm" ~"release:minor" |
+| **Start Date**           | 4 Feb, 2020                                 |
+| **Due Date**             | 10 Feb, 2020                                |
+
+#### Transcript
+
+> ### Steps to reproduce
+> 1. Go to employee details
+> 2. Open Salary Config tab
+> 3. Select a month which no attendance is marked for it
+> 4. Click on Mark Attendance
+>
+> ### What is the current *bug* behavior?
+> 1. When Mark Attendance is clicked the attendance gets marked as Present but still "Employee has no attendance for payroll" is there.
+>
+> ### What is the expected *correct* behavior?
+> 1. When the Mark Attendance is clicked, the attendance should be marked as Present
+> 2. "Employee has no attendance for payroll" message should disappear
+> 3. Monthly Salary Breakdown should be shown, and I should be able to add fine/bonus, Add advance recovery, approve/revoke salary
+>
+> ### Relevant logs and/or screenshots
+> ![image](/uploads/304cb03ad52064c9a94a90808fae6e75/image.png)
+
+### Minor enhancement to employee termination process - 352
+
+| **Planning Detail Type** | Planning Detail Value                       |
+| ------------------------ | ------------------------------------------- |
+| **Labels**               | ~enhancement ~"module:hrm" ~"release:minor" |
+| **Start Date**           | 4 Feb, 2020                                 |
+| **Due Date**             | 10 Feb, 2020                                |
+
+#### Transcript
+
+> As specified in [this proposal section](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/212#termination), we need to add one last enhancement before we can consider all the use-cases as passing our developer tests.
+>
+> ### Specification transcript
+>
+> Users can terminate an employee at any time using by submitting a form that can be opened through a Toolbar button. The form will require the user to specify the date of termination and detailed reasoning for their termination.
+>
+> The terminated employee's tenure stops adding up after the date that they were terminated. Resigned or terminated employees cannot be terminated again
+>
+> ### Current status
+>
+> Termination simply updates the **Fired On** field of employee details.
+>
+> ### What to add/change
+>
+> 1. Add form for asking termination date and reasoning
+> 2. Ensure there is an easily accessible location where the employee's tenure can be viewed by users
+> 2. Ensure tenure stops adding up for employee in tenure calculation
+
+### Adding the Profession is not working. HR, Configuration, General Page. - 350
+
+| **Planning Detail Type** | Planning Detail Value               |
+| ------------------------ | ----------------------------------- |
+| **Labels**               | ~bug ~"module:hrm" ~"release:patch" |
+| **Start Date**           | 4 Feb, 2020                         |
+| **Due Date**             | 10 Feb, 2020                        |
+
+#### Transcript
+
+> ### Steps to reproduce
+> 1.  Go to HR. Configuration, Profession
+> 2. Clicking on the Add Profession button, fill the form
+> 3. Clicking on the Save button
+>
+> ### What is the current bug behavior?
+> When we clicking on the save button of the Profession page, it generated an error and not save the new Profession.
+>
+> ### What is the expected correct behavior?
+> The profession name which we entered in the form, must be saved when we click the save button.
+>
+> ### Relevant logs and/or screenshots
+>
+> ![image](/uploads/9de8123b9bb82105f0df0d091c931565/image.png)
+
+### Incorrect implementation of employee leave balances and PDF export - 345
+
+| **Planning Detail Type** | Planning Detail Value               |
+| ------------------------ | ----------------------------------- |
+| **Labels**               | ~bug ~"module:hrm" ~"release:patch" |
+| **Start Date**           | 4 Feb, 2020                         |
+| **Due Date**             | 10 Feb, 2020                        |
+
+#### Transcript
+
+> ### Prerequisites
+>
+> 1. Have at least 1 active employee
+> 2. Ensure the employee's attendance group has policy approved hours for the months of leave application
+> 3. Assign at least 2 leave types for the employee to be able to apply for
+>
+> ### Steps to reproduce
+>
+> 1. Enter the **LEAVE** tab in the Employe Control Panel
+> 2. Add a leave application for any of the leave types
+> 3. View the days of your new application by clicking the **SEE DAYS** button for that application
+> 4. Add a leave application that spans across a weekend
+> 5. Click the **PDF EXPORT** button
+>
+> ### What is the current *bug* behavior?
+>
+> 1. At step 1, you will notice that **Policy Approved Hours** shows you the maximum allowed hours as specified for the leave type in the configuration page. And **Applied/Approved** hours show the hours that were assigned for this specific employee when assigning them the leave type.
+> 2. At step 2, the leave balance for that type will be subtracted as soon as you create the application.
+> 3. At step 3, the days of the leave application are not actually highlighted. I have no idea which days the leave application is for.
+> 4. At step 4, the leave application will count the hours of the weekend days towards their total leave hours.
+> 5. At step 5, in the PDF document, you only see entries for the types of leave that the employee has created an application for. If you had only ever applied for one type of leave, you will only see the balances for those leave types. Please see [this attached document](/uploads/dd505cc69f8709c805c706d04457c6ae/EmployeeLeave__4_.pdf).
+>
+> ### What is the expected *correct* behavior?
+>
+> 1. **Policy Approved Hours** must show the total hours that were approved specifically for this employee. **Applied/Approved Hours** must show the total number of hours for a leave type that the employee has applied for **and that has actually been approved**.
+> 2. Leave balance should only go down for a leave type when an application is **Approved**.
+> 3. The calendar must actually highlight the days selected for the leave application.
+> 4. Hours from application days that are weekends or holidays must not count towards the **Applied/Approved Hours** for that leave type.
+> 5. The PDF document must show the current balances across all the months of the current year for all leave types that are assigned to the employee.
+>
+> ### Relevant logs/screenshots
+>
+> ![image](/uploads/4cbe6b332293bf7383ffdbdb2e846e8e/image.png)
+>
+> [EmployeeLeave__4_.pdf](/uploads/dd505cc69f8709c805c706d04457c6ae/EmployeeLeave__4_.pdf)
+
+### Cleaning up CHA employee data - 239
+
+| **Planning Detail Type** | Planning Detail Value              |
+| ------------------------ | ---------------------------------- |
+| **Labels**               | ~support ~"module:hrm" ~discussion |
+| **Start Date**           | 26 Jan, 2020                       |
+| **Due Date**             | 11 Feb, 2020                       |
+
+#### Transcript
+
+> Due to issues in the employee data, a cleanup was needed. Following issues were there in the data which were fixed:
+> 1. Dates in the excel had different formats, we had to change it to the same format.
+> 2. Wrong professional id
+> 3. Wrong office id
+> 4. Wrong designation id
+> 5. Fields that were blank, the value "0" were added in them
+> 6. Make a separate table for professional, designation, and department
+
+#### Change history
+
+Below is a list of all the changes made to the scope of this issue and the exact source where the change originated from:
+
+1. Salam had to give training for HR department to clean up province, district, and employee linking data and had to wait for them to get back with cleaned data as reported on 30 Jan, 2020, [here](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/239#note_279403620)
+2. Salam had to train HR department again on how to fix more problems with the format of data that was provided to us as reported on 9 Feb, 2020, [here](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/239#note_284862046)
+
+### Integrate analytical info breakdown account selection with job grades and accounts - 179
+
+| **Planning Detail Type** | Planning Detail Value                                        |
+| ------------------------ | ------------------------------------------------------------ |
+| **Labels**               | ~enhancement ~"module:project" ~"module:hrm" ~"module:finance" |
+| **Start Date**           | 3 Feb, 2020                                                  |
+| **Due Date**             | 10 Feb, 2020                                                 |
+
+#### Transcript
+
+> ### Current Implementation
+>
+> Upon selecting an Existing Employee candidate for a Hiring Request, the user is asked to fill out an analytical info breakdown form before the candidate can be selected. This form forces the user to provide an account selection for every analytical info entry for that employee.
+>
+> ### Problems identified with this implementation
+>
+> This manual selection of accounts is still prone to some human error when it comes to ensuring the correct accounts are selected for analytical info entries. Ensuring that errors don't happen here requires some memorization and application of some conventions by end-users and there is no such convention currently in practice.
+>
+> ### Proposed Change/Enhancement
+>
+> 1. Enhance Job Grades so that each one can have an associated **EXPENSE** account that can be configured by an administrator.
+> 2. Enhance the application logic that drives the analytical info breakdown form so that it automatically will select the Expense Account associated with the Job Grade of the Hiring Request as the Account for new analytical info entries when selected New Candidates or Existing Employee candidates for said hiring request.
+> 3. Change the Analytical Breakdown form (the one that the user must fill before selecting an Existing Employee candidate) so that it no longer asks user to select an account. Instead, all the accounts for all the analytical info entries (both existing and new) in the form must automatically show the correct expense account associated with the job grade of that hiring request.
+> 4. When the associated expense account for a job grade is changed by an administrator, all analytical info entries that were previously generated for hiring requests that use the job that was changed must update their accounts to the new one.
+
