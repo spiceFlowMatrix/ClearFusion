@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using HumanitarianAssistance.Common.Enums;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Collections.Generic;
+using HumanitarianAssistance.Domain.Entities.Accounting;
 
 namespace HumanitarianAssistance.Application.Store.Commands.Create
 {
@@ -51,6 +52,18 @@ namespace HumanitarianAssistance.Application.Store.Commands.Create
                         purchase.CreatedById = request.CreatedById;
                         purchase.CreatedDate = request.CreatedDate;
                         purchase.SerialNo = request.PurchaseOrderNo.ToString();
+
+                        if(purchase.VoucherId.HasValue && purchase.VoucherId !=0)
+                        {
+                            VoucherDetail voucher = await _dbContext.VoucherDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.VoucherNo == purchase.VoucherId);
+
+                            if(voucher!= null)
+                            {
+                                voucher.OperationalType = (int)OperationType.Store;
+                                _dbContext.VoucherDetail.Update(voucher);
+                                await _dbContext.SaveChangesAsync();
+                            }
+                        }
 
                         List<PurchaseUnitType> PurchaseUnitTypeList = await _dbContext.PurchaseUnitType.Where(x => x.IsDeleted == false).ToListAsync();
                         unitName = PurchaseUnitTypeList.Any(x => x.UnitTypeId == request.UnitType) ? PurchaseUnitTypeList.First(x => x.UnitTypeId == request.UnitType).UnitTypeName : "";
