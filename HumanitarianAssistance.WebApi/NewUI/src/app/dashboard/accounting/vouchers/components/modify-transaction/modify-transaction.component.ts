@@ -40,6 +40,9 @@ export class ModifyTransactionComponent implements OnInit {
   addEditTransaction = false;
   addEditTransactionForm: FormGroup;
   filterdOptionsAccountList: Observable<any[]>;
+  accountspinner= false;
+  projectspinner = false;
+  budgetlinespinner= false;
   accountList: any[] = [];
   projectList: any[] = [];
   jobList: any[] = [];
@@ -52,7 +55,8 @@ export class ModifyTransactionComponent implements OnInit {
   selectedProjectName: any;
   selectedBudgetLineName: any;
   isFormSubmitted = false;
-  showAddTransaction = false;
+  showAddTransactionTop = false;
+  showAddTransactionBottom = false;
   filterdOptionsProjectList: Observable<any[]>;
   filterdOptionsBudgetLineList: Observable<any[]>;
   errorMessage: string;
@@ -193,23 +197,36 @@ export class ModifyTransactionComponent implements OnInit {
     });
   }
 
-  onAddTransactionBtnClick() {
+  onAddTransactionTopBtnClick() {
    // this.onInItAddTransactionForm();
    this.addEditTransactionForm.get('Credit').setValue(0);
    this.addEditTransactionForm.get('Debit').setValue(0);
    this.addEditTransactionForm.get('Debit').enable();
    this.addEditTransactionForm.get('Credit').enable();
-    this.showAddTransaction = true;
+    this.showAddTransactionTop = true;
   }
 
-  cancelTransactionBtnClicked() {
-    this.showAddTransaction = false;
+  cancelTransactionTopBtnClicked() {
+    this.showAddTransactionTop = false;
   }
+
+  onAddTransactionBottomBtnClick() {
+    // this.onInItAddTransactionForm();
+    this.addEditTransactionForm.get('Credit').setValue(0);
+    this.addEditTransactionForm.get('Debit').setValue(0);
+    this.addEditTransactionForm.get('Debit').enable();
+    this.addEditTransactionForm.get('Credit').enable();
+     this.showAddTransactionBottom = true;
+   }
+
+   cancelTransactionBottomBtnClicked() {
+     this.showAddTransactionBottom = false;
+   }
 
   private filterAccountName(value: string): any[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length > 2) {
+      if (value.length >= 2) {
         this.getFilteredAccountList(filterValue);
         return this.accountList;
       } else {
@@ -221,7 +238,7 @@ export class ModifyTransactionComponent implements OnInit {
   private filterProjectName(value: string): any[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length > 2) {
+      if (value.length >= 2) {
         this.getFilteredProjectList(filterValue);
         return this.projectList;
       } else {
@@ -234,7 +251,7 @@ export class ModifyTransactionComponent implements OnInit {
   private filterBudgetLineName(value: string): any[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length >= 3) {
+      if (value.length >= 2) {
         this.getFilteredBudgetLineList(filterValue);
         return this.budgetLineList;
       } else {
@@ -245,6 +262,7 @@ export class ModifyTransactionComponent implements OnInit {
 
   getFilteredAccountList(data: string) {
     if (data !== undefined && data != null) {
+      this.accountspinner = true;
       this.voucherService
         .GetFilteredInputLevelAccountList(data)
         .subscribe(resp => {
@@ -256,13 +274,19 @@ export class ModifyTransactionComponent implements OnInit {
                 AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
               });
             });
+            this.accountspinner = false;
+          } else {
+            this.accountspinner = false;
           }
+        }, error=> {
+          this.accountspinner = false;
         });
     }
   }
 
   getFilteredProjectList(data: string) {
     if (data !== undefined && data != null) {
+      this.projectspinner = true;
       this.voucherService
         .GetFilteredProjectList(data)
         .subscribe(resp => {
@@ -274,7 +298,12 @@ export class ModifyTransactionComponent implements OnInit {
                 ProjectName: element.ProjectCode + '-' + element.ProjectName
               });
             });
+            this.projectspinner = false;
+          } else {
+            this.projectspinner = false;
           }
+        }, error=> {
+          this.projectspinner = false;
         });
     }
   }
@@ -285,6 +314,7 @@ export class ModifyTransactionComponent implements OnInit {
       FilterValue: data
     }
     if (data !== undefined && data != null) {
+      this.budgetlinespinner = true;
       this.voucherService
         .getFilteredBudgetLineList(model)
         .subscribe(resp => {
@@ -296,7 +326,12 @@ export class ModifyTransactionComponent implements OnInit {
                 BudgetLineName: element.BudgetLineCode + '-' + element.BudgetLineName
               });
             });
+            this.budgetlinespinner = false;
+          } else {
+            this.budgetlinespinner = false;
           }
+        }, error => {
+          this.budgetlinespinner = false;
         });
     }
   }
@@ -352,14 +387,14 @@ export class ModifyTransactionComponent implements OnInit {
       this.errorMessage = 'Please correct form errors and try again';
       return;
     }
-    const creditamount = Number(this.addEditTransactionForm.value.Credit);
-    const debitamount = Number(this.addEditTransactionForm.value.Debit);
+    const creditamount = Number(this.addEditTransactionForm.getRawValue().Credit);
+    const debitamount = Number(this.addEditTransactionForm.getRawValue().Debit);
     if (creditamount == 0) {
       this.addEditTransactionForm.controls.Type.setValue(TransactionType.Debit)
     } else {
       this.addEditTransactionForm.controls.Type.setValue(TransactionType.Credit)
     }
-    // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.value.Job);
+    // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.getRawValue().Job);
     const model = {
       AccountNo: this.selectedAccountNo,
       Debit: debitamount.toFixed(2),
@@ -369,18 +404,18 @@ export class ModifyTransactionComponent implements OnInit {
       ProjectName: this.selectedProjectName,
       BudgetLineName: this.selectedBudgetLineName,
       BudgetLineId: this.selectedBudgetLineId,
-      Description: this.addEditTransactionForm.value.Description,
+      Description: this.addEditTransactionForm.getRawValue().Description,
       TransactionId: 0,
       VoucherNo: this.voucherNo,
-      JobId: this.addEditTransactionForm.value.JobId,
-      JobName: this.addEditTransactionForm.value.JobName,
-      Type: this.addEditTransactionForm.value.Type === TransactionType.Debit ? 'Debit' : 'Credit',
+      JobId: this.addEditTransactionForm.getRawValue().JobId,
+      JobName: this.addEditTransactionForm.getRawValue().JobName,
+      Type: this.addEditTransactionForm.getRawValue().Type === TransactionType.Debit ? 'Debit' : 'Credit',
       AccountCode: this.selectedAccountName
     };
     this.voucherDetail.TotalCredit = this.voucherDetail.TotalCredit === undefined ? 0 : this.voucherDetail.TotalCredit;
     this.voucherDetail.TotalDebit = this.voucherDetail.TotalDebit === undefined ? 0 : this.voucherDetail.TotalDebit;
 
-    if (this.addEditTransactionForm.value.Type === TransactionType.Debit) {
+    if (this.addEditTransactionForm.getRawValue().Type === TransactionType.Debit) {
       this.voucherDetail.TotalDebit += parseFloat(debitamount.toFixed(2));
     } else {
       this.voucherDetail.TotalCredit += parseFloat(creditamount.toFixed(2));
@@ -390,11 +425,10 @@ export class ModifyTransactionComponent implements OnInit {
     this.selectedProjectName = null;
     this.selectedProjectId = null;
     this.selectedProjectName = null;
-    this.showAddTransaction = true;
+    this.showAddTransactionTop = false;
+    this.showAddTransactionBottom = false;
     this.addEditTransactionForm.reset();
     this.setAutoComplete();
-    this.showAddTransaction = false;
-
     this.ELEMENT_DATA.push(model);
     this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
   }
@@ -445,8 +479,12 @@ export class ModifyTransactionComponent implements OnInit {
       else {
         let credit = 0;
         let debit = 0;
-        creditsTotal.map(item => item.Credit).reduce((prev, next) => credit = Number(prev) + Number(next));
-        debitsTotal.map(item => item.Debit).reduce((prev, next) => debit = Number(prev) + Number(next))
+        if (creditsTotal.length == 1) {
+          credit = Number(creditsTotal[0].Credit);
+        } else { creditsTotal.map(item => item.Credit).reduce((prev, next) => credit = Number(prev) + Number(next)); }
+        if (debitsTotal.length == 1) {
+          debit = Number(debitsTotal[0].Debit);
+        } else {  debitsTotal.map(item => item.Debit).reduce((prev, next) => debit = Number(prev) + Number(next)); }
         if (credit !== debit) {
           this.errorMessage = 'Credits and Debits must be equal';
           this.isFormSubmitted = false;

@@ -7,6 +7,8 @@ import { IAddVoucherModel } from '../../models/voucher.model';
 import { IResponseData } from '../../models/status-code.model';
 import { VoucherType } from 'src/app/shared/enum';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { forkJoin } from 'rxjs/observable/forkJoin';
+import { of } from 'rxjs/internal/observable/of';
 
 @Component({
   selector: 'app-add-voucher',
@@ -48,10 +50,19 @@ export class AddVoucherComponent implements OnInit {
       // BudgetLineId: ['', [Validators.required]]
     });
 
-    this.getAllCurrency();
-    this.getOfficeList();
-    this.getJournalList();
-    this.getVoucherTypeList();
+    forkJoin([
+      this.getVoucherTypeList(),
+      this.getAllCurrency(),
+      this.getOfficeList(),
+      this.getJournalList(),
+    ])
+      .subscribe(result => {
+        this.subscribeGetVoucherTypeList(of(result[0]));
+        this.subscribeGetAllCurrency(of(result[1]));
+        this.subscribeGetOfficeList(of(result[2]));
+        this.subscribeGetJournalList(of(result[3]));
+      });
+
     if (this.voucherNo && this.voucherNo !== NaN) {
       this.getVoucherByVoucherNo();
     }
@@ -121,7 +132,7 @@ export class AddVoucherComponent implements OnInit {
       TimezoneOffset: new Date().getTimezoneOffset()
     };
 
-    if (this.voucherNo  && this.voucherNo !== NaN) {
+    if (this.voucherNo && this.voucherNo !== NaN) {
       this.editVoucherDetail(voucherData);
     } else {
       this.addVoucher(voucherData);
@@ -167,7 +178,11 @@ export class AddVoucherComponent implements OnInit {
   //#endregion
 
   getAllCurrency() {
-    return this.voucherService.GetCurrencyList().subscribe(x => {
+    return this.voucherService.GetCurrencyList();
+  }
+
+  subscribeGetAllCurrency(res) {
+    res.subscribe(x => {
       this.currencyList = [];
       x.data.forEach(ele => {
         this.currencyList.push({
@@ -180,7 +195,12 @@ export class AddVoucherComponent implements OnInit {
 
   //#region "getOfficeList"
   getOfficeList() {
-    this.voucherService.GetOfficeList().subscribe(
+    return this.voucherService.GetOfficeList();
+  }
+  //#endregion
+
+  subscribeGetOfficeList(res) {
+    res.subscribe(
       (response: IResponseData) => {
         this.officeList = [];
         if (response.statusCode === 200 && response.data !== null) {
@@ -195,11 +215,15 @@ export class AddVoucherComponent implements OnInit {
       error => { }
     );
   }
-  //#endregion
 
   //#region "getJournalList"
   getJournalList() {
-    this.voucherService.GetJournalList().subscribe(
+    return this.voucherService.GetJournalList();
+  }
+  //#endregion
+
+  subscribeGetJournalList(res) {
+    res.subscribe(
       (response: IResponseData) => {
         this.journalList = [];
         if (response.statusCode === 200 && response.data !== null) {
@@ -215,11 +239,16 @@ export class AddVoucherComponent implements OnInit {
       error => { }
     );
   }
-  //#endregion
 
   //#region "getVoucherTypeList"
   getVoucherTypeList() {
-    this.voucherService.GetVoucherTypeList().subscribe(
+    return this.voucherService.GetVoucherTypeList();
+  }
+  //#endregion
+
+  subscribeGetVoucherTypeList(res) {
+    console.log(res, 'vt');
+    res.subscribe(
       (response: IResponseData) => {
         this.voucherTypeList = [];
         if (response.statusCode === 200 && response.data !== null) {
@@ -234,7 +263,6 @@ export class AddVoucherComponent implements OnInit {
       error => { }
     );
   }
-  //#endregion
 
   //#region "getVoucherByVoucherNo"
   getVoucherByVoucherNo() {
@@ -243,6 +271,7 @@ export class AddVoucherComponent implements OnInit {
       (response: IResponseData) => {
         this.voucherTypeList = [];
         if (response.statusCode === 200 && response.data !== null) {
+          console.log(response.data);
           this.addVoucherForm.patchValue({
             VoucherNo: this.voucherNo,
             CurrencyId: response.data.CurrencyId,
