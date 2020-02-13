@@ -102,108 +102,20 @@
       </tr>
     </table>
   </div>
+
+  <div class="alert alert-warning" *ngIf="errorMessage != '' && errorMessage != null" role="alert">
+    <p class="txt-center-align">{{errorMessage}}</p>
+  </div>
+
   <div class="row">
     <div class="col-sm-1">
       <h4>Transactions</h4>
     </div>
     <div class="col-sm-11">
-      <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionBtnClick()"></hum-button>
-      <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button>
+      <!-- <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionBtnClick()"></hum-button>
+      <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button> -->
     </div>
   </div>
-
-  <div class="row" *ngIf="showAddTransaction">
-    <div class="col-sm-2">
-      <h5>New Transaction Details</h5>
-    </div>
-    <div class="col-sm-10">
-      <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCreditDebit()"></hum-button>
-      <hum-button (click)='cancelTransactionBtnClicked()' [type]="'cancel'" [text]="'CANCEL'"></hum-button>
-    </div>
-  </div>
-  <form [formGroup]="addEditTransactionForm" (ngSubmit)="addTransaction()" *ngIf="showAddTransaction">
-    <div class="row container-fluid">
-      <div class="col-sm-12">
-        <div class="col-sm-3">
-          <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Search Accounts" aria-label="Number" matInput formControlName="AccountId"
-              name="AccountId" [matAutocomplete]="matAutocomplete1">
-            <mat-autocomplete #matAutocomplete1="matAutocomplete">
-              <mat-option (onSelectionChange)="onChangeAccountValue($event,item.AccountId)"
-                *ngFor="let item of filterdOptionsAccountList | async" [value]="item.AccountName">{{item.AccountName}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-hint>Please enter altest 3 characters to search</mat-hint>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field class="example-full-width">
-            <mat-label>Description</mat-label>
-            <textarea matInput rows="1" formControlName="Description" placeholder="Description"></textarea>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field class="example-full-width">
-            <mat-label>Credit</mat-label>
-            <input formControlName="Credit" (input)="checkAmount(1)" (blur)="onAmountEvent($event.target.value, 1)" matInput placeholder="Credit"
-              type="number">
-            <mat-error *ngIf="addEditTransactionForm.controls['Credit'].hasError('min')">Amount can not be 0</mat-error>
-          </mat-form-field>
-
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field class="example-full-width">
-            <mat-label>Debit</mat-label>
-            <input formControlName="Debit" (input)="checkAmount(2)" (blur)="onAmountEvent($event.target.value, 2)" matInput placeholder="Debit"
-              type="number">
-            <mat-error *ngIf="addEditTransactionForm.controls['Debit'].hasError('min')">Amount can not be 0</mat-error>
-          </mat-form-field>
-        </div>
-      
-      </div>
-      <div class="col-sm-12">
-        <div class="col-sm-3">
-          <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Search Projects" aria-label="Number" matInput formControlName="ProjectId"
-              name="ProjectId" [matAutocomplete]="matAutocomplete2">
-            <mat-autocomplete #matAutocomplete2="matAutocomplete">
-              <mat-option (onSelectionChange)="onChangeProjectValue($event,item.ProjectId)"
-                *ngFor="let item of filterdOptionsProjectList | async" [value]="item.ProjectName">{{item.ProjectName}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-hint>Please enter altest 3 characters to search</mat-hint>
-          </mat-form-field>
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Search BudgetLines" aria-label="Number" matInput
-              formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
-            <mat-autocomplete #matAutocomplete3="matAutocomplete">
-              <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
-                *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">
-                {{item.BudgetLineName}}
-              </mat-option>
-            </mat-autocomplete>
-            <mat-hint>Please enter altest 3 characters to search</mat-hint>
-          </mat-form-field>
-        </div>
-        <!-- <div class="col-sm-3 padding_top_20">
-          <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field>
-            <mat-label>Transaction Type</mat-label>
-            <mat-select formControlName="Type">
-              <mat-option *ngFor="let type of typeList" [value]="type.value">
-                {{type.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div> -->
-      </div>
-    </div>
-    <button type="submit" style="display: none;" #btnSubmit></button>
-  </form>
 
   <table mat-table [dataSource]="transactionDataSource" class="mat-elevation-z8">
     <!-- Checkbox Column -->
@@ -272,7 +184,106 @@
     </tr>
   </table>
   <mat-paginator [length]="recordCount" [pageSize]="transactionPagingModel.PageSize"
-    [pageIndex]="transactionPagingModel.PageIndex" [pageSizeOptions]="[5, 10, 20]" (page)="pagination($event)">
-  </mat-paginator>
+  [pageIndex]="transactionPagingModel.PageIndex" [pageSizeOptions]="[5, 10, 20]" (page)="pagination($event)">
+</mat-paginator>
+
+  <div class="row">
+    <div class="col-sm-11">
+      <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionBtnClick()"></hum-button>
+      <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button>
+    </div>
+  </div>
+  <div class="row" *ngIf="showAddTransaction">
+    <div class="col-sm-2 padding_left_37">
+      <h5>New Transaction Details</h5>
+    </div>
+    <div class="col-sm-10">
+      <hum-button [type]="'add'" [text]="'ADD'" (click)="addNewCreditDebit()"></hum-button>
+      <hum-button (click)='cancelTransactionBtnClicked()' [type]="'cancel'" [text]="'CANCEL'"></hum-button>
+    </div>
+  </div>
+  <form [formGroup]="addEditTransactionForm" (ngSubmit)="addTransaction()" *ngIf="showAddTransaction">
+    <div class="row container-fluid">
+      <div class="col-sm-12">
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Search and Select Account" aria-label="Number" matInput formControlName="AccountId"
+              name="AccountId" [matAutocomplete]="matAutocomplete1">
+            <mat-autocomplete #matAutocomplete1="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeAccountValue($event,item.AccountId)"
+                *ngFor="let item of filterdOptionsAccountList | async" [value]="item.AccountName">{{item.AccountName}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <mat-label>Description</mat-label>
+            <textarea matInput rows="1" formControlName="Description" placeholder="Description"></textarea>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <mat-label>Credit</mat-label>
+            <input formControlName="Credit" (input)="checkAmount(1)" (blur)="onAmountEvent($event.target.value, 1)" matInput placeholder="Credit"
+              type="number">
+            <mat-error *ngIf="addEditTransactionForm.controls['Credit'].hasError('min')">Amount can not be 0</mat-error>
+          </mat-form-field>
+
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <mat-label>Debit</mat-label>
+            <input formControlName="Debit" (input)="checkAmount(2)" (blur)="onAmountEvent($event.target.value, 2)" matInput placeholder="Debit"
+              type="number">
+            <mat-error *ngIf="addEditTransactionForm.controls['Debit'].hasError('min')">Amount can not be 0</mat-error>
+          </mat-form-field>
+        </div>
+
+      </div>
+      <div class="col-sm-12">
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Search and Select Project" aria-label="Number" matInput formControlName="ProjectId"
+              name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
+            <mat-autocomplete #matAutocomplete2="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeProjectValue($event,item.ProjectId)"
+                *ngFor="let item of filterdOptionsProjectList | async" [value]="item.ProjectName">{{item.ProjectName}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+          </mat-form-field>
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Search and Select BudgetLine" aria-label="Number" matInput
+              formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
+            <mat-autocomplete #matAutocomplete3="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
+                *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">
+                {{item.BudgetLineName}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+          </mat-form-field>
+        </div>
+        <!-- <div class="col-sm-3 padding_top_20">
+          <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
+        </div>
+        <div class="col-sm-3">
+          <mat-form-field>
+            <mat-label>Transaction Type</mat-label>
+            <mat-select formControlName="Type">
+              <mat-option *ngFor="let type of typeList" [value]="type.value">
+                {{type.name}}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div> -->
+      </div>
+    </div>
+    <button type="submit" style="display: none;" #btnSubmit></button>
+  </form>
 
 </div>

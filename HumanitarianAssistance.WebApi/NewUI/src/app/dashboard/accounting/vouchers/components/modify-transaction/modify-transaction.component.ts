@@ -70,6 +70,7 @@ export class ModifyTransactionComponent implements OnInit {
     this.getDetailsByVoucherNo();
     this.getVoucherTransactionsByVoucherNo();
     this.setAutoComplete();
+
   }
 
   setAutoComplete() {
@@ -142,6 +143,7 @@ export class ModifyTransactionComponent implements OnInit {
       'JobName': [''],
       'Type': [null],
     });
+    this.addEditTransactionForm.controls['BudgetLine'].disable();
   }
 
   getDetailsByVoucherNo() {
@@ -192,6 +194,11 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onAddTransactionBtnClick() {
+   // this.onInItAddTransactionForm();
+   this.addEditTransactionForm.get('Credit').setValue(0);
+   this.addEditTransactionForm.get('Debit').setValue(0);
+   this.addEditTransactionForm.get('Debit').enable();
+   this.addEditTransactionForm.get('Credit').enable();
     this.showAddTransaction = true;
   }
 
@@ -200,11 +207,14 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   private filterAccountName(value: string): any[] {
+    debugger;
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length >= 3) {
+      if (value.length > 2) {
         this.getFilteredAccountList(filterValue);
         return this.accountList;
+      } else {
+        this.accountList = [];
       }
     }
   }
@@ -212,9 +222,12 @@ export class ModifyTransactionComponent implements OnInit {
   private filterProjectName(value: string): any[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length >= 3) {
+      if (value.length > 2) {
         this.getFilteredProjectList(filterValue);
         return this.projectList;
+      } else {
+        this.addEditTransactionForm.controls['BudgetLine'].disable();
+        this.projectList = [];
       }
     }
   }
@@ -225,6 +238,8 @@ export class ModifyTransactionComponent implements OnInit {
       if (value.length >= 3) {
         this.getFilteredBudgetLineList(filterValue);
         return this.budgetLineList;
+      } else {
+        this.budgetLineList = [];
       }
     }
   }
@@ -296,10 +311,13 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onChangeProjectValue(event: any, id: number) {
+    debugger;
     if (id !== undefined && id != null) {
       this.selectedProjectId = id;
       this.selectedProjectName = event.source.value;
-      // this.getBudgetLineByProjectId(id);
+      this.addEditTransactionForm.controls['BudgetLine'].enable();
+    } else {
+      this.addEditTransactionForm.controls['BudgetLine'].disable();
     }
   }
 
@@ -308,6 +326,8 @@ export class ModifyTransactionComponent implements OnInit {
       this.selectedBudgetLineId = id;
       this.selectedBudgetLineName = event.source.value;
       this.getProjectJobDetailByBudgetLineId(id);
+    } else {
+
     }
   }
 
@@ -472,24 +492,36 @@ export class ModifyTransactionComponent implements OnInit {
     });
   }
 
-  onAmountEvent(val, type) {
-    if (val && val !== 0) {
-      const value = Number(val);
-      if (type == 2) {
-        this.addEditTransactionForm.get('Debit').setValue(value.toFixed(2));
+  onAmountEvent(value, type) {
+    debugger;
+    const val = Number(value);
+    //if (val && val !== 0) {
+      if (type === 2 && val !== 0) {
+        this.addEditTransactionForm.get('Debit').setValue(val.toFixed(2));
+        this.addEditTransactionForm.get('Credit').setValue(0);
+        this.addEditTransactionForm.get('Credit').disable();
         // this.addEditTransactionForm.get('Credit').setValue(0);
-      } else {
-        this.addEditTransactionForm.get('Credit').setValue(value.toFixed(2));
-        // this.addEditTransactionForm.get('Debit').setValue(0);
+      } else if (type === 2 && val == 0) {
+        this.addEditTransactionForm.get('Credit').enable();
+      } else if(type === 1 && val !== 0) {
+        this.addEditTransactionForm.get('Credit').setValue(val.toFixed(2));
+        this.addEditTransactionForm.get('Debit').setValue(0);
+        this.addEditTransactionForm.get('Debit').disable();
+      } else if(type === 1 && val == 0) {
+        this.addEditTransactionForm.get('Debit').enable();
       }
-    }
+    //}
 
   }
   checkAmount(val) {
     if (val == 1) {
+      // this.addEditTransactionForm.get('Credit').enable();
       this.addEditTransactionForm.get('Debit').setValue(0);
+     //  this.addEditTransactionForm.get('Debit').disable();
     } else {
+      // this.addEditTransactionForm.get('Debit').enable();
       this.addEditTransactionForm.get('Credit').setValue(0);
+     // this.addEditTransactionForm.get('Credit').disable();
     }
   }
   pagination(event) {
@@ -505,6 +537,13 @@ export class ModifyTransactionComponent implements OnInit {
   addNewCreditDebit() {
     //  this.showAddTransaction = false;
     this.addTransaction();
+  }
+
+  enableDisableBudgetLine(value) {
+    if (value == null || value == undefined || value== '' ) {
+      this.addEditTransactionForm.controls['BudgetLine'].setValue('');
+      this.addEditTransactionForm.controls['BudgetLine'].disable();
+    }
   }
 
 }

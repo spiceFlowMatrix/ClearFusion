@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             {
 
                 var query = _dbContext.VoucherDetail
-                                       .Where(v => v.IsDeleted == false)
+                                       .Where(v => v.IsDeleted == false && request.OfficeIds.Contains(v.OfficeId))
                                       .OrderByDescending(x => x.CreatedDate)
                                       .AsQueryable();
 
@@ -48,13 +48,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 }
                 if (!string.IsNullOrEmpty(request.FilterValue))
                 {
-                    query = query.Where(x => request.FilterValue.ToLower().Contains(x.ReferenceNo.ToLower()) ||
-                            request.FilterValue.ToLower().Contains(x.Description.ToLower()));
-                }
-                if(request.OfficeIds != null && request.OfficeIds.Count >0)
-                {
-                    query = query.Where(x => request.OfficeIds.Contains(x.OfficeId));
-                }
+                    query = query.Where(x => request.FilterValue.Trim().ToLower().Contains(x.ReferenceNo.Trim().ToLower()) ||
+                            request.FilterValue.Trim().ToLower().Contains(x.Description.Trim().ToLower()));
+                }           
                 if(request.OperationalType.HasValue) 
                 {
                     query = query.Where(x => x.OperationalType == request.OperationalType);

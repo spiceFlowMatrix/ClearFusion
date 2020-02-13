@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
 		public int AppraisalPeriod { get; set; }
 		public DateTime CurrentAppraisalDate { get; set; }
 		public int OfficeId { get; set; }
-		public bool AppraisalStatus { get; set; }
+		public bool? AppraisalStatus { get; set; }
 		public int? TotalScore { get; set; }
         public double? AppraisalScore { get; set; }  
 		public List<EmployeeAppraisalQuestions> EmployeeAppraisalQuestions{get;set;}

@@ -31,7 +31,7 @@ export class VoucherDetailComponent implements OnInit {
 
   voucherNo: any;
   voucherDetail: any;
-  displayedColumns: string[] = ['Type', 'AccountCode', 'Description', 'Amount', 'ProjectName', 'BudgetLineName', 'JobName'];
+  displayedColumns: string[] = ['AccountCode', 'Description', 'CreditAmount', 'DebitAmount', 'ProjectName', 'BudgetLineName', 'JobName'];
   ELEMENT_DATA: any[] = [];
   documentList: any[] = [];
   isModifyTransactions = false;
@@ -156,6 +156,7 @@ export class VoucherDetailComponent implements OnInit {
 
   getVoucherTransactionsByVoucherNo() {
     this.voucherService.GetTransactionByVoucherId(this.transactionPagingModel).subscribe(x => {
+      debugger;
       this.ELEMENT_DATA = [];
       if (x.statusCode === 200) {
         this.ELEMENT_DATA = x.data;
