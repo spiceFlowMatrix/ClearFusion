@@ -48,8 +48,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 }
                 if (!string.IsNullOrEmpty(request.FilterValue))
                 {
-                    query = query.Where(x => request.FilterValue.Trim().ToLower().Contains(x.ReferenceNo.Trim().ToLower()) ||
-                            request.FilterValue.Trim().ToLower().Contains(x.Description.Trim().ToLower()));
+                    query = query.Where(x =>  x.ReferenceNo.Trim().ToLower().ToLower().Contains(request.FilterValue.Trim()) ||
+                                    x.Description.Trim().ToLower().ToLower().Contains(request.FilterValue.Trim()));
                 }           
                 if(request.OperationalType.HasValue) 
                 {
