@@ -52,7 +52,8 @@ export class ModifyTransactionComponent implements OnInit {
   selectedProjectName: any;
   selectedBudgetLineName: any;
   isFormSubmitted = false;
-  showAddTransaction = false;
+  showAddTransactionTop = false;
+  showAddTransactionBottom = false;
   filterdOptionsProjectList: Observable<any[]>;
   filterdOptionsBudgetLineList: Observable<any[]>;
   errorMessage: string;
@@ -193,18 +194,31 @@ export class ModifyTransactionComponent implements OnInit {
     });
   }
 
-  onAddTransactionBtnClick() {
+  onAddTransactionTopBtnClick() {
    // this.onInItAddTransactionForm();
    this.addEditTransactionForm.get('Credit').setValue(0);
    this.addEditTransactionForm.get('Debit').setValue(0);
    this.addEditTransactionForm.get('Debit').enable();
    this.addEditTransactionForm.get('Credit').enable();
-    this.showAddTransaction = true;
+    this.showAddTransactionTop = true;
   }
 
-  cancelTransactionBtnClicked() {
-    this.showAddTransaction = false;
+  cancelTransactionTopBtnClicked() {
+    this.showAddTransactionTop = false;
   }
+
+  onAddTransactionBottomBtnClick() {
+    // this.onInItAddTransactionForm();
+    this.addEditTransactionForm.get('Credit').setValue(0);
+    this.addEditTransactionForm.get('Debit').setValue(0);
+    this.addEditTransactionForm.get('Debit').enable();
+    this.addEditTransactionForm.get('Credit').enable();
+     this.showAddTransactionBottom = true;
+   }
+
+   cancelTransactionBottomBtnClicked() {
+     this.showAddTransactionBottom = false;
+   }
 
   private filterAccountName(value: string): any[] {
     debugger;
@@ -354,14 +368,14 @@ export class ModifyTransactionComponent implements OnInit {
       this.errorMessage = 'Please correct form errors and try again';
       return;
     }
-    const creditamount = Number(this.addEditTransactionForm.value.Credit);
-    const debitamount = Number(this.addEditTransactionForm.value.Debit);
+    const creditamount = Number(this.addEditTransactionForm.getRawValue().Credit);
+    const debitamount = Number(this.addEditTransactionForm.getRawValue().Debit);
     if (creditamount == 0) {
       this.addEditTransactionForm.controls.Type.setValue(TransactionType.Debit)
     } else {
       this.addEditTransactionForm.controls.Type.setValue(TransactionType.Credit)
     }
-    // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.value.Job);
+    // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.getRawValue().Job);
     const model = {
       AccountNo: this.selectedAccountNo,
       Debit: debitamount.toFixed(2),
@@ -371,18 +385,18 @@ export class ModifyTransactionComponent implements OnInit {
       ProjectName: this.selectedProjectName,
       BudgetLineName: this.selectedBudgetLineName,
       BudgetLineId: this.selectedBudgetLineId,
-      Description: this.addEditTransactionForm.value.Description,
+      Description: this.addEditTransactionForm.getRawValue().Description,
       TransactionId: 0,
       VoucherNo: this.voucherNo,
-      JobId: this.addEditTransactionForm.value.JobId,
-      JobName: this.addEditTransactionForm.value.JobName,
-      Type: this.addEditTransactionForm.value.Type === TransactionType.Debit ? 'Debit' : 'Credit',
+      JobId: this.addEditTransactionForm.getRawValue().JobId,
+      JobName: this.addEditTransactionForm.getRawValue().JobName,
+      Type: this.addEditTransactionForm.getRawValue().Type === TransactionType.Debit ? 'Debit' : 'Credit',
       AccountCode: this.selectedAccountName
     };
     this.voucherDetail.TotalCredit = this.voucherDetail.TotalCredit === undefined ? 0 : this.voucherDetail.TotalCredit;
     this.voucherDetail.TotalDebit = this.voucherDetail.TotalDebit === undefined ? 0 : this.voucherDetail.TotalDebit;
 
-    if (this.addEditTransactionForm.value.Type === TransactionType.Debit) {
+    if (this.addEditTransactionForm.getRawValue().Type === TransactionType.Debit) {
       this.voucherDetail.TotalDebit += parseFloat(debitamount.toFixed(2));
     } else {
       this.voucherDetail.TotalCredit += parseFloat(creditamount.toFixed(2));
@@ -392,11 +406,10 @@ export class ModifyTransactionComponent implements OnInit {
     this.selectedProjectName = null;
     this.selectedProjectId = null;
     this.selectedProjectName = null;
-    this.showAddTransaction = true;
+    this.showAddTransactionTop = false;
+    this.showAddTransactionBottom = false;
     this.addEditTransactionForm.reset();
     this.setAutoComplete();
-    this.showAddTransaction = false;
-
     this.ELEMENT_DATA.push(model);
     this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
   }
