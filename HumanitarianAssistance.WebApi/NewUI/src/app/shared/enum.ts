@@ -806,3 +806,10 @@ export enum AppraisalCatchLevelType {
  '4 - Good' = 4,
  '5 - Excellent' = 5
 }
+
+
+
+
+
+
+

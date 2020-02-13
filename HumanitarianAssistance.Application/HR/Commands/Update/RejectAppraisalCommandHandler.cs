@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                 if (ifExistEmpRecord != null)
                 {
                     ifExistEmpRecord.AppraisalStatus = false;
-                    ifExistEmpRecord.IsDeleted = true;
+                    // ifExistEmpRecord.IsDeleted = true;
                     ifExistEmpRecord.ModifiedById = request.ModifiedById;
                     ifExistEmpRecord.ModifiedDate = request.ModifiedDate;
                     await _dbContext.SaveChangesAsync();

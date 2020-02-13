@@ -30,6 +30,7 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
   styleUrls: ['./add-employee-appraisal.component.scss']
 })
 export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
+  isViewed = true;
   err = null;
   employeeId: number;
   employeeAppraisalPeriod: any[];
@@ -48,6 +49,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   weakPointsList$: Observable<IAppraisalWeakPoints[]> = of([]);
   employeeAppraisalId: number;
   appraisalList: IAppraisalDetailModel[] = [];
+  score = 0;
 
   appraisalPeriodDataSource$ = of([
     { value: 1, name: 'Annual' },
@@ -153,19 +155,20 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     this.initForm();
     this.routeActive.url.subscribe(params => {
       this.employeeId = +params[1].path;
-      this.employeeAppraisalId = +params[3].path;
       console.log(params);
-      console.log(this.employeeAppraisalId);
-      if (
-        this.employeeAppraisalId != undefined &&
-        this.employeeAppraisalId != null
-      ) {
-        // this.setEmployeeAppraisalDetail(this.employeeAppraisalId);
+      if (params.length > 3) {
+        this.employeeAppraisalId = +params[3].path;
+        console.log(this.employeeAppraisalId);
       }
       this.getAllAppraisalList();
     });
 
-    console.log(this.employeeId);
+    this.routeActive.queryParams.subscribe(p => {
+      console.log(p);
+      if (p['isViewed'] === 'false') {
+        this.isViewed = false;
+      }
+    });
     this.employeeAppraisalPeriod = [
       {
         PeriodId: 1,
@@ -212,7 +215,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       FinalResultQues4: [null, Validators.required],
       FinalResultQues5: [null, Validators.required],
       CommentsByEmployee: [null, Validators.required],
-      EmployeeId: this.employeeId
+      EmployeeId: this.employeeId,
+      AppraisalScore: [null]
     });
   }
   setEmployeeAppraisalDetail(id: number, filterData: any) {
@@ -230,7 +234,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
           FinalResultQues4: [element.FinalResultQues4],
           FinalResultQues5: [element.FinalResultQues5],
           CommentsByEmployee: [element.CommentsByEmployee],
-          EmployeeId: this.employeeId
+          EmployeeId: this.employeeId,
+          AppraisalScore: element.AppraisalScore
         });
         this.setProfessionalIndicatorQuestion(
           element.GeneralProfessionalIndicatorQuestion
@@ -292,6 +297,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
           })
         );
       });
+
+      this.score = this.employeeAppraisalForm.get('AppraisalScore').value;
     }
   }
 
@@ -437,6 +444,9 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     ) as FormArray;
   }
 
+  get appraisalQuestionScore() {
+    return this.score;
+  }
   //#region "set appraisal members"
   setAppraisalMembers() {
     debugger;
@@ -471,17 +481,31 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#endregion
 
   backClick() {
+    if (
+      this.employeeAppraisalId === undefined ||
+      this.employeeAppraisalId == null
+    ) {
+      this.router.navigate(['../'], {
+        relativeTo: this.routeActive,
+        queryParams: { tabId: 8 }
+      });
+    } else {
+      this.router.navigate(['../../'], {
+        relativeTo: this.routeActive,
+        queryParams: { tabId: 8 }
+      });
+    }
     debugger;
-    this.router.navigate([
-      '../'
-    ], {
-      relativeTo: this.routeActive
-    });
+
     // this.router.navigate(['/hr/employee/' + this.employeeId]);
     // this.router.navigate(['/hr/employee/' + this.employeeId + '/employeeAppraisal']);
   }
 
-  getQuestionScoreeSelectedValue(event: any) {}
+  getQuestionScoreeSelectedValue(event: any) {
+    debugger;
+    console.log(event);
+    this.score = this.score + event;
+  }
   //#region "Get All Appraisal Questions"
   getAllAppraisalQuestions() {
     debugger;
@@ -884,6 +908,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         .length === 0
     ) {
       this.err = 'Please fill entire form';
+      document.getElementById('err').scrollIntoView();
       return;
     }
     debugger;
@@ -918,18 +943,21 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   addAppraisalForm(form: IAppraisalDetailModel) {
     debugger;
     this.err = null;
-    this.appraisalService.addAppraisalForm(form).subscribe(res => {
-      console.log(res);
-      if (res === true) {
-        this.router.navigate([
-          '../'
-        ], {
-          relativeTo: this.routeActive
-        });
+    this.appraisalService.addAppraisalForm(form).subscribe(
+      res => {
+        console.log(res);
+        if (res === true) {
+          this.router.navigate(['../'], {
+            relativeTo: this.routeActive,
+            queryParams: { tabId: 8 }
+          });
+        }
+      },
+      err => {
+        this.err = err;
+        document.getElementById('err').scrollIntoView();
       }
-    }, err => {
-      this.err = err;
-    });
+    );
   }
   //#endregion
 
@@ -937,15 +965,18 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   editAppraisalForm(form: IAppraisalDetailModel) {
     debugger;
     this.err = null;
-    this.appraisalService.editAppraisalForm(form).subscribe(res => {
-      this.router.navigate([
-        '../'
-      ], {
-        relativeTo: this.routeActive
-      });
-    }, err => {
-      this.err = err;
-    });
+    this.appraisalService.editAppraisalForm(form).subscribe(
+      res => {
+        this.router.navigate(['../../'], {
+          relativeTo: this.routeActive,
+          queryParams: { tabId: 8 }
+        });
+      },
+      err => {
+        this.err = err;
+        document.getElementById('err').scrollIntoView();
+      }
+    );
   }
   //#endregion
 }

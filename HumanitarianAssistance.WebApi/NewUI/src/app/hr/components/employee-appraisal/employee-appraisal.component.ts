@@ -82,53 +82,98 @@ export class EmployeeAppraisalComponent implements OnInit {
                     EvaluationDate: y.EvaluationDisplayDate,
                     AppraisalScore: y.AppraisalScore,
                     TotalAppraisalScore: y.TotalScore,
-                    DirectSupervisor: y.Position,
-                    AppraisalStatus: y.AppraisalStatus,
-                    itemAction: (!y.AppraisalStatus)
+                    DirectSupervisor: y.Position == null ? '' : y.Position,
+                    AppraisalStatus: (y.AppraisalStatus == true ) ? 'Approved' : ( y.AppraisalStatus == false ? 'Rejected' : 'Pending'),
+
+                    itemAction: (y.AppraisalStatus === true)
                       ? [
-                          {
-                            button: {
-                              status: true,
-                              text: 'VIEW',
-                              type: 'text'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
+                        {
+                          button: {
+                            status: true,
+                            text: 'VIEW',
+                            type: 'text'
                           },
-                          {
-                            button: {
-                              status: true,
-                              text: 'REJECT',
-                              type: 'cancel'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'APPROVED',
+                            type: 'text'
                           },
-                          {
-                            button: {
-                              status: true,
-                              text: 'APPROVE',
-                              type: 'save'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
-                          }
-                        ]
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
+                      :
+                     (  (y.AppraisalStatus === false) ?
+                      [
+                        {
+                          button: {
+                            status: true,
+                            text: 'VIEW',
+                            type: 'text'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'REJECTED',
+                            type: 'text'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        }
+                      ]
                       : [
-                          {
-                            button: {
-                              status: true,
-                              text: 'APPROVED',
-                              type: 'text'
-                            },
-                            delete: false,
-                            download: false,
-                            edit: false
-                          }
-                        ]
+                        {
+                          button: {
+                            status: true,
+                            text: 'VIEW',
+                            type: 'text'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'REJECT',
+                            type: 'cancel'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: true,
+                            text: 'APPROVE',
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: false
+                        },
+                        {
+                          button: {
+                            status: false,
+                            text: 'APPROVE',
+                            type: 'save'
+                          },
+                          delete: false,
+                          download: false,
+                          edit: true
+                        }
+                      ])
                   };
                 })
               );
@@ -144,7 +189,6 @@ export class EmployeeAppraisalComponent implements OnInit {
     this.router.navigate(['addAppraisal'], { relativeTo: this.routeActive });
   }
   ActionEvents(event: any) {
-    debugger;
     if (event.type === 'edit') {
       this.editAppraisalList(event.item.EmployeeAppraisalDetailsId);
     }
@@ -153,6 +197,9 @@ export class EmployeeAppraisalComponent implements OnInit {
     }
     if (event.type === 'REJECT') {
       this.RejectAppraisal(event.item.EmployeeAppraisalDetailsId);
+    }
+    if (event.type === 'VIEW') {
+      this.ViewAppraisal(event.item.EmployeeAppraisalDetailsId);
     }
   }
   editAppraisalList(id: any) {
@@ -175,5 +222,14 @@ export class EmployeeAppraisalComponent implements OnInit {
       console.log(res);
       this.getAllAppraisalList();
     });
+  }
+
+  ViewAppraisal(id: any) {
+    if (id !== undefined) {
+      this.router.navigate(['addAppraisal', id], {
+        relativeTo: this.routeActive,
+        queryParams: { isViewed: 'false' }
+      });
+    }
   }
 }

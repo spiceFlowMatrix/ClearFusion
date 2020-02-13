@@ -156,7 +156,6 @@ export class VoucherDetailComponent implements OnInit {
 
   getVoucherTransactionsByVoucherNo() {
     this.voucherService.GetTransactionByVoucherId(this.transactionPagingModel).subscribe(x => {
-      debugger;
       this.ELEMENT_DATA = [];
       if (x.statusCode === 200) {
         this.ELEMENT_DATA = x.data;

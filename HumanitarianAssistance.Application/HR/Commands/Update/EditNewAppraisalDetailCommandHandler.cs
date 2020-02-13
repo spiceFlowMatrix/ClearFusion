@@ -35,27 +35,35 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         ifExistEmpRecord.EmployeeId = request.EmployeeId;
                         ifExistEmpRecord.AppraisalPeriod = request.AppraisalPeriod;
                         ifExistEmpRecord.CurrentAppraisalDate = request.CurrentAppraisalDate;
-                        ifExistEmpRecord.AppraisalStatus = false;
+                        ifExistEmpRecord.AppraisalStatus = null;
                         ifExistEmpRecord.ModifiedById = request.ModifiedById;
                         ifExistEmpRecord.ModifiedDate = request.ModifiedDate;
                         // await _dbContext.EmployeeAppraisalDetails.AddAsync(empArraidalDetial);
                         await _dbContext.SaveChangesAsync();
 
+                        List<EmployeeAppraisalQuestions> quesList = new List<EmployeeAppraisalQuestions>();
                         if (request.GeneralProfessionalIndicatorQuestion.Count > 0)
                         {
+                            var questionList = await _dbContext.EmployeeAppraisalQuestions.Where(x => x.EmployeeAppraisalDetailsId == request.EmployeeAppraisalDetailsId).ToListAsync();
+                            _dbContext.RemoveRange(questionList);
                             foreach (var item in request.GeneralProfessionalIndicatorQuestion)
                             {
-                                var question = await _dbContext.EmployeeAppraisalQuestions.FirstOrDefaultAsync(x => x.EmployeeAppraisalQuestionsId == item.AppraisalGeneralQuestionsId);
-                                if (question != null)
-                                {
-                                    question.Score = item.Score;
-                                    question.Remarks = item.Remarks;
-                                    question.ModifiedDate = request.ModifiedDate;
-                                    question.ModifiedById = request.ModifiedById;
-                                    await _dbContext.SaveChangesAsync();
-                                }
+
+                                EmployeeAppraisalQuestions question = new EmployeeAppraisalQuestions();
+                                question.Score = item.Score;
+                                question.Remarks = item.Remarks;
+                                question.IsDeleted = false;
+                                question.EmployeeAppraisalDetailsId = request.EmployeeAppraisalDetailsId;
+                                question.AppraisalGeneralQuestionsId = item.AppraisalGeneralQuestionsId;
+                                question.EmployeeId = request.EmployeeId;
+                                question.CreatedById = request.CreatedById;
+                                question.CreatedDate = request.CreatedDate;
+                                quesList.Add(question);
 
                             }
+                            await _dbContext.EmployeeAppraisalQuestions.AddRangeAsync(quesList);
+                            await _dbContext.SaveChangesAsync();
+
                         }
 
 
@@ -91,7 +99,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                         obj.FinalResultQues3 = request.FinalResultQues3;
                         obj.FinalResultQues4 = request.FinalResultQues4;
                         obj.FinalResultQues5 = request.FinalResultQues5;
-                        obj.CommentsByEmployee = request.CommnetByEmployee;
+                        obj.CommentsByEmployee = request.CommentsByEmployee;
                         obj.CreatedById = request.CreatedById;
                         obj.CreatedDate = request.CreatedDate;
                         obj.CurrentAppraisalDate = DateTime.Now;
