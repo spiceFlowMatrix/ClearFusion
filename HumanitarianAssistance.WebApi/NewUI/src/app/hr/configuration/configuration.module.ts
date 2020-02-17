@@ -1,3 +1,4 @@
+import { CKEditorModule } from 'ckeditor4-angular';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -100,6 +101,7 @@ import { ContractClausesComponent } from './components/contract-clauses/contract
     MatCheckboxModule,
     MatMenuModule,
     NgxMaterialTimepickerModule,
+    CKEditorModule
   ],
   entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
                    AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,
