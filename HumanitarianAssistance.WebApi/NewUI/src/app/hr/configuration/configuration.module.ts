@@ -44,6 +44,7 @@ import { AddAppraisalComponent } from './components/appraisal-config/add-apprais
 import { AttendanceGroupDetailComponent } from './components/attendance-group-master/attendance-group-detail/attendance-group-detail.component';
 import { AddPayrollHoursComponent } from './components/attendance-group-master/add-payroll-hours/add-payroll-hours.component';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
+import { ContractClausesComponent } from './components/contract-clauses/contract-clauses.component';
 
 @NgModule({
   declarations: [
@@ -74,7 +75,8 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     AppraisalConfigComponent,
     AddAppraisalComponent,
     AttendanceGroupDetailComponent,
-    AddPayrollHoursComponent
+    AddPayrollHoursComponent,
+    ContractClausesComponent
   ],
   imports: [
     CommonModule,
@@ -97,7 +99,7 @@ import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
     MatSelectModule,
     MatCheckboxModule,
     MatMenuModule,
-    NgxMaterialTimepickerModule
+    NgxMaterialTimepickerModule,
   ],
   entryComponents: [AddDesignationComponent, AddEducationDegreeComponent, AddOfficeMasterComponent,
                    AddDepartmentMasterComponent, AddJobGradeComponent, AddAttendanceGroupComponent,
