@@ -208,7 +208,7 @@ export class PurchaseListComponent implements OnInit {
                   },
                   delete: false,
                   download: false,
-                  edit: true
+                  edit: false
                 }]) : ([
                   {
                     button: {
@@ -217,7 +217,7 @@ export class PurchaseListComponent implements OnInit {
                     },
                     delete: false,
                     download: false,
-                    edit: true
+                    edit: false
                   }])
           } as IPurchaseList;
         }));

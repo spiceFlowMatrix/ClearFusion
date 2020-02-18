@@ -34,7 +34,6 @@ import { SatDatepickerModule } from 'saturn-datepicker';
 import { AddVoucherComponent } from './components/add-voucher/add-voucher.component';
 import { VoucherDetailComponent } from './components/voucher-detail/voucher-detail.component';
 import { ModifyTransactionComponent } from './components/modify-transaction/modify-transaction.component';
-import { DocumentUploadComponent } from 'src/app/store/components/document-upload/document-upload.component';
 import { AddDocumentsComponent } from './components/add-documents/add-documents.component';
 
 @NgModule({
@@ -48,7 +47,6 @@ import { AddDocumentsComponent } from './components/add-documents/add-documents.
     AddVoucherComponent,
     VoucherDetailComponent,
     ModifyTransactionComponent,
-    DocumentUploadComponent,
     AddDocumentsComponent,
   ],
   imports: [

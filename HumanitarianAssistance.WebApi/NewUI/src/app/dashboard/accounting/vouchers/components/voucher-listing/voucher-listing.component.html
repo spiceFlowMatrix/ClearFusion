@@ -23,7 +23,7 @@
       </mat-select>
     </mat-form-field> -->
 
-      <mat-select placeholder="Offices" [formControl]="Office" multiple style="width:10%">
+      <mat-select placeholder="Offices" [formControl]="Office" multiple style="width:10%; font-size: 14px;">
           <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option>
         <mat-option *ngFor="let office of offices" [value]="office.OfficeId" (click)="tosslePerOne(allSelected.viewValue)">
           {{office.OfficeName}}
