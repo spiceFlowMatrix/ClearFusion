@@ -21,7 +21,7 @@ export class AddStrongPointsComponent implements OnInit {
   }
 
   onFormSubmit(formdata: any) {
-    if (formdata !== undefined && formdata != null) {
+    if (formdata !== undefined && formdata != null && this.addStrongPointDetailForm.valid) {
       this.strongPointDataEmit.emit(formdata);
       this.dialogRef.close();
     }
