@@ -8,5 +8,8 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
         public long ProjectSectorId { get; set; }
         public long ProjectId { get; set; }       
         public long SectorId { get; set; }
+        public long[] SectorIds { get; set; }
+        
+
     }
 }

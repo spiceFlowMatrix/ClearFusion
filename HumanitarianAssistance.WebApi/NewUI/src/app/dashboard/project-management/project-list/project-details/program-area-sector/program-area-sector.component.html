@@ -201,7 +201,7 @@
             </div><br>
             <div class="row">
               <div class="col-sm-6">
-                <div class="autoComplete">
+                <!-- <div class="autoComplete">
                   <mat-form-field class="example-full-width">
                     <input type="text" placeholder="Select Sector" [value]="Sector" aria-label="Number" matInput
                       [formControl]="myControlSector" name="myControlSector" [matAutocomplete]="autoNumSector">
@@ -213,7 +213,21 @@
                     <mat-spinner class="center_loader custom_load" *ngIf="sectorListFlag;" diameter="20"></mat-spinner>
                   </mat-form-field>
                   <button *ngIf="isEditingAllowed" type="button" (click)="AddSectorDeatil(myControlSector)">+</button>
-                </div>
+                </div> -->
+
+
+                <lib-search-dropdown
+                placeholder="Sector"
+                [multiSelect]="true"
+                placeholderSearchLabel="Search Sector..."
+                noEntriesFoundLabel="No matching sector found"
+                [dataSource]="Sectorlist"
+                [selectedValue]="SectorIds"
+                (openedChange)="
+                onOpenedSectorMultiSelectChange($event)
+                      "
+              >
+              </lib-search-dropdown>
               </div>
               <div class="col-sm-6">
                 <div class="autoComplete">

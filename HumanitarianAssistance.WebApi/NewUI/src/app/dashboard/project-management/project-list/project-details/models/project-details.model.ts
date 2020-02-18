@@ -134,6 +134,7 @@ export interface ProjectSectorModel {
   ProjectSectorId?: number;
   ProjectId?: number;
   SectorId?: number;
+  SectorIds?: number[];
 }
 export interface ApproveProjectDetailModel {
   ProjectId?: number;

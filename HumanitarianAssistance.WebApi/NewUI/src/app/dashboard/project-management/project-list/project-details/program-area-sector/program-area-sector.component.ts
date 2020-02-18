@@ -15,7 +15,7 @@ import {
   CountryMultiSelectModel,
   IProjectOtherDetailPdf
 } from './../models/project-details.model';
-import { Validators } from '@angular/forms';
+import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { Component, OnInit, Inject, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
@@ -33,7 +33,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { startWith, map, takeUntil } from 'rxjs/operators';
 import { ToastrService } from 'ngx-toastr';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
-import { IDataSource } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
+import { IDataSource, IOpenedChange } from 'projects/library/src/lib/components/search-dropdown/search-dropdown.model';
 import { Observable } from 'rxjs/internal/Observable';
 import { ApplicationPages } from 'src/app/shared/applicationpagesenum';
 import { LocalStorageService } from 'src/app/shared/services/localstorage.service';
@@ -49,6 +49,9 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 })
 export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   //#region variables
+  sectorFilterForm: FormGroup;
+  selectedSectors: any[];
+  intialFlagValue = 0;
 
   projectOtherDetailPdf: IProjectOtherDetailPdf = {
     // Opportunity Details
@@ -135,7 +138,9 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   isEditingAllowed = false;
   pageId = ApplicationPages.ProjectDetails;
 
-  Sectorlist: SectorModel[];
+  // Sectorlist: SectorModel[];
+  Sectorlist: any[];
+
   Programlist: ProgramModel[];
   Arealist: AreaModel[];
   Area: string[];
@@ -229,9 +234,9 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
     public toastr: ToastrService,
     public router: Router,
     public commonLoaderService: CommonLoaderService,
-    private pDetailPdfService: ProjectOtherDetailPdfService,
     private _cdr: ChangeDetectorRef,
     private globalSharedService: GlobalSharedService,
+    private fb: FormBuilder,
 
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
@@ -274,6 +279,9 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
     this.StartDate = new Date();
     this.EndDate = new Date();
+    this.sectorFilterForm = this.fb.group({
+      'SectorList': ['']
+    });
   }
 
   //#region  initialize model
@@ -731,6 +739,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
   //#region  GetAllSectorList
   GetAllSectorList() {
+    debugger;
     this.Sectorlist = [];
     this.sectorListFlag = true;
     this.projectListService
@@ -741,28 +750,48 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
         data => {
           if (data != null) {
             if (data.data.sectorDetails != null) {
+              debugger;
               data.data.sectorDetails.forEach(element => {
                 this.Sectorlist.push({
-                  SectorId: element.SectorId,
-                  SectorName: element.SectorName
+                  Id: element.SectorId,
+                  Name: element.SectorName
                 });
               });
-              this._cdr.detectChanges();
-              this.filterdOptionSector = this.myControlSector.valueChanges.pipe(
-                startWith<string | SectorModel>(''),
-                map(SectorId =>
-                  typeof SectorId === 'string' ? SectorId : SectorId.SectorName
-                ),
-                map(SectorName =>
-                  SectorName
-                    ? this._filterSector(SectorName)
-                    : this.Sectorlist.slice()
-                )
-              );
-            }
-            this.getProjectSectorById(this.ProjectId);
-            this.sectorListFlag = false;
-          }
+            //   this._cdr.detectChanges();
+            //   this.filterdOptionSector = this.myControlSector.valueChanges.pipe(
+            //     startWith<string | SectorModel>(''),
+            //     map(SectorId =>
+            //       typeof SectorId === 'string' ? SectorId : SectorId.SectorName
+            //     ),
+            //     map(SectorName =>
+            //       SectorName
+            //         ? this._filterSector(SectorName)
+            //         : this.Sectorlist.slice()
+            //     )
+            //   );
+            // }
+
+
+            //this.getProjectSectorById(this.ProjectId);
+            //this.sectorListFlag = false;
+
+
+
+
+
+            this.selectedSectors = [];
+            this.Sectorlist.forEach(x => {
+              // tslint:disable-next-line:radix
+              this.selectedSectors.push(x.SectorId);
+            });
+            this.sectorFilterForm.controls['SectorList'].setValue(this.selectedSectors);
+            this.intialFlagValue += 1;
+
+            this.Sectorlist = this.projectListService.sortDropdown(
+              this.Sectorlist,
+              'SectorName'
+            );
+        }}
         },
         error => {
           this.sectorListFlag = false;
@@ -772,6 +801,43 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
   }
   //#endregion
 
+
+
+  get SectorIds() {
+    return this.sectorFilterForm.get('SectorList').value;
+  }
+  onOpenedSectorMultiSelectChange(event: IOpenedChange) {
+    debugger;
+    this.sectorFilterForm.controls['SectorList'].setValue(event.Value);
+    if (event.Value[0] != null && event.Value[0] !== undefined) {
+      const projectSectorModel: ProjectSectorModel = {
+        ProjectId: this.ProjectId,
+        // SectorId: event.source.value.SectorId
+        SectorIds : this.sectorFilterForm.get('SectorList').value
+      };
+      this.projectListService
+        .AddeditSelectSectorvalue(
+          this.appurl.getApiUrl() + GLOBAL.API_Project_AddEditProjectSector,
+          projectSectorModel
+        )
+        .subscribe(
+          response => {
+            if (response.StatusCode === 200) {
+              this._cdr.detectChanges();
+              this.sectorListFlag = false;
+            }
+            if (response.StatusCode === 400) {
+              this.toastr.error(response.Message);
+              this.sectorListFlag = false;
+            }
+          },
+          error => {
+            this.sectorListFlag = false;
+            this.toastr.error('Something went wrong ! Please try Again');
+          }
+        );
+    }
+  }
   //#region _filter the Program from ProgramList
   private _filterSector(name: string): SectorModel[] {
     const filterValue = name.toLowerCase();
@@ -871,6 +937,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
 
   //#region AddeditSelectSectorvalue when choose from dropdown
   AddeditSelectSectorvalue(event: any) {
+    debugger;
     // this.sectorListFlag = true;
     if (event != null && event !== undefined) {
       const projectSectorModel: ProjectSectorModel = {
@@ -2240,7 +2307,7 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy  {
     // set your pdf values here
     this.globalSharedService
       .getFile(this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetProjectOtherDetailReportPdf,
-      {"ProjectId":this.ProjectId}
+      {'ProjectId': this.ProjectId}
       )
       .pipe()
       .subscribe();
