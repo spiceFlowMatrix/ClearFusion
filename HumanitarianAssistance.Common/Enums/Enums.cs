@@ -371,12 +371,14 @@ namespace HumanitarianAssistance.Common.Enums {
         Rehired = 3
     }
 
+
     public enum AppriasalStorngWeakPointType {
         Strong = 1,
         Weak = 2
     }
 
     public enum ActionType {
+
         Add = 0,
         Update = 1,
         Delete = 2,
@@ -395,5 +397,12 @@ namespace HumanitarianAssistance.Common.Enums {
         Advance = 7, [Description ("This Action Perform on Employee Analytical Information")]
         AnalyticalInformation = 8
 
+    }
+
+    public enum OperationType
+    {
+        Store = 1,
+        DirectVoucher = 2,
+        Logistics = 3,
     }
 }

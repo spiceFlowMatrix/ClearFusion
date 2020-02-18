@@ -10,3 +10,12 @@ table {
 .example-full-width {
   width: 100%;
 }
+td , th {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 200px;
+}
+
+.icon_color_yellow{
+  color: darkgoldenrod;
+}

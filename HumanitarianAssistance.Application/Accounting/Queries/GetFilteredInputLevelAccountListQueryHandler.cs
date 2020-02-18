@@ -25,8 +25,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
             try
             {
                 var accountList = await _dbContext.ChartOfAccountNew.Where(x=> x.IsDeleted == false &&
-                                  x.ChartOfAccountNewCode.ToLower().Contains(request.FilterValue.ToLower()) ||
-                                  x.AccountName.ToLower().Contains(request.FilterValue.ToLower()) && x.AccountLevelId == (int)AccountLevels.InputLevel).ToListAsync();
+                                  (x.ChartOfAccountNewCode.ToLower().Contains(request.FilterValue.ToLower()) ||
+                                  x.AccountName.ToLower().Contains(request.FilterValue.ToLower())) &&
+                                  x.AccountLevelId == (int)AccountLevels.InputLevel).ToListAsync();
 
                 response.Add("AccountList", accountList);
             }

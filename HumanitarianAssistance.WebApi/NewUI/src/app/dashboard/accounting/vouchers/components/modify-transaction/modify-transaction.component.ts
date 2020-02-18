@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
-import { TransactionType } from 'src/app/shared/enum';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { TransactionType, VoucherType } from 'src/app/shared/enum';
 import { Validators, FormGroup, FormBuilder } from '@angular/forms';
 import { IResponseData } from '../../models/status-code.model';
 import { MatTableDataSource } from '@angular/material';
+import { MatSort } from '@angular/material/sort';
 import { SelectionModel } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -19,9 +20,19 @@ import { of } from 'rxjs/internal/observable/of';
 })
 export class ModifyTransactionComponent implements OnInit {
 
+  constructor(private routeActive: ActivatedRoute,
+    private router: Router, private voucherService: VoucherService,
+    private toastr: ToastrService, private fb: FormBuilder) {
+    this.routeActive.url.subscribe(params => {
+      this.voucherNo = +params[0].path;
+    });
+  }
+
+  transactionPagingModel: any;
+
   voucherNo: any;
   voucherDetail: any;
-  displayedColumns: string[] = ['select', 'Type', 'AccountCode', 'Description', 'Amount', 'ProjectName', 'BudgetLineName', 'JobName'];
+  displayedColumns: string[] = ['select', 'AccountCode', 'Description', 'CreditAmount', 'DebitAmount', 'ProjectName', 'BudgetLineName', 'JobName'];
   ELEMENT_DATA: any[] = [];
   isModifyTransactions = false;
   transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
@@ -29,6 +40,9 @@ export class ModifyTransactionComponent implements OnInit {
   addEditTransaction = false;
   addEditTransactionForm: FormGroup;
   filterdOptionsAccountList: Observable<any[]>;
+  accountspinner= false;
+  projectspinner = false;
+  budgetlinespinner= false;
   accountList: any[] = [];
   projectList: any[] = [];
   jobList: any[] = [];
@@ -41,26 +55,28 @@ export class ModifyTransactionComponent implements OnInit {
   selectedProjectName: any;
   selectedBudgetLineName: any;
   isFormSubmitted = false;
-  showAddTransaction = false;
+  showAddTransactionTop = false;
+  showAddTransactionBottom = false;
   filterdOptionsProjectList: Observable<any[]>;
   filterdOptionsBudgetLineList: Observable<any[]>;
   errorMessage: string;
-
-  constructor(private routeActive: ActivatedRoute,
-    private router: Router, private voucherService: VoucherService,
-    private toastr: ToastrService, private fb: FormBuilder,
-    private budgetLineService: BudgetLineService) {
-    this.routeActive.url.subscribe(params => {
-      this.voucherNo = +params[0].path;
-    });
-  }
+  recordCount = 0;
+  VoucherTypeEnum = VoucherType;
 
   ngOnInit() {
+    this.transactionPagingModel = {
+      PageSize: 10,
+      PageIndex: 0,
+      VoucherNo: this.voucherNo
+    };
+
     this.onFormInIt();
     this.getDetailsByVoucherNo();
     this.getVoucherTransactionsByVoucherNo();
     this.setAutoComplete();
+
   }
+
   setAutoComplete() {
 
     this.filterdOptionsAccountList = this.addEditTransactionForm.controls[
@@ -106,7 +122,15 @@ export class ModifyTransactionComponent implements OnInit {
       IsVoucherVerified: null,
       IsExchangeGainLos: null,
       TotalCredit: 0,
-      TotalDebit: 0
+      TotalDebit: 0,
+      PurchaseOrderModel: {
+        ProjectId: null,
+        Code: null,
+        PurchaseOrderId: null,
+        Description: null,
+        ApprovedBy: null,
+        ApprovedOn: null
+      }
     };
   }
 
@@ -115,13 +139,15 @@ export class ModifyTransactionComponent implements OnInit {
       'AccountId': ['', [Validators.required]],
       'AccountName': [null],
       'Description': [null, [Validators.required]],
-      'Amount': [null, [Validators.required]],
+      'Credit': [0.00],
+      'Debit': [0.00],
       'ProjectId': [''],
       'BudgetLine': [null],
       'JobId': [null],
       'JobName': [''],
-      'Type': [null, [Validators.required]],
+      'Type': [null],
     });
+    this.addEditTransactionForm.controls['BudgetLine'].disable();
   }
 
   getDetailsByVoucherNo() {
@@ -157,10 +183,11 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   getVoucherTransactionsByVoucherNo() {
-    this.voucherService.GetTransactionByVoucherId(this.voucherNo).subscribe(x => {
+    this.voucherService.GetTransactionByVoucherId(this.transactionPagingModel).subscribe(x => {
       this.ELEMENT_DATA = [];
       if (x.statusCode === 200) {
         this.ELEMENT_DATA = x.data;
+        this.recordCount = x.total;
         this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
         this.selection.clear();
       }
@@ -170,20 +197,40 @@ export class ModifyTransactionComponent implements OnInit {
     });
   }
 
-  onAddTransactionBtnClick() {
-    this.showAddTransaction = true;
+  onAddTransactionTopBtnClick() {
+   // this.onInItAddTransactionForm();
+   this.addEditTransactionForm.get('Credit').setValue(0);
+   this.addEditTransactionForm.get('Debit').setValue(0);
+   this.addEditTransactionForm.get('Debit').enable();
+   this.addEditTransactionForm.get('Credit').enable();
+    this.showAddTransactionTop = true;
   }
 
-  cancelTransactionBtnClicked() {
-    this.showAddTransaction = false;
+  cancelTransactionTopBtnClicked() {
+    this.showAddTransactionTop = false;
   }
+
+  onAddTransactionBottomBtnClick() {
+    // this.onInItAddTransactionForm();
+    this.addEditTransactionForm.get('Credit').setValue(0);
+    this.addEditTransactionForm.get('Debit').setValue(0);
+    this.addEditTransactionForm.get('Debit').enable();
+    this.addEditTransactionForm.get('Credit').enable();
+     this.showAddTransactionBottom = true;
+   }
+
+   cancelTransactionBottomBtnClicked() {
+     this.showAddTransactionBottom = false;
+   }
 
   private filterAccountName(value: string): any[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length >= 3) {
+      if (value.length >= 2) {
         this.getFilteredAccountList(filterValue);
         return this.accountList;
+      } else {
+        this.accountList = [];
       }
     }
   }
@@ -191,9 +238,12 @@ export class ModifyTransactionComponent implements OnInit {
   private filterProjectName(value: string): any[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length >= 3) {
+      if (value.length >= 2) {
         this.getFilteredProjectList(filterValue);
         return this.projectList;
+      } else {
+        this.addEditTransactionForm.controls['BudgetLine'].disable();
+        this.projectList = [];
       }
     }
   }
@@ -201,15 +251,18 @@ export class ModifyTransactionComponent implements OnInit {
   private filterBudgetLineName(value: string): any[] {
     if (value) {
       const filterValue = value.toLowerCase();
-      if (value.length >= 3) {
+      if (value.length >= 2) {
         this.getFilteredBudgetLineList(filterValue);
         return this.budgetLineList;
+      } else {
+        this.budgetLineList = [];
       }
     }
   }
 
   getFilteredAccountList(data: string) {
     if (data !== undefined && data != null) {
+      this.accountspinner = true;
       this.voucherService
         .GetFilteredInputLevelAccountList(data)
         .subscribe(resp => {
@@ -221,13 +274,19 @@ export class ModifyTransactionComponent implements OnInit {
                 AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
               });
             });
+            this.accountspinner = false;
+          } else {
+            this.accountspinner = false;
           }
+        }, error=> {
+          this.accountspinner = false;
         });
     }
   }
 
   getFilteredProjectList(data: string) {
     if (data !== undefined && data != null) {
+      this.projectspinner = true;
       this.voucherService
         .GetFilteredProjectList(data)
         .subscribe(resp => {
@@ -239,7 +298,12 @@ export class ModifyTransactionComponent implements OnInit {
                 ProjectName: element.ProjectCode + '-' + element.ProjectName
               });
             });
+            this.projectspinner = false;
+          } else {
+            this.projectspinner = false;
           }
+        }, error=> {
+          this.projectspinner = false;
         });
     }
   }
@@ -250,6 +314,7 @@ export class ModifyTransactionComponent implements OnInit {
       FilterValue: data
     }
     if (data !== undefined && data != null) {
+      this.budgetlinespinner = true;
       this.voucherService
         .getFilteredBudgetLineList(model)
         .subscribe(resp => {
@@ -261,7 +326,12 @@ export class ModifyTransactionComponent implements OnInit {
                 BudgetLineName: element.BudgetLineCode + '-' + element.BudgetLineName
               });
             });
+            this.budgetlinespinner = false;
+          } else {
+            this.budgetlinespinner = false;
           }
+        }, error => {
+          this.budgetlinespinner = false;
         });
     }
   }
@@ -278,7 +348,9 @@ export class ModifyTransactionComponent implements OnInit {
     if (id !== undefined && id != null) {
       this.selectedProjectId = id;
       this.selectedProjectName = event.source.value;
-      // this.getBudgetLineByProjectId(id);
+      this.addEditTransactionForm.controls['BudgetLine'].enable();
+    } else {
+      this.addEditTransactionForm.controls['BudgetLine'].disable();
     }
   }
 
@@ -286,7 +358,9 @@ export class ModifyTransactionComponent implements OnInit {
     if (id !== undefined && id != null) {
       this.selectedBudgetLineId = id;
       this.selectedBudgetLineName = event.source.value;
-       this.getProjectJobDetailByBudgetLineId(id);
+      this.getProjectJobDetailByBudgetLineId(id);
+    } else {
+
     }
   }
 
@@ -295,7 +369,7 @@ export class ModifyTransactionComponent implements OnInit {
       (response: IResponseData) => {
         if (response.statusCode === 200) {
           this.addEditTransactionForm.controls['JobName'].setValue(response.data.ProjectJobCode + '-' +
-                            response.data.ProjectJobName);
+            response.data.ProjectJobName);
           this.addEditTransactionForm.controls['JobId'].setValue(response.data.ProjectJobId);
         } else if (response.statusCode === 400) {
           this.toastr.warning(response.message);
@@ -308,47 +382,53 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   addTransaction() {
+
     if (!this.addEditTransactionForm.valid) {
       this.errorMessage = 'Please correct form errors and try again';
       return;
     }
-
-    // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.value.Job);
+    const creditamount = Number(this.addEditTransactionForm.getRawValue().Credit);
+    const debitamount = Number(this.addEditTransactionForm.getRawValue().Debit);
+    if (creditamount == 0) {
+      this.addEditTransactionForm.controls.Type.setValue(TransactionType.Debit)
+    } else {
+      this.addEditTransactionForm.controls.Type.setValue(TransactionType.Credit)
+    }
+    // const jobIndex = this.jobList.findIndex(x => x.JobId === this.addEditTransactionForm.getRawValue().Job);
     const model = {
       AccountNo: this.selectedAccountNo,
-      Debit: this.addEditTransactionForm.value.Type === TransactionType.Debit ? this.addEditTransactionForm.value.Amount.toFixed(2) : 0,
-      Credit: this.addEditTransactionForm.value.Type === TransactionType.Credit ? this.addEditTransactionForm.value.Amount.toFixed(2) : 0,
-      Amount: this.addEditTransactionForm.value.Amount.toFixed(2),
+      Debit: debitamount.toFixed(2),
+      Credit: creditamount.toFixed(2),
+      Amount: 0,
       ProjectId: this.selectedProjectId,
       ProjectName: this.selectedProjectName,
       BudgetLineName: this.selectedBudgetLineName,
       BudgetLineId: this.selectedBudgetLineId,
-      Description: this.addEditTransactionForm.value.Description,
+      Description: this.addEditTransactionForm.getRawValue().Description,
       TransactionId: 0,
       VoucherNo: this.voucherNo,
-      JobId: this.addEditTransactionForm.value.JobId,
-      JobName: this.addEditTransactionForm.value.JobName,
-      Type: this.addEditTransactionForm.value.Type === TransactionType.Debit ? 'Debit' : 'Credit',
+      JobId: this.addEditTransactionForm.getRawValue().JobId,
+      JobName: this.addEditTransactionForm.getRawValue().JobName,
+      Type: this.addEditTransactionForm.getRawValue().Type === TransactionType.Debit ? 'Debit' : 'Credit',
       AccountCode: this.selectedAccountName
     };
     this.voucherDetail.TotalCredit = this.voucherDetail.TotalCredit === undefined ? 0 : this.voucherDetail.TotalCredit;
     this.voucherDetail.TotalDebit = this.voucherDetail.TotalDebit === undefined ? 0 : this.voucherDetail.TotalDebit;
 
-    if (this.addEditTransactionForm.value.Type === TransactionType.Debit) {
-      this.voucherDetail.TotalDebit += parseFloat(this.addEditTransactionForm.value.Amount.toFixed(2));
+    if (this.addEditTransactionForm.getRawValue().Type === TransactionType.Debit) {
+      this.voucherDetail.TotalDebit += parseFloat(debitamount.toFixed(2));
     } else {
-      this.voucherDetail.TotalCredit += parseFloat(this.addEditTransactionForm.value.Amount.toFixed(2));
+      this.voucherDetail.TotalCredit += parseFloat(creditamount.toFixed(2));
     }
 
     this.selectedAccountNo = null;
     this.selectedProjectName = null;
     this.selectedProjectId = null;
     this.selectedProjectName = null;
-    this.showAddTransaction = true;
+    this.showAddTransactionTop = false;
+    this.showAddTransactionBottom = false;
     this.addEditTransactionForm.reset();
     this.setAutoComplete();
-    this.showAddTransaction = false;
-
     this.ELEMENT_DATA.push(model);
     this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
   }
@@ -386,18 +466,34 @@ export class ModifyTransactionComponent implements OnInit {
     const creditsTotal = this.ELEMENT_DATA.filter(x => x.Type === 'Credit');
     const debitsTotal = this.ELEMENT_DATA.filter(x => x.Type === 'Debit');
 
-    if (creditsTotal.length === 0 || debitsTotal.length === 0) {
-      this.errorMessage = 'Credits and Debits must be equal';
-      this.isFormSubmitted = false;
-      return;
+    if (creditsTotal.length === 0 && debitsTotal.length === 0) {
+      // this.errorMessage = 'Credits and Debits must be equal';
+      // this.isFormSubmitted = false;
+      // return;
+    } else {
+      if (creditsTotal.length === 0 || debitsTotal.length === 0) {
+        this.errorMessage = 'Credits and Debits must be equal';
+        this.isFormSubmitted = false;
+        return;
+      }
+      else {
+        let credit = 0;
+        let debit = 0;
+        if (creditsTotal.length == 1) {
+          credit = Number(creditsTotal[0].Credit);
+        } else { creditsTotal.map(item => item.Credit).reduce((prev, next) => credit = Number(prev) + Number(next)); }
+        if (debitsTotal.length == 1) {
+          debit = Number(debitsTotal[0].Debit);
+        } else {  debitsTotal.map(item => item.Debit).reduce((prev, next) => debit = Number(prev) + Number(next)); }
+        if (credit !== debit) {
+          this.errorMessage = 'Credits and Debits must be equal';
+          this.isFormSubmitted = false;
+          return;
+        }
+      }
     }
 
-    if (creditsTotal.map(item => item.Credit).reduce((prev, next) => prev + next) !==
-      debitsTotal.map(item => item.Debit).reduce((prev, next) => prev + next)) {
-      this.errorMessage = 'Credits and Debits must be equal';
-      this.isFormSubmitted = false;
-      return;
-    }
+
 
     this.errorMessage = '';
 
@@ -423,7 +519,7 @@ export class ModifyTransactionComponent implements OnInit {
         this.toastr.success('Saved Successfully');
         this.isFormSubmitted = false;
       } else {
-        this.errorMessage ='Something went wrong. Please try again';
+        this.errorMessage = 'Something went wrong. Please try again';
         this.isFormSubmitted = false;
       }
     }, error => {
@@ -431,6 +527,60 @@ export class ModifyTransactionComponent implements OnInit {
       this.isFormSubmitted = false;
     });
   }
+
+  onAmountEvent(value, type) {
+    const val = Number(value);
+    //if (val && val !== 0) {
+      if (type === 2 && val !== 0) {
+        this.addEditTransactionForm.get('Debit').setValue(val.toFixed(2));
+        this.addEditTransactionForm.get('Credit').setValue(0);
+        this.addEditTransactionForm.get('Credit').disable();
+        // this.addEditTransactionForm.get('Credit').setValue(0);
+      } else if (type === 2 && val == 0) {
+        this.addEditTransactionForm.get('Credit').enable();
+      } else if(type === 1 && val !== 0) {
+        this.addEditTransactionForm.get('Credit').setValue(val.toFixed(2));
+        this.addEditTransactionForm.get('Debit').setValue(0);
+        this.addEditTransactionForm.get('Debit').disable();
+      } else if(type === 1 && val == 0) {
+        this.addEditTransactionForm.get('Debit').enable();
+      }
+    //}
+
+  }
+  checkAmount(val) {
+    if (val == 1) {
+      // this.addEditTransactionForm.get('Credit').enable();
+      this.addEditTransactionForm.get('Debit').setValue(0);
+     //  this.addEditTransactionForm.get('Debit').disable();
+    } else {
+      // this.addEditTransactionForm.get('Debit').enable();
+      this.addEditTransactionForm.get('Credit').setValue(0);
+     // this.addEditTransactionForm.get('Credit').disable();
+    }
+  }
+  pagination(event) {
+    this.transactionPagingModel.PageIndex = event.pageIndex;
+    this.transactionPagingModel.PageSize = event.pageSize;
+    this.getVoucherTransactionsByVoucherNo();
+  }
+
+  navigateToLogisticRequest() {
+    this.router.navigate(['project/my-project/' + this.voucherDetail.PurchaseOrderModel.ProjectId +
+      '/logistic-requests/' + this.voucherDetail.PurchaseOrderModel.PurchaseOrderId]);
+  }
+  addNewCreditDebit() {
+    //  this.showAddTransaction = false;
+    this.addTransaction();
+  }
+
+  enableDisableBudgetLine(value) {
+    if (value == null || value == undefined || value== '' ) {
+      this.addEditTransactionForm.controls['BudgetLine'].setValue('');
+      this.addEditTransactionForm.controls['BudgetLine'].disable();
+    }
+  }
+
 }
 
 export interface ITransaction {

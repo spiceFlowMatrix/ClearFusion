@@ -21,6 +21,15 @@
           <span *ngFor="let actionType of item.itemAction">
               <hum-button *ngIf="actionType.button?.status" [type]="actionType.button?.type" [text]="actionType.button?.text"
               (click)='action(item,actionType.button?.text,$event)'></hum-button>
+              <span class="action-span">
+                <i *ngIf="actionType.download" class="fas fa-download" (click)='action(item,"download",$event)'></i>
+              </span>
+              <span class="action-span">
+                <i *ngIf="actionType.edit" class="fa fa-pencil" (click)='action(item,"edit",$event)'></i>
+              </span>
+              <span class="action-span">
+                <i *ngIf="actionType.delete" class="fas fa-trash" (click)='action(item,"delete",$event)'></i>
+              </span>
           </span>
 
         </span>

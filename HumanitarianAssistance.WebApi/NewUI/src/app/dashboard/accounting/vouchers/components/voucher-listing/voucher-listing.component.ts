@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs/internal/Observable';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { Month, VoucherType } from 'src/app/shared/enum';
 import { of } from 'rxjs/internal/observable/of';
-import { FormGroup, FormBuilder, NgModel } from '@angular/forms';
+import { FormGroup, FormBuilder, NgModel, FormControl } from '@angular/forms';
 import { VoucherService } from '../../voucher.service';
 import { IResponseData } from '../../models/status-code.model';
 import { MatTableDataSource } from '@angular/material/table';
@@ -15,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 import { GLOBAL } from 'src/app/shared/global';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { MatOption } from '@angular/material';
 
 
 @Component({
@@ -31,6 +32,10 @@ export class VoucherListingComponent implements OnInit {
   journalList$: Observable<IDropDownModel[]>;
   operationalTypes$: Observable<IDropDownModel[]>;
   selectedOffices: any[];
+  // officeForm: FormGroup;
+  Office = new FormControl([]);
+  @ViewChild('allSelected') private allSelected: MatOption;
+  selectedVoucherNo = 30;
   offices: any[];
   ELEMENT_DATA: any[] = [];
   voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
@@ -53,7 +58,6 @@ export class VoucherListingComponent implements OnInit {
       'JournalId': [null]
     });
     this.operationalTypes$ = of([
-      {name: 'Store', value: 1 },
       {name: 'Direct Voucher', value: 2 },
       {name: 'Logistics', value: 3 }
     ]);
@@ -63,8 +67,8 @@ export class VoucherListingComponent implements OnInit {
     this.getAllMonthList();
     this.getAllCurrency();
     this.getJournalList();
-    this.getVoucherList();
     this.getOfficeList();
+
   }
 
 
@@ -142,12 +146,11 @@ export class VoucherListingComponent implements OnInit {
 
   //#region "getVoucherList"
   getVoucherList() {
-
     const officeIds: any[] = [];
 
-    if (this.selectedOffices && this.selectedOffices.length > 0) {
-      this.selectedOffices.forEach(x => {
-        officeIds.push(x.OfficeId);
+    if (this.Office.value.length > 0) {
+      this.Office.value.forEach(x => {
+        officeIds.push(x);
       });
     }
 
@@ -173,6 +176,7 @@ export class VoucherListingComponent implements OnInit {
         ) {
           if (response.data.VoucherDetailList.length > 0) {
             this.pagingModel.recordCount = response.data.TotalCount != null ? response.data.TotalCount : 0;
+            this.selectedVoucherNo = response.data.VoucherDetailList[0].VoucherNo;
             response.data.VoucherDetailList.forEach(element => {
               this.ELEMENT_DATA.push({
                 VoucherNo: element.VoucherNo,
@@ -207,6 +211,9 @@ export class VoucherListingComponent implements OnInit {
             this.voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
             this.selection.clear();
           }
+        } else {
+          this.voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+            this.selection.clear();
         }
         // this.commonLoader.hideLoader();
       },
@@ -300,6 +307,9 @@ export class VoucherListingComponent implements OnInit {
               OfficeName: element.OfficeName
             });
           });
+           this.Office.patchValue([...this.offices.map(item => item.OfficeId), 0]);
+          this.allSelected.select();
+          this.getVoucherList();
         }
       },
       error => {}
@@ -308,6 +318,7 @@ export class VoucherListingComponent implements OnInit {
   //#endregion
 
   navigateToDetails(detail) {
+    this.selectedVoucherNo = detail.VoucherNo;
     this.router.navigate(['../' + detail.VoucherNo], { relativeTo: this.routeActive });
   }
 
@@ -355,6 +366,36 @@ export class VoucherListingComponent implements OnInit {
 
   resetFilter() {
     this.voucherFilterForm.reset();
+    this.voucherFilterForm = this.fb.group({
+      'Search': [null],
+      'Date': [{ 'begin': null, 'end':  null}],
+      'CurrencyId': [null],
+      'OperationalType': [null],
+      'JournalId': [null]
+    });
     this.getVoucherList();
   }
+
+  toggleAllSelection() {
+    if (this.allSelected.selected) {
+
+      this.Office
+        .patchValue([...this.offices.filter(x => x !== 0).map(item => item.OfficeId), 0]);
+    } else {
+      this.Office.patchValue([]);
+    }
+    this.getVoucherList();
+  }
+
+  tosslePerOne(all){
+    if (this.allSelected.selected) {
+     this.allSelected.deselect();
+     return false;
+ }
+   if (this.Office.value.length==this.offices.length) {
+    this.allSelected.select();
+   }
+     this.getVoucherList();
+
+ }
 }

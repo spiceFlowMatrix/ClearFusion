@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Update
             {
                 List<VoucherDetail> vouchers = await _dbContext.VoucherDetail.Where(x=> x.IsDeleted == false && request.VoucherNos.Contains(x.VoucherNo)).ToListAsync();
 
-                vouchers.ForEach(x=> x.IsVoucherVerified = true);
+                vouchers.ForEach(x => x.IsVoucherVerified = x.IsVoucherVerified ? false : true);
 
                 _dbContext.VoucherDetail.UpdateRange(vouchers);
                 await _dbContext.SaveChangesAsync();

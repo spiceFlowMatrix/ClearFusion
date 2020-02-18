@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         }
 
         public int EmployeeAppraisalDetailsId { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
         public int AppraisalPeriod { get; set; }
         public DateTime CurrentAppraisalDate { get; set; }
         public string EmployeeCode { get; set; }
@@ -30,16 +30,16 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public DateTime RecruitmentDate { get; set; }
 
         public int OfficeId { get; set; }
-        public double TotalScore { get; set; }
-        public string AppraisalScore { get; set; }
-        public bool AppraisalStatus { get; set; }
+        public double? TotalScore { get; set; }
+        public int? AppraisalScore { get; set; }
+        public bool? AppraisalStatus { get; set; }
         public string EvaluationDisplayDate { get; set; }
 
         public string FinalResultQues2 { get; set; }
         public string FinalResultQues3 { get; set; }
         public string FinalResultQues4 { get; set; }
         public string FinalResultQues5 { get; set; }
-        public string CommnetByEmployee { get; set; }
+        public string CommentsByEmployee { get; set; }
         public int EmployeeEvaluationId { get; set; }
         public string DirectSupervisor { get; set; }
         public string EvaluationStatus { get; set; }
@@ -59,7 +59,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public string Type { get; set; }
-        public int EmployeeId { get; set; }
+        public int? EmployeeId { get; set; }
     }
     public class AppraisalTrainingListModel
     {
@@ -84,7 +84,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
 
     public class GeneralProfessionalIndicatorQuestionListModel
     {
-        public int SequenceNumber { get; set; }
+        public int? SequenceNumber { get; set; }
         public string QuestionEnglish { get; set; }
         public int Score { get; set; }
         public string Remarks { get; set; }

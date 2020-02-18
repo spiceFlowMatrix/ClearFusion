@@ -69,9 +69,9 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        public async Task<ApiResponse> GetAllTransactionsByVoucherId([FromBody] long id)
+        public async Task<ApiResponse> GetAllTransactionsByVoucherId([FromBody] GetAllTransactionsByVoucherIdQuery query)
         {
-            return await _mediator.Send(new GetAllTransactionsByVoucherIdQuery { VoucherId = id });
+            return await _mediator.Send(query);
         }
 
         [HttpPost]

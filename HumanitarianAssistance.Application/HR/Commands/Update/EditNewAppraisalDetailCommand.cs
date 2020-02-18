@@ -3,17 +3,18 @@ using System.Collections.Generic;
 using HumanitarianAssistance.Application.Infrastructure;
 using MediatR;
 
-namespace HumanitarianAssistance.Application.HR.Commands.Create
+namespace HumanitarianAssistance.Application.HR.Commands.Update
 {
-    public class EmployeeAppraisalDetailCommand : BaseModel, IRequest<object>
+    public class EditNewAppraisalDetailCommand : BaseModel, IRequest<bool>
     {
-        public EmployeeAppraisalDetailCommand()
+        public EditNewAppraisalDetailCommand()
         {
-            AppraisalMembers = new List<AppraisalMemberList>();
-            AppraisalTraining = new List<AppraisalTrainingList>();
-            AppraisalStrongPoints = new List<AppraisalStrongPointsList>();
-            AppraisalWeakPoints = new List<AppraisalWeakPointsList>();
-            GeneralProfessionalIndicatorQuestion = new List<GeneralProfessionalIndicatorQuestionList>();
+            AppraisalMembers = new List<EditAppraisalMemberList>();
+            AppraisalTraining = new List<EditAppraisalTrainingList>();
+            AppraisalStrongPoints = new List<EditAppraisalStrongPointsList>();
+            AppraisalWeakPoints = new List<EditAppraisalWeakPointsList>();
+            GeneralProfessionalIndicatorQuestion = new List<EditGeneralProfessionalIndicatorQuestionList>();
+
         }
         public int EmployeeAppraisalDetailsId { get; set; }
         public int EmployeeId { get; set; }
@@ -25,20 +26,20 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public string FinalResultQues4 { get; set; }
         public string FinalResultQues5 { get; set; }
         public string CommentsByEmployee { get; set; }
-        public List<AppraisalMemberList> AppraisalMembers { get; set; }
-        public List<AppraisalTrainingList> AppraisalTraining { get; set; }
-        public List<AppraisalStrongPointsList> AppraisalStrongPoints { get; set; }
-        public List<AppraisalWeakPointsList> AppraisalWeakPoints { get; set; }
-        public List<GeneralProfessionalIndicatorQuestionList> GeneralProfessionalIndicatorQuestion { get; set; }
+        public List<EditAppraisalMemberList> AppraisalMembers { get; set; }
+        public List<EditAppraisalTrainingList> AppraisalTraining { get; set; }
+        public List<EditAppraisalStrongPointsList> AppraisalStrongPoints { get; set; }
+        public List<EditAppraisalWeakPointsList> AppraisalWeakPoints { get; set; }
+        public List<EditGeneralProfessionalIndicatorQuestionList> GeneralProfessionalIndicatorQuestion { get; set; }
     }
-    public class AppraisalMemberList
+    public class EditAppraisalMemberList
     {
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public string Type { get; set; }
         public int EmployeeId { get; set; }
     }
-    public class AppraisalTrainingList
+    public class EditAppraisalTrainingList
     {
         public int TrainingProgramBasedOn { get; set; }
         public string Program { get; set; }
@@ -48,26 +49,26 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
         public string OtherRecommemenedTraining { get; set; }
         public int EmployeeEvaluationTrainingId { get; set; }
     }
-    public class AppraisalStrongPointsList
+    public class EditAppraisalStrongPointsList
     {
         public string StrongPoints { get; set; }
         public int AppraisalStrongPointsId { get; set; }
     }
-    public class AppraisalWeakPointsList
+    public class EditAppraisalWeakPointsList
     {
         public string WeakPoints { get; set; }
         public int AppraisalWeakPointsId { get; set; }
     }
 
-    public class GeneralProfessionalIndicatorQuestionList
+    public class EditGeneralProfessionalIndicatorQuestionList
     {
         public int SequenceNumber { get; set; }
         public string QuestionEnglish { get; set; }
         public int Score { get; set; }
         public string Remarks { get; set; }
         public int AppraisalGeneralQuestionsId { get; set; }
-
-
+        
+        public int EmployeeId { get; set; }
 
     }
 }

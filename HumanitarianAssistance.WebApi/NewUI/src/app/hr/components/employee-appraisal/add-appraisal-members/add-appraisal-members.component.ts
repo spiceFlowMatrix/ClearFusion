@@ -17,6 +17,7 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AddAppraisalMembersComponent implements OnInit {
   title = 'Add Appraisal Evaluation Team Members';
+  err = null;
 
   addAppraisalMembersForm: FormGroup;
   filterdOptionsEmployeeList: Observable<IEmployeeListModel[]>;
@@ -27,6 +28,7 @@ export class AddAppraisalMembersComponent implements OnInit {
   employeeDetailList: IEmployeeDetailModel[] = [];
 
   employeeListEmit = new EventEmitter<any>();
+  addMemberLoaderFlag = false;
   constructor(
     private fb: FormBuilder,
     private appraisalService: EmployeeAppraisalService,
@@ -58,7 +60,7 @@ export class AddAppraisalMembersComponent implements OnInit {
 
   private _filter(value: string): IEmployeeListModel[] {
     const filterValue = value.toLowerCase();
-    if (value.length >= 3) {
+    if (value.length > 2) {
       this.getFilteredEmployeeList(filterValue);
       return this.employeeList.filter(
         x => x.EmployeeName.toLowerCase().indexOf(filterValue) === 0
@@ -67,40 +69,57 @@ export class AddAppraisalMembersComponent implements OnInit {
   }
 
   getFilteredEmployeeList(data: string) {
+    // this.err = null;
+    this.addMemberLoaderFlag = true;
     if (data !== undefined && data != null) {
       this.employeeDetailModel.EmployeeName = data;
       this.appraisalService
         .getfilteredEmployeeList(this.employeeDetailModel)
-        .subscribe(resp => {
-          this.employeeList = [];
-          this.employeeDetailList = [];
-          if (resp !== undefined && resp.EmployeeList.length > 0) {
-            resp.EmployeeList.forEach(element => {
-              this.employeeList.push({
-                EmployeeId: element.EmployeeId,
-                EmployeeName: element.EmployeeName
-              });
-              // to get the all records if employee
-              this.employeeDetailList.push({
-                EmployeeId: element.EmployeeId,
-                EmployeeCode: element.EmployeeCode,
-                EmployeeName: element.EmployeeName,
-                Type: element.Type
-              });
-            });
+        .subscribe(
+          resp => {
+            // if (resp === true) {
+              this.employeeList = [];
+              this.employeeDetailList = [];
+              if (resp !== undefined && resp.EmployeeList.length > 0) {
+                resp.EmployeeList.forEach(element => {
+                  this.employeeList.push({
+                    EmployeeId: element.EmployeeId,
+                    EmployeeName: element.EmployeeName
+                  });
+                  // to get the all records if employee
+                  this.employeeDetailList.push({
+                    EmployeeId: element.EmployeeId,
+                    EmployeeCode: element.EmployeeCode,
+                    EmployeeName: element.EmployeeName,
+                    Type: element.Type == null ? '' : element.Type
+                  });
+                });
+              }
+              this.addMemberLoaderFlag = false;
+            // } else {
+            //   // this.err = 'No record Found';
+            //   this.addMemberLoaderFlag = false;
+            // }
+          },
+          error => {
+            this.err = 'No record Found';
+            this.addMemberLoaderFlag = false;
           }
-        });
+        );
     }
   }
 
   saveForm() {
-    if (this.addAppraisalMembersForm.valid) {
-      this.isFormSubmitted = true;
-      const filterEmlployee = this.employeeDetailList.filter(
-        x => x.EmployeeId === this.selectedEmployeeId
-      );
-      this.employeeListEmit.emit(filterEmlployee);
-      this.dialogRef.close();
+    debugger;
+    if (this.selectedEmployeeId != undefined) {
+      if (this.addAppraisalMembersForm.valid) {
+        this.isFormSubmitted = true;
+        const filterEmlployee = this.employeeDetailList.filter(
+          x => x.EmployeeId === this.selectedEmployeeId
+        );
+        this.employeeListEmit.emit(filterEmlployee);
+        this.dialogRef.close();
+      }
     }
   }
 

@@ -5,6 +5,11 @@ namespace HumanitarianAssistance.Application.CommonModels
 {
     public class VoucherDetailModel : BaseModel
     {
+        public VoucherDetailModel() 
+        {
+            PurchaseOrderModel = new PurchaseOrderModel();
+        }
+
         public long VoucherNo { get; set; }
         public int CurrencyId { get; set; }
         public string CurrencyCode { get; set; }
@@ -28,5 +33,16 @@ namespace HumanitarianAssistance.Application.CommonModels
         public double? TotalCredit { get; set; }
         public double? TotalDebit { get; set; }
         public bool IsExchangeGainLossVoucher { get; set; } = false;
+        public PurchaseOrderModel PurchaseOrderModel { get; set; }
+    }
+
+    public class PurchaseOrderModel 
+    {
+        public long? ProjectId { get; set; }
+        public long PurchaseOrderId { get; set; }
+        public string Code { get; set; }
+        public string Description { get; set; }
+        public string ApprovedBy { get; set; }
+        public string ApprovedOn { get; set; }
     }
 }

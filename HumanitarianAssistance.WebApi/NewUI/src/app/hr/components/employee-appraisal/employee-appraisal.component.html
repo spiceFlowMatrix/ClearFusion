@@ -4,8 +4,8 @@
   </h4>
   <div class="row">
     <div class="col-md-12">
-      <hum-table [isDefaultAction]="false" [headers]="appraisalListHeader$" [items]="appraisalList$"
-        [actions]="actions"></hum-table>
+      <hum-table [isDefaultAction]="false" [headers]="appraisalListHeader$"  [hideColums$]="hideColumsAppraisalList$" [items]="appraisalList$"
+         (actionClick)="ActionEvents($event)"></hum-table>
     </div>
   </div>
 </div>

@@ -115,6 +115,7 @@ export class EmployeeListComponent implements OnInit {
   }
 
   getFilteredEmployeeList(filterModel) {
+    this.selection.clear();
     this.employeeListService.getAllEmployeeList(filterModel).subscribe(res => {
       if (res.EmployeeList) {
         this.employeeList = [];
