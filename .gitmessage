@@ -15,12 +15,12 @@
 #    WIP      (Work In Progress; for intermediate commits to keep patches reasonably sized)
 #    defaults (changes default options)
 
-feat : 
-
+Tag (feat, fix) : 
 #(Required)
-
 Issue Id  :
+Message   :
 Transcript:
+
 
  
 
