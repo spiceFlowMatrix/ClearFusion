@@ -544,6 +544,7 @@ export class AddEmployeeComponent implements OnInit {
           x => {
             if (x.StatusCode === 200) {
               this.toastr.success('Employee Successfully Added');
+              this.employeeId = x.data.EmployeeDetailModel.EmployeeID;
               this.routeBackToListing();
             } else {
               this.toastr.warning(x.Message);
@@ -729,7 +730,11 @@ export class AddEmployeeComponent implements OnInit {
   }
 
   routeBackToListing() {
+    if (this.employeeId > 0) {
     this.router.navigate(['/hr/employee/' + this.employeeId]);
+    } else {
+      this.router.navigate(['/hr/employees']);
+    }
   }
 }
 

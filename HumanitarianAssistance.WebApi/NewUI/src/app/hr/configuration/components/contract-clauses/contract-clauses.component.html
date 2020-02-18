@@ -1,0 +1,63 @@
+<lib-sub-header-template [headerClass]="'sub_header_template_main1'">
+    <span class="action_header">
+    Contract Clauses
+  </span>
+</lib-sub-header-template>
+<mat-card humAddScroll [height]="230">
+    <div class="row">
+        <div class="col-md-12">
+            <mat-tab-group (selectedTabChange)="onTabChange($event)">
+                <mat-tab label="Probationary">
+                    <ng-template matTabContent>
+                        <ng-container *ngTemplateOutlet="showContractClauses"></ng-container>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="Part-time ">
+                    <ng-template matTabContent>
+                        <ng-container *ngTemplateOutlet="showContractClauses"></ng-container>
+                    </ng-template>
+                </mat-tab>
+                <mat-tab label="Permanent ">
+                    <ng-template matTabContent>
+                        <ng-container *ngTemplateOutlet="showContractClauses"></ng-container>
+                    </ng-template>
+                </mat-tab>
+            </mat-tab-group>
+        </div>
+    </div>
+</mat-card>
+
+<ng-template #showContractClauses>
+    <div class="row">
+        <div class="col-md-12">
+            <hum-button *ngIf="isContractSaved" [type]="'loading'" [text]="'Saving....'"></hum-button>
+            <hum-button *ngIf="!isContractSaved" [type]="'save'" [text]="'Save'" (click)="SaveContractContent()" style="float:right"></hum-button>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <p>
+                <strong> Probationary Contract - English </strong>
+            </p>
+            <div>
+                <ckeditor [(ngModel)]="ckeditorContentEnglish" [config]="{
+          extraPlugins: 'divarea',
+          defaultLanguage: 'en',
+          language: 'en'
+        }"></ckeditor>
+            </div>
+            <br />
+            <br />
+            <p>
+                <strong> Probationary Contract - Dari </strong>
+            </p>
+            <div>
+                <ckeditor [(ngModel)]="ckeditorContentDari" [config]="{
+          extraPlugins: 'divarea',
+          defaultLanguage: 'fa',
+          language: 'fa'
+        }"></ckeditor>
+            </div>
+        </div>
+    </div>
+</ng-template>
