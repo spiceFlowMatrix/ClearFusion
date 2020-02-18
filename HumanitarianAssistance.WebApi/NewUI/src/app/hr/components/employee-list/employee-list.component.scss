@@ -12,3 +12,7 @@
   height: 200px;
   margin-left: 10px;
 }
+::ng-deep .officeCustomStyle .mat-select-value-text span {
+  color: #0390D1;
+  text-transform: uppercase;
+}

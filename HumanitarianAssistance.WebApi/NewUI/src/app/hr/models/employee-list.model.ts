@@ -4,7 +4,7 @@ export class EmployeeFilterModel {
     // LastNameFilter;
     GenderFilter;
     EmployeeIdFilter;
-    OfficeId;
+    OfficeIds;
     PageSize;
     PageIndex;
 }

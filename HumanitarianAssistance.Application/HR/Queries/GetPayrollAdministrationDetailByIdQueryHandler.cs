@@ -48,21 +48,21 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     throw new Exception("Some Employees don't have Attendance Group assigned to them!");
                 }
 
-                var payrollDetail = await _dbContext.PayrollMonthlyHourDetail.Where(x => x.OfficeId == request.OfficeId && x.PayrollYear == financialYear.StartDate.Year && x.PayrollMonth == request.Month && x.IsDeleted == false)
-                                                        .ToListAsync();
+                // var payrollDetail = await _dbContext.PayrollMonthlyHourDetail.Where(x => x.OfficeId == request.OfficeId && x.PayrollYear == financialYear.StartDate.Year && x.PayrollMonth == request.Month && x.IsDeleted == false)
+                //                                         .ToListAsync();
 
-                var AttendanceGroupWithNoInOutTimeId = empDetails.Select(x => (x.EmployeeProfessionalDetail.AttendanceGroupId)).Except(payrollDetail.Select(x=>x.AttendanceGroupId)).ToList();
-                if(AttendanceGroupWithNoInOutTimeId.Any()) 
-                {
-                    var AttendanceGroupWithNoInOutTimeName = empDetails.Where(x=>AttendanceGroupWithNoInOutTimeId.Contains(x.EmployeeProfessionalDetail.AttendanceGroupId)).Select(x=>x.EmployeeProfessionalDetail.AttendanceGroupMaster.Name).Distinct().ToList();
+                // var AttendanceGroupWithNoInOutTimeId = empDetails.Select(x => (x.EmployeeProfessionalDetail.AttendanceGroupId)).Except(payrollDetail.Select(x=>x.AttendanceGroupId)).ToList();
+                // if(AttendanceGroupWithNoInOutTimeId.Any()) 
+                // {
+                //     var AttendanceGroupWithNoInOutTimeName = empDetails.Where(x=>AttendanceGroupWithNoInOutTimeId.Contains(x.EmployeeProfessionalDetail.AttendanceGroupId)).Select(x=>x.EmployeeProfessionalDetail.AttendanceGroupMaster.Name).Distinct().ToList();
                     
-                    throw new Exception(String.Format(StaticResource.PayrollDailyHoursNotSetForAttendanceGroup, 
-                    await _dbContext.OfficeDetail.Where(x=>x.IsDeleted==false && x.OfficeId == request.OfficeId).Select(x=>x.OfficeName).FirstOrDefaultAsync(),
-                    CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.Month),
-                    (financialYear.StartDate.Year),
-                    String.Join(",", AttendanceGroupWithNoInOutTimeName)
-                    ));
-                }
+                //     throw new Exception(String.Format(StaticResource.PayrollDailyHoursNotSetForAttendanceGroup, 
+                //     await _dbContext.OfficeDetail.Where(x=>x.IsDeleted==false && x.OfficeId == request.OfficeId).Select(x=>x.OfficeName).FirstOrDefaultAsync(),
+                //     CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.Month),
+                //     (financialYear.StartDate.Year),
+                //     String.Join(",", AttendanceGroupWithNoInOutTimeName)
+                //     ));
+                // }
 
                 List<EmployeeAttendance> empPayrollAttendance = await _dbContext.EmployeeAttendance
                                                                 .Include(x=>x.EmployeeDetails)

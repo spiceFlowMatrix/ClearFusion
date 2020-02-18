@@ -3,11 +3,11 @@ import { EmployeeListService } from '../../services/employee-list.service';
 import { Observable, of } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { ToastrService } from 'ngx-toastr';
-import { FormGroup, FormBuilder } from '@angular/forms';
+import { FormGroup, FormBuilder, FormControl } from '@angular/forms';
 import { SelectionModel } from '@angular/cdk/collections';
 import { EmployeeFilterModel, EmployeeDetailList } from '../../models/employee-list.model';
 import { EmploymentStatus, Month } from 'src/app/shared/enum';
-import { MatTableDataSource, MatDatepicker, MatDialog } from '@angular/material';
+import { MatTableDataSource, MatDatepicker, MatDialog, MatOption } from '@angular/material';
 import { Router } from '@angular/router';
 import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.service';
 import { SetEmployeeAttendanceComponent } from '../set-employee-attendance/set-employee-attendance.component';
@@ -24,8 +24,9 @@ import { AdministerPayrollComponent } from '../administer-payroll/administer-pay
 })
 export class EmployeeListComponent implements OnInit {
 
-  officeDropdown$: Observable<IDropDownModel[]>;
-  selectedOffice = { value: 0, name: 'OFFICE' };
+  officeDropdown: any[];
+  @ViewChild('allSelected') private allSelected: MatOption;
+  selectedOffice = [];
   employeeListFilterForm: FormGroup;
   genderList$: Observable<IDropDownModel[]>;
   accountStatusList$: Observable<IDropDownModel[]>;
@@ -35,7 +36,7 @@ export class EmployeeListComponent implements OnInit {
     'FatherName', 'EmploymentStatus', 'Profession'];
   filterModel: EmployeeFilterModel = {
     EmployeeIdFilter: null, EmploymentStatusFilter: 0, NameFilter: null,
-    PageIndex: 0, PageSize: 10, OfficeId: 0, GenderFilter: 0
+    PageIndex: 0, PageSize: 10, OfficeIds: [], GenderFilter: 0
   };
   employeeDataSource;
   TotalCount = 0;
@@ -43,6 +44,7 @@ export class EmployeeListComponent implements OnInit {
   EmployeeAttendanceList: any[];
   AttendanceDates: Date[] = [];
   MonthsList$: Observable<IDropDownModel[]>;
+  Office = new FormControl([]);
 
   constructor(
     private employeeListService: EmployeeListService,
@@ -82,14 +84,15 @@ export class EmployeeListComponent implements OnInit {
       .subscribe(
         data => {
           if (data.data.OfficeDetailsList != null) {
-            this.officeDropdown$ = of(data.data.OfficeDetailsList.map(y => {
+            this.officeDropdown = data.data.OfficeDetailsList.map(y => {
               return {
-                value: y.OfficeId,
-                name: y.OfficeName
+                OfficeId: y.OfficeId,
+                OfficeName: y.OfficeName
               };
-            }));
-            this.selectedOffice = { value: data.data.OfficeDetailsList[0].OfficeId, name: data.data.OfficeDetailsList[0].OfficeName };
-            this.filterModel.OfficeId = this.selectedOffice.value;
+            });
+            this.Office.patchValue([...this.officeDropdown.map(item => item.OfficeId), 0]);
+            this.allSelected.select();
+            this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
             this.getFilteredEmployeeList(this.filterModel);
           }
         },
@@ -105,14 +108,40 @@ export class EmployeeListComponent implements OnInit {
       );
   }
 
-  selectedOfficeChanged(office) {
-    this.selectedOffice = {
-      value: office.value,
-      name: office.name
-    };
-    this.filterModel.OfficeId = office.value;
+  toggleAllSelection() {
+    if (this.allSelected.selected) {
+
+      this.Office
+        .patchValue([...this.officeDropdown.filter(x => x !== 0).map(item => item.OfficeId), 0]);
+    } else {
+      this.Office.patchValue([]);
+    }
+    this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
     this.getFilteredEmployeeList(this.filterModel);
   }
+
+  togglePerOne(all) {
+    if (this.allSelected.selected) {
+      this.allSelected.deselect();
+      this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
+      this.getFilteredEmployeeList(this.filterModel);
+     return false;
+    }
+   if (this.Office.value.length === this.officeDropdown.length) {
+    this.allSelected.select();
+   }
+   this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
+   this.getFilteredEmployeeList(this.filterModel);
+ }
+
+  // selectedOfficeChanged(office) {
+  //   this.selectedOffice = {
+  //     value: office.value,
+  //     name: office.name
+  //   };
+  //   this.filterModel.OfficeId = office.value;
+  //   this.getFilteredEmployeeList(this.filterModel);
+  // }
 
   getFilteredEmployeeList(filterModel) {
     this.selection.clear();
@@ -141,7 +170,7 @@ export class EmployeeListComponent implements OnInit {
   filterEmployee(value) {
     this.filterModel = {
       EmployeeIdFilter: value.EmployeeId, EmploymentStatusFilter: value.EmploymentStatus,
-      NameFilter: value.Name, PageIndex: 0, PageSize: 10, OfficeId: this.selectedOffice.value,
+      NameFilter: value.Name, PageIndex: 0, PageSize: 10, OfficeIds: this.Office.value.filter(x => x !== 0),
       GenderFilter: value.Sex
     };
     this.getFilteredEmployeeList(this.filterModel);
@@ -154,7 +183,7 @@ export class EmployeeListComponent implements OnInit {
   pageEvent(e) {
     this.filterModel.PageIndex = e.pageIndex;
     this.filterModel.PageSize = e.pageSize;
-    this.filterModel.OfficeId = this.selectedOffice.value;
+    this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
     this.getFilteredEmployeeList(this.filterModel);
   }
 
@@ -204,7 +233,7 @@ export class EmployeeListComponent implements OnInit {
     const model = {
       FromDate: StaticUtilities.getLocalDate(attendanceFromDate),
       ToDate: StaticUtilities.getLocalDate(attendanceToDate),
-      OfficeId: this.selectedOffice.value,
+      OfficeIds: this.Office.value.filter(x => x !== 0),
       EmpIds: []
     };
     this.selection.selected.forEach(res => {
@@ -233,7 +262,7 @@ export class EmployeeListComponent implements OnInit {
           width: '600px',
           data: {
             'AttendanceDates': this.getAllDates(attendanceFromDate, attendanceToDate), 'EmployeeList': this.EmployeeAttendanceList,
-            'errors': false, 'errorMessage': '', 'OfficeId': this.selectedOffice.value
+            'errors': false, 'errorMessage': '', 'OfficeId': this.Office.value.filter(x => x !== 0)
           }
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -247,7 +276,7 @@ export class EmployeeListComponent implements OnInit {
           width: '600px',
           data: {
             'AttendanceDates': this.getAllDates(attendanceFromDate, attendanceToDate), 'EmployeeList': this.EmployeeAttendanceList,
-            'errors': true, 'errorMessage': err, 'OfficeId': this.selectedOffice.value
+            'errors': true, 'errorMessage': err, 'OfficeId': this.Office.value.filter(x => x !== 0)
           }
         });
         dialogRef.afterClosed().subscribe(result => {
@@ -309,9 +338,9 @@ export class EmployeeListComponent implements OnInit {
   resetFilter() {
     this.filterModel = {
       EmployeeIdFilter: null, EmploymentStatusFilter: 0, NameFilter: null,
-      PageIndex: 0, PageSize: 10, OfficeId: 0, GenderFilter: 0
+      PageIndex: 0, PageSize: 10, OfficeIds: this.Office.value.filter(x => x !== 0), GenderFilter: 0
     };
-    this.filterModel.OfficeId = this.selectedOffice.value;
+    // this.filterModel.OfficeIds = [this.selectedOffice.value];
     this.getFilteredEmployeeList(this.filterModel);
     this.employeeListFilterForm.reset();
   }
@@ -355,7 +384,7 @@ export class EmployeeListComponent implements OnInit {
         SelectedEmployees: this.selection.selected,
         Month: month,
         MonthName: monthName,
-        OfficeId: this.selectedOffice.value
+        OfficeId: this.Office.value.filter(x => x !== 0)
       }
     });
     dialogRef.afterClosed().subscribe(() => {
