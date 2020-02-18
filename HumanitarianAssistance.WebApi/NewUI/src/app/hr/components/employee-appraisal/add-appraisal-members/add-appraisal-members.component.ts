@@ -110,7 +110,6 @@ export class AddAppraisalMembersComponent implements OnInit {
   }
 
   saveForm() {
-    debugger;
     if (this.selectedEmployeeId != undefined) {
       if (this.addAppraisalMembersForm.valid) {
         this.isFormSubmitted = true;

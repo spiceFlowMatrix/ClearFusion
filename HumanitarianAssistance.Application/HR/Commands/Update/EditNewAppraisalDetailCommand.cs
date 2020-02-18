@@ -26,6 +26,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public string FinalResultQues4 { get; set; }
         public string FinalResultQues5 { get; set; }
         public string CommentsByEmployee { get; set; }
+        public int EmployeeEvaluationId { get; set; }
         public List<EditAppraisalMemberList> AppraisalMembers { get; set; }
         public List<EditAppraisalTrainingList> AppraisalTraining { get; set; }
         public List<EditAppraisalStrongPointsList> AppraisalStrongPoints { get; set; }
@@ -38,6 +39,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public string EmployeeName { get; set; }
         public string Type { get; set; }
         public int EmployeeId { get; set; }
+        public int EmployeeAppraisalTeamMemberId { get; set; }
     }
     public class EditAppraisalTrainingList
     {
@@ -53,6 +55,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
     {
         public string StrongPoints { get; set; }
         public int AppraisalStrongPointsId { get; set; }
+        // public int StrongPointsId { get; set; }
     }
     public class EditAppraisalWeakPointsList
     {
@@ -67,8 +70,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public int Score { get; set; }
         public string Remarks { get; set; }
         public int AppraisalGeneralQuestionsId { get; set; }
-        
-        public int EmployeeId { get; set; }
 
+        public int EmployeeId { get; set; }
+        public int EmployeeAppraisalQuestionsId { get; set; }
     }
 }

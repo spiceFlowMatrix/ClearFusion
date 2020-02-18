@@ -204,7 +204,9 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       EmployeeAppraisalDetailsId: [null],
       AppraisalPeriod: [null, Validators.required],
       CurrentAppraisalDate: [null, Validators.required],
-      GeneralProfessionalIndicatorQuestion: new FormArray([], Validators.required),
+      GeneralProfessionalIndicatorQuestion: new FormArray([
+        this.initAppraisalQuestion()
+      ]),
       AppraisalMembers: new FormArray([], Validators.required),
       AppraisalTraining: new FormArray([], Validators.required),
       AppraisalStrongPoints: new FormArray([], Validators.required),
@@ -214,11 +216,53 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       FinalResultQues3: [null, Validators.required],
       FinalResultQues4: [null, Validators.required],
       FinalResultQues5: [null, Validators.required],
+      EmployeeEvaluationId: [null],
       CommentsByEmployee: [null, Validators.required],
       EmployeeId: this.employeeId,
       AppraisalScore: [null]
     });
   }
+  initAppraisalQuestion() {
+    return this.fb.group({
+      AppraisalGeneralQuestionsId: ['', Validators.required],
+      SequenceNumber: ['', Validators.required],
+      QuestionEnglish: ['', Validators.required],
+      Score: ['', Validators.required],
+      Remarks: ['', Validators.required]
+    });
+  }
+
+  //#region "get appraisal list"
+  getAllAppraisalList() {
+    this.loader.showLoader();
+    if (this.employeeId !== undefined && this.employeeId != null) {
+      this.appraisalService
+        .getAllAppraisalListEmployeeId(this.employeeId)
+        .subscribe(
+          res => {
+            if (
+              res &&
+              res.AppraisalList !== undefined &&
+              res.AppraisalList.length > 0
+            ) {
+              this.appraisalList = res.AppraisalList;
+              const filteredRecord = res.AppraisalList.filter(
+                x => x.EmployeeAppraisalDetailsId == this.employeeAppraisalId
+              );
+              this.setEmployeeAppraisalDetail(
+                this.employeeAppraisalId,
+                filteredRecord
+              );
+            }
+            this.loader.hideLoader();
+          },
+          err => {
+            this.loader.hideLoader();
+          }
+        );
+    }
+  }
+  //#endregion
   setEmployeeAppraisalDetail(id: number, filterData: any) {
     if (id != undefined && id != null) {
       filterData.forEach(element => {
@@ -233,6 +277,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
           FinalResultQues4: [element.FinalResultQues4],
           FinalResultQues5: [element.FinalResultQues5],
           CommentsByEmployee: [element.CommentsByEmployee],
+          EmployeeEvaluationId: [element.EmployeeEvaluationId],
           EmployeeId: this.employeeId,
           AppraisalScore: element.AppraisalScore
         });
@@ -302,7 +347,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   }
 
   setProfessionalIndicatorQuestion(item: any[]) {
-    const formArray = new FormArray([]);
+    const formArray = new FormArray([], Validators.required);
     for (const x of item) {
       formArray.push(
         this.fb.group({
@@ -310,7 +355,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
           SequenceNumber: x.SequenceNumber,
           QuestionEnglish: x.QuestionEnglish,
           Score: x.Score,
-          Remarks: x.Remarks
+          Remarks: x.Remarks,
+          EmployeeAppraisalQuestionsId: x.EmployeeAppraisalQuestionsId
         })
       );
     }
@@ -379,36 +425,6 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     this.employeeAppraisalForm.setControl('AppraisalWeakPoints', formArray);
   }
 
-  //#region "get appraisal list"
-  getAllAppraisalList() {
-    this.loader.showLoader();
-    if (this.employeeId !== undefined && this.employeeId != null) {
-      this.appraisalService
-        .getAllAppraisalListEmployeeId(this.employeeId)
-        .subscribe(
-          res => {
-            if (
-              res &&
-              res.AppraisalList !== undefined &&
-              res.AppraisalList.length > 0
-            ) {
-              this.appraisalList = res.AppraisalList;
-              const filteredRecord = res.AppraisalList.filter(
-                x => x.EmployeeAppraisalDetailsId == this.employeeAppraisalId
-              );
-              this.setEmployeeAppraisalDetail(
-                this.employeeAppraisalId,
-                filteredRecord
-              );
-            }
-            this.loader.hideLoader();
-          },
-          err => { this.loader.hideLoader();}
-        );
-    }
-  }
-  //#endregion
-
   // if apprasial question list is not null
   setAppraisalQuestion() {
     this.employeeAppraisalForm.setControl(
@@ -416,19 +432,24 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
       this.setGeneralProfessionalQuestion(this.questionSourceData)
     );
   }
-
+  // Add
   setGeneralProfessionalQuestion(
     sources: EmployeeAppraisalQuestionList[]
   ): FormArray {
-    const formArray = new FormArray([]);
+    const formArray = new FormArray([], Validators.required);
+    // const formArray =  this.fb.array([this.fb.control('', Validators.required)])
+
     sources.forEach(s => {
       formArray.push(
         this.fb.group({
-          AppraisalGeneralQuestionsId: s.AppraisalGeneralQuestionsId,
-          SequenceNumber: s.SequenceNo,
-          QuestionEnglish: s.QuestionEnglish,
-          Score: s.Score,
-          Remarks: s.Remarks
+          AppraisalGeneralQuestionsId: [
+            s.AppraisalGeneralQuestionsId,
+            Validators.required
+          ],
+          SequenceNumber: [s.SequenceNo, Validators.required],
+          QuestionEnglish: [s.QuestionEnglish, Validators.required],
+          Score: [s.Score, Validators.required],
+          Remarks: [s.Remarks, Validators.required]
         })
       );
     });
@@ -519,7 +540,8 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
               SequenceNo: element.SequenceNo,
               Remarks: element.Remarks,
               Score: element.Score,
-              AppraisalScore: element.AppraisalScore
+              AppraisalScore: element.AppraisalScore,
+              EmployeeAppraisalQuestionsId: element.EmployeeAppraisalQuestionsId
             });
           });
           this.setAppraisalQuestion();
@@ -591,6 +613,13 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   deleteAppraisalMembersLog(employeeId: number) {
     if (employeeId !== undefined && employeeId != null) {
       let index;
+      const findIndex = this.employeeDetailList.findIndex(
+        x => x.EmployeeId === employeeId
+      );
+      if (findIndex !== -1) {
+        this.employeeDetailList.splice(findIndex, 1);
+      }
+      // note : to remove
       this.appraisalMembersList$.subscribe(data => {
         index = data.findIndex(x => x.EmployeeId === employeeId);
         data.splice(index, 1);
@@ -706,6 +735,12 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   deleteAppraisalTraining(data: any) {
     if (data != undefined && data != null) {
       let index;
+      const findIndex = this.trainingDetailList.findIndex(
+        x => x.Program == data.Program
+      );
+      if (findIndex !== -1) {
+        this.trainingDetailList.splice(findIndex, 1);
+      }
       this.appraisalTrainingList$.subscribe(res => {
         index = res.findIndex(x => x === data);
         res.splice(index, 1);
@@ -782,6 +817,12 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   deleteStrongPoint(data: any) {
     if (data != undefined && data != null) {
       let index;
+      const findIndex = this.strongPontsDetailList.findIndex(
+        x => x.StrongPoints === data.StrongPoints
+      );
+      if (findIndex !== -1) {
+        this.strongPontsDetailList.splice(findIndex, 1);
+      }
       this.strongPointsList$.subscribe(res => {
         index = res.findIndex(x => x === data);
         res.splice(index, 1);
@@ -859,6 +900,12 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   deleteWeakPoint(data: any) {
     if (data != undefined && data != null) {
       let index;
+      const findIndex = this.weakPontsDetailList.findIndex(
+        x => x.WeakPoints === data.WeakPoints
+      );
+      if (findIndex !== -1) {
+        this.weakPontsDetailList.splice(findIndex, 1);
+      }
       this.weakPointsList$.subscribe(res => {
         index = res.findIndex(x => x === data);
         res.splice(index, 1);
@@ -894,15 +941,15 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
     if (this.employeeAppraisalForm.valid) {
       if (
         this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
-        undefined &&
+          undefined &&
         this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
-        null
+          null
       ) {
         if (
           this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId']
             .value !== undefined &&
           this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId'] !=
-          null
+            null
         ) {
           form.CurrentAppraisalDate = StaticUtilities.setLocalDate(
             form.CurrentAppraisalDate

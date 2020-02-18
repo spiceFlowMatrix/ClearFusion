@@ -25,7 +25,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 var empAppraisalDetails = await _dbContext.EmployeeAppraisalDetails
                                                         .Include(x => x.EmployeeDetail)
-                                                        .ThenInclude(x=> x.EmployeeProfessionalDetail)
+                                                        .ThenInclude(x => x.EmployeeProfessionalDetail)
                                                         .Include(x => x.EmployeeEvaluation)
                                                         .Include(x => x.EmployeeAppraisalQuestions)
                                                         .ThenInclude(x => x.AppraisalGeneralQuestions)
@@ -39,14 +39,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 {
                     EmployeeAppraisalDetailsId = x.EmployeeAppraisalDetailsId,
                     EmployeeId = x.EmployeeId,
-                    // EmployeeCode = x.EmployeeEvaluation.EmployeeDetail.EmployeeCode,
-                    // EmployeeName = x.EmployeeEvaluation.EmployeeDetail.EmployeeName,
-                    // FatherName = x.EmployeeEvaluation.EmployeeDetail.FatherName,
                     Position = x.EmployeeDetail.EmployeeProfessionalDetail.DesignationDetails.Designation,
-                    // DepartmentId = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentId,
-                    // DepartmentName = x.EmployeeEvaluation.EmployeeDetail.EmployeeProfessionalDetail.DepartmentName,
-                    // Qualification = x.Qualification,
-                    // DutyStation = x.DutyStation,
                     RecruitmentDate = x.RecruitmentDate,
                     AppraisalPeriod = x.AppraisalPeriod,
                     CurrentAppraisalDate = x.CurrentAppraisalDate,
@@ -59,7 +52,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     FinalResultQues4 = x.EmployeeEvaluation.FinalResultQues4,
                     FinalResultQues5 = x.EmployeeEvaluation.FinalResultQues5,
                     CommentsByEmployee = x.EmployeeEvaluation.CommentsByEmployee,
-                    AppraisalMembers = x.EmployeeAppraisalTeamMember.Select(y => new AppraisalMemberListModel
+                    EmployeeEvaluationId = x.EmployeeEvaluation.EmployeeEvaluationId,
+                    AppraisalMembers = x.EmployeeAppraisalTeamMember.Where(m=> m.IsDeleted == false).Select(y => new AppraisalMemberListModel
                     {
                         EmployeeId = y.EmployeeId,
                         EmployeeAppraisalTeamMemberId = y.EmployeeAppraisalTeamMemberId,
@@ -68,7 +62,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         EmployeeCode = y.EmployeeDetail.EmployeeCode
 
                     }).ToList(),
-                    AppraisalTraining = x.EmployeeEvaluationTraining.Select(z => new AppraisalTrainingListModel
+                    AppraisalTraining = x.EmployeeEvaluationTraining.Where(t => t.IsDeleted == false).Select(z => new AppraisalTrainingListModel
                     {
                         TrainingProgramBasedOn = z.TrainingProgram,
                         Program = z.Program,
@@ -79,13 +73,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         EmployeeEvaluationTrainingId = z.EmployeeEvaluationTrainingId,
 
                     }).ToList(),
-                    AppraisalStrongPoints = x.StrongandWeakPoints.Where(s => s.Status == (int)AppriasalStorngWeakPointType.Strong).Select(a => new AppraisalStrongPointsListModel
+                    AppraisalStrongPoints = x.StrongandWeakPoints.Where(s => s.Status == (int)AppriasalStorngWeakPointType.Strong && s.IsDeleted == false).Select(a => new AppraisalStrongPointsListModel
                     {
                         StrongPoints = a.Point,
                         AppraisalStrongPointsId = a.StrongPointsId,
 
                     }).ToList(),
-                    AppraisalWeakPoints = x.StrongandWeakPoints.Where(w => w.Status == (int)AppriasalStorngWeakPointType.Weak).Select(s => new AppraisalWeakPointsListModel
+                    AppraisalWeakPoints = x.StrongandWeakPoints.Where(w => w.Status == (int)AppriasalStorngWeakPointType.Weak  && w.IsDeleted == false).Select(s => new AppraisalWeakPointsListModel
                     {
                         WeakPoints = s.Point,
                         AppraisalWeakPointsId = s.StrongPointsId
@@ -97,11 +91,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         Remarks = d.Remarks,
                         SequenceNumber = d.AppraisalGeneralQuestions.SequenceNo,
                         QuestionEnglish = d.AppraisalGeneralQuestions.Question,
-
+                        EmployeeAppraisalQuestionsId = d.EmployeeAppraisalQuestionsId
                         // CurrentAppraisalDate = d.CurrentAppraisalDate,
-                    }).ToList(),
-                   AppraisalScore = x.EmployeeAppraisalQuestions.Count> 0 ? (x.EmployeeAppraisalQuestions.Select(sc => sc.Score).DefaultIfEmpty(0).Sum()) : 0,
-                   TotalScore = (double)(x.EmployeeAppraisalQuestions.Count> 0 ? Math.Round((decimal)(x.EmployeeAppraisalQuestions.Select(sc => sc.Score).DefaultIfEmpty(0).Average()),2) : 0)
+                    }).OrderBy( a=> a.SequenceNumber).ToList(),
+                    AppraisalScore = x.EmployeeAppraisalQuestions.Count > 0 ? (x.EmployeeAppraisalQuestions.Select(sc => sc.Score).DefaultIfEmpty(0).Sum()) : 0,
+                    TotalScore = (double)(x.EmployeeAppraisalQuestions.Count > 0 ? Math.Round((decimal)(x.EmployeeAppraisalQuestions.Select(sc => sc.Score).DefaultIfEmpty(0).Average()), 2) : 0)
                 })
                 .ToListAsync();
 
