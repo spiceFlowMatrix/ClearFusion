@@ -14,12 +14,14 @@
 #    hack     (Temporary fix to make things move forward; please avoid it)
 #    WIP      (Work In Progress; for intermediate commits to keep patches reasonably sized)
 #    defaults (changes default options)
-
-Tag (feat, fix) : 
+#
+# Put tag (feat, fix) 
+#
+[feat] [fix]
 #(Required)
-Issue Id  :
-Message   :
-Transcript:
+Issue Id   :
+Message    :
+Transcript :
 
 
  
