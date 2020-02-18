@@ -97,9 +97,9 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                              Date = x.VoucherDate.ToShortDateString(),
                                              Region = x.OfficeDetails.OfficeName,
                                              Description = x.Description,
-                                             TotalCredit = Math.Round((double)x.VoucherTransactionDetails.Select(y => y.Credit).DefaultIfEmpty(0).Sum(), 2).ToString(),
-                                             TotalDebit = Math.Round((double)x.VoucherTransactionDetails.Select(y => y.Debit).DefaultIfEmpty(0).Sum(), 2).ToString(),
-                                             TransactionDetails = x.VoucherTransactionDetails.Select(z => new TransactionSummaryReportPdfModel
+                                             TotalCredit = Math.Round((double)x.VoucherTransactionDetails.Where(y=> y.IsDeleted == false).Select(y => y.Credit).DefaultIfEmpty(0).Sum(), 2).ToString(),
+                                             TotalDebit = Math.Round((double)x.VoucherTransactionDetails.Where(y=> y.IsDeleted == false).Select(y => y.Debit).DefaultIfEmpty(0).Sum(), 2).ToString(),
+                                             TransactionDetails = x.VoucherTransactionDetails.Where(y=> y.IsDeleted == false).Select(z => new TransactionSummaryReportPdfModel
                                              {
                                                  AccountNo = z.ChartOfAccountDetail.ChartOfAccountNewCode,
                                                  Description = z.Description,
