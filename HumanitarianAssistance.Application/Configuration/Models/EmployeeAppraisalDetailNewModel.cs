@@ -89,6 +89,7 @@ namespace HumanitarianAssistance.Application.Configuration.Models
         public int Score { get; set; }
         public string Remarks { get; set; }
         public int AppraisalGeneralQuestionsId { get; set; }
+        public int EmployeeAppraisalQuestionsId { get; set; }
 
     }
 

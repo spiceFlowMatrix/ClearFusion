@@ -42,13 +42,9 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     if (request.HolidayType == (int)HolidayType.REPEATWEEKLYDAY)
                     {
                         List<HolidayWeeklyDetails> holidayweeklylist = new List<HolidayWeeklyDetails>();
-                        // foreach (var office in request.OfficeId)
-                        // {
+                        
                         foreach (var hlist in request.RepeatWeeklyDay)
                         {
-                            var ifExist = holidayDetail.Select(x => x.Day).Contains(hlist.Day);
-                            if (ifExist == false)
-                            {
                                 HolidayWeeklyDetails list = new HolidayWeeklyDetails();
                                 list.Day = hlist.Day;
                                 // list.OfficeId = (int)office;
@@ -57,13 +53,9 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                                 list.CreatedDate = request.CreatedDate;
                                 list.IsDeleted = false;
                                 holidayweeklylist.Add(list);
-                            }
-
                         }
                         await _dbContext.HolidayWeeklyDetails.AddRangeAsync(holidayweeklylist);
                         await _dbContext.SaveChangesAsync();
-
-                        // }
                     }
                     else
                     {

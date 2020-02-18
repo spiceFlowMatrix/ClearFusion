@@ -370,6 +370,7 @@ export class AddNewCandidateComponent implements OnInit {
             this.isFormSubmitted = false;
           }
           this.onCancelPopup();
+          this.AddCandidateListRefresh();
         },
         error => {
           this.toastr.error('Someting went wrong. Please try again');
