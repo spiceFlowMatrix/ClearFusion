@@ -16,9 +16,6 @@
 #    defaults (changes default options)
 #
 # Put tag (feat, fix) 
-#
-[feat] [fix]
-#(Required)
 Issue Id   :
 Message    :
 Transcript :
