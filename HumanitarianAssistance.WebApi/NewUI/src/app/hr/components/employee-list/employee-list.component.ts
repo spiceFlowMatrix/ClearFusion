@@ -255,6 +255,7 @@ export class EmployeeListComponent implements OnInit {
             );
             e.Attendance = emp[0].AttendanceType;
             e.AttendanceGroupId = emp[0].AttendanceGroupId;
+            e.OfficeId = emp[0].OfficeId;
           }
         });
         this.commonLoader.hideLoader();

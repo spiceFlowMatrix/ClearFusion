@@ -111,7 +111,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     .Select(z => z.OutTime).FirstOrDefault()).FirstOrDefault(),
                     // InTime = payrollDetail.Where(y=>y.AttendanceGroupId == x.EmployeeProfessionalDetail.AttendanceGroupId).Select(y=> y.InTime).FirstOrDefault(),
                     // OutTime = payrollDetail.Where(y=>y.AttendanceGroupId == x.EmployeeProfessionalDetail.AttendanceGroupId).Select(y=> y.OutTime).FirstOrDefault(),
-                    AttendanceType = (int)AttendanceType.P
+                    AttendanceType = (int)AttendanceType.P,
+                    OfficeId = (x.EmployeeProfessionalDetail.OfficeId != null) ? x.EmployeeProfessionalDetail.OfficeId.Value : 0
                 }).ToList();
 
                 var existingAttendanceDetail = await _dbContext.EmployeeAttendance.Where(x=>x.IsDeleted == false && employeeRecord.Select(y=>y.EmployeeID).Contains(x.EmployeeId) && x.Date.Date >= request.FromDate.Date && x.Date.Date <= request.ToDate.Date).ToListAsync();

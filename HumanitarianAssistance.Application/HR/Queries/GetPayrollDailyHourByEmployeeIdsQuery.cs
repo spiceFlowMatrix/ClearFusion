@@ -20,6 +20,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
         public DateTime? InTime { get; set; }
         public DateTime? OutTime { get; set; }
         public int AttendanceType { get; set; }
+        public int OfficeId { get; set; }
     }
 
     public class PayrollExceptionModel {
