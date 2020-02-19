@@ -76,7 +76,7 @@
                         <div class="row">
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="Password" placeholder="Password" type="password" />
+                                    <input matInput formControlName="Password" placeholder="Password" type="password" autocomplete="off"/>
                                     <mat-error *ngIf="
                       employeeDetailForm.controls['Password'].hasError(
                         'required'
@@ -86,7 +86,7 @@
                             </div>
                             <div class="col-md-3">
                                 <mat-form-field class="example-full-width">
-                                    <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" type="password" />
+                                    <input matInput formControlName="ConfirmPassword" placeholder="Confirm Password" type="password" autocomplete="off" />
                                     <mat-error *ngIf="
                       employeeDetailForm.controls['ConfirmPassword'].hasError(
                         'required'
