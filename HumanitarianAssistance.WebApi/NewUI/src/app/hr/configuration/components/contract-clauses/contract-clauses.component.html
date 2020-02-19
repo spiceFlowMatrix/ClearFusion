@@ -30,7 +30,7 @@
 <ng-template #showContractClauses>
     <div class="row">
         <div class="col-md-12">
-            <hum-button *ngIf="isContractSaved" [type]="'loading'" [text]="'Saving....'"></hum-button>
+            <hum-button *ngIf="isContractSaved" [type]="'loading'" [text]="'Saving....'" style="float:right"></hum-button>
             <hum-button *ngIf="!isContractSaved" [type]="'save'" [text]="'Save'" (click)="SaveContractContent()" style="float:right"></hum-button>
         </div>
     </div>
@@ -43,7 +43,7 @@
                 <ckeditor [(ngModel)]="ckeditorContentEnglish" [config]="{
           extraPlugins: 'divarea',
           defaultLanguage: 'en',
-          language: 'en'
+          language_list: [ 'fa:Persian:rtl', 'en:English']
         }"></ckeditor>
             </div>
             <br />

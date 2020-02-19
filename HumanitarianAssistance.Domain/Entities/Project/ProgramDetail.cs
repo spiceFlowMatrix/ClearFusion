@@ -16,6 +16,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long ProjectId { get; set; }
         public string ProgramName { get; set; }
         public string ProgramCode { get; set; }
+        public List<ProjectProgram> ProjectProgram { get; set; }
 
     }
 }
