@@ -130,14 +130,24 @@
                 <mat-cell *matCellDef="let element"> {{element.FatherName}} </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="Designation">
+              <mat-header-cell *matHeaderCellDef> Designation </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.Designation}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Sex">
+              <mat-header-cell *matHeaderCellDef> Sex </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.Sex}} </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="EmploymentStatus">
                 <mat-header-cell *matHeaderCellDef> Employment Status </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.EmploymentStatus}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="Profession">
-                <mat-header-cell *matHeaderCellDef> Profession </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.Profession}}
+            <ng-container matColumnDef="DateRange">
+                <mat-header-cell *matHeaderCellDef> Date Range </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.DateRange}}
                 </mat-cell>
             </ng-container>
 
