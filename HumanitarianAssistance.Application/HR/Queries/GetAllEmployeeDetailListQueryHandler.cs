@@ -29,7 +29,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     .ThenInclude(p => p.professionDetails)
                     .Include(e => e.EmployeeProfessionalDetail)
                     .ThenInclude(p => p.DesignationDetails)
-                    .Where(x => x.EmployeeProfessionalDetail.OfficeId == request.OfficeId && x.IsDeleted == false)
+                    .Where(x => request.OfficeIds.Contains(x.EmployeeProfessionalDetail.OfficeId.Value) && x.IsDeleted == false)
                     .Select(x => new {
                         EmployeeTypeId = x.EmployeeTypeId,
                         EmployeeID = x.EmployeeID,

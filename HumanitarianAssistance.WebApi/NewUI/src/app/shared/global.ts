@@ -818,6 +818,9 @@ export class GLOBAL {
   public static API_EmployeeDetail_RejectAppraisalDetail = 'EmployeeDetail/RejectAppraisalDetail';
 
   //#endregion
+
+  public static API_Code_GetAllContractTypeContent = 'Code/GetAllContractTypeContent';
+  public static API_Code_SaveContractContent = 'Code/SaveContractContent';
 }
 
 

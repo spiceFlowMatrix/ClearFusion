@@ -40,7 +40,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Common
 
                 //gets the total working hours in a day for an office
                 List<PayrollMonthlyHourDetail> payrollMonthlyHourDetail = await _dbContext.PayrollMonthlyHourDetail
-                                                                              .Where(x => x.OfficeId == request.OfficeId
+                                                                              .Where(x => request.OfficeIds.Contains(x.OfficeId)
                                                                               && x.PayrollYear == request.AttendanceDate.Year 
                                                                               && x.PayrollMonth == request.AttendanceDate.Month
                                                                               && request.EmployeeAttendance.Select(y=>y.AttendanceGroupId).Distinct().Contains(x.AttendanceGroupId))
@@ -49,15 +49,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Common
                 // int? officeMonthlyHour = payrollMonthlyHourDetail.WorkingTime;
 
 
-                if (payrollMonthlyHourDetail.Count() == request.EmployeeAttendance.Select(y=>y.AttendanceGroupId).Distinct().Count())
-                {
+                // if (payrollMonthlyHourDetail.Count() == request.EmployeeAttendance.Select(y=>y.AttendanceGroupId).Distinct().Count())
+                // {
 
                     var financiallist = await _dbContext.FinancialYearDetail.FirstOrDefaultAsync(x => x.IsDefault == true);
 
                     foreach (var list in request.EmployeeAttendance)
                     {
-                        int? officeDailyHour = payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.Hours).FirstOrDefault();
-                        int? officeMonthlyHour = payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.WorkingTime).FirstOrDefault();
+                        int? officeDailyHour = payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.Hours).FirstOrDefault();
+                        int? officeMonthlyHour = payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.WorkingTime).FirstOrDefault();
 
                         TimeSpan? totalworkhour;
                         TimeSpan? totalovertime;
@@ -79,13 +79,13 @@ namespace HumanitarianAssistance.Application.HR.Commands.Common
                             }
 
                             OfficeInTime = new DateTime(list.InTime.Value.Year, list.InTime.Value.Month, list.InTime.Value.Day, 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.InTime.Value.Hour).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.InTime.Value.Minute).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.InTime.Value.Second).FirstOrDefault());
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.InTime.Value.Hour).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.InTime.Value.Minute).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.InTime.Value.Second).FirstOrDefault());
                             OfficeOutTime = new DateTime(list.OutTime.Value.Year, list.OutTime.Value.Month, list.OutTime.Value.Day,
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.OutTime.Value.Hour).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.OutTime.Value.Minute).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.OutTime.Value.Second).FirstOrDefault());
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.OutTime.Value.Hour).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.OutTime.Value.Minute).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.OutTime.Value.Second).FirstOrDefault());
 
                             if (list.InTime < OfficeInTime)
                             {
@@ -162,13 +162,13 @@ namespace HumanitarianAssistance.Application.HR.Commands.Common
                             }
 
                             OfficeInTime = new DateTime(list.InTime.Value.Year, list.InTime.Value.Month, list.InTime.Value.Day, 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.InTime.Value.Hour).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.InTime.Value.Minute).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.InTime.Value.Second).FirstOrDefault());
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.InTime.Value.Hour).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.InTime.Value.Minute).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.InTime.Value.Second).FirstOrDefault());
                             OfficeOutTime = new DateTime(list.OutTime.Value.Year, list.OutTime.Value.Month, list.OutTime.Value.Day,
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.OutTime.Value.Hour).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.OutTime.Value.Minute).FirstOrDefault(), 
-                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId).Select(x=> x.OutTime.Value.Second).FirstOrDefault());
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.OutTime.Value.Hour).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.OutTime.Value.Minute).FirstOrDefault(), 
+                                            payrollMonthlyHourDetail.Where(x=>x.AttendanceGroupId == list.AttendanceGroupId && x.OfficeId == list.OfficeId).Select(x=> x.OutTime.Value.Second).FirstOrDefault());
 
                             if (list.InTime < OfficeInTime)
                             {
@@ -235,89 +235,15 @@ namespace HumanitarianAssistance.Application.HR.Commands.Common
                             await _dbContext.SaveChangesAsync();
                         }
 
-                        // EmployeeMonthlyAttendance xEmployeeMonthlyAttendanceRecord = await _dbContext.EmployeeMonthlyAttendance.FirstOrDefaultAsync(x => x.EmployeeId == list.EmployeeId && x.Month == list.Date.Month && x.Year == list.Date.Year && x.IsDeleted == false);
-
-                        // EmployeeMonthlyAttendance xEmployeeMonthlyAttendance = new EmployeeMonthlyAttendance();
-
-                        // //If Employee record is present in monthly attendance table then 
-                        // if (xEmployeeMonthlyAttendanceRecord != null)
-                        // {
-
-                        //     //if Employee is absent without any leave
-                        //     if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
-                        //     {
-                        //         xEmployeeMonthlyAttendance.AbsentHours = xEmployeeMonthlyAttendance.AbsentHours == null ? 0 : xEmployeeMonthlyAttendance.AbsentHours;
-                        //         xEmployeeMonthlyAttendance.AbsentHours += officeDailyHour;
-                        //     }
-
-                        //     //update total attendance hours
-                        //     if ((workingHours != 0 || workingMinutes !=0) && overtime == 0)
-                        //     {
-                        //         xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
-                        //         xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
-                        //         xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
-
-                        //     }
-                        //     //update total attendance hours and also add overtime hours
-                        //     else if ((workingHours != 0 || workingMinutes !=0) && overtime != 0)
-                        //     {
-                        //         xEmployeeMonthlyAttendanceRecord.AttendanceHours += totalworkhour.Value.Hours;
-                        //         xEmployeeMonthlyAttendanceRecord.OvertimeHours = xEmployeeMonthlyAttendanceRecord.OvertimeHours ?? 0;
-                        //         xEmployeeMonthlyAttendanceRecord.OvertimeHours += overtime;
-                        //         xEmployeeMonthlyAttendanceRecord.AttendanceMinutes += workingMinutes.Value;
-                        //         xEmployeeMonthlyAttendanceRecord.OverTimeMinutes += overtimeMinutes.Value;
-                        //     }
-
-                        //     //updating employee monthly attendance record
-                        //     _dbContext.EmployeeMonthlyAttendance.Update(xEmployeeMonthlyAttendanceRecord);
-                        //     await _dbContext.SaveChangesAsync();
-                        // }
-                        // else // if employee monthly attendance record does not exists then add a record
-                        // {
-                        //     // int monthDays = GetMonthDays(modellist.FirstOrDefault().Date.Month, modellist.FirstOrDefault().Date.Year);
-
-                        //     int monthDays = DateTime.DaysInMonth(list.Date.Year, list.Date.Month);
-
-                        //     //if employee is absent without any leave
-                        //     if (totalworkhour.ToString() == "00:00:00" || list.AttendanceTypeId == (int)AttendanceType.A)
-                        //     {
-                        //         xEmployeeMonthlyAttendance.IsDeleted = false;
-                        //         xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
-                        //         xEmployeeMonthlyAttendance.Month = list.Date.Month;
-                        //         xEmployeeMonthlyAttendance.Year = list.Date.Year;
-                        //         xEmployeeMonthlyAttendance.AttendanceHours = 0;
-                        //         xEmployeeMonthlyAttendance.OvertimeHours = 0;
-                        //         xEmployeeMonthlyAttendance.AbsentHours = officeDailyHour;
-                        //         xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
-                        //         xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
-                        //     }
-                        //     else
-                        //     {
-                        //         xEmployeeMonthlyAttendance.IsDeleted = false;
-                        //         xEmployeeMonthlyAttendance.EmployeeId = list.EmployeeId;
-                        //         xEmployeeMonthlyAttendance.Month = list.Date.Month;
-                        //         xEmployeeMonthlyAttendance.Year = list.Date.Year;
-                        //         xEmployeeMonthlyAttendance.AttendanceHours = workingHours;
-                        //         xEmployeeMonthlyAttendance.OvertimeHours = overtime;
-                        //         xEmployeeMonthlyAttendance.OfficeId = list.OfficeId;
-                        //         xEmployeeMonthlyAttendance.TotalDuration = officeMonthlyHour;
-                        //         xEmployeeMonthlyAttendance.AttendanceMinutes = list.WorkTimeMinutes.Value;
-                        //         xEmployeeMonthlyAttendance.OverTimeMinutes = list.OvertimeMinutes.Value;
-                        //     }
-
-                        //     await _dbContext.EmployeeMonthlyAttendance.AddAsync(xEmployeeMonthlyAttendance);
-                        //     await _dbContext.SaveChangesAsync();
-                        // }
-
                         
                     }
 
                     success = true;
-                }
-                else
-                {
-                    throw new Exception("Office Hours Not Set");
-                }
+                // }
+                // else
+                // {
+                //     throw new Exception("Office Hours Not Set");
+                // }
             }
             catch (Exception ex)
             {

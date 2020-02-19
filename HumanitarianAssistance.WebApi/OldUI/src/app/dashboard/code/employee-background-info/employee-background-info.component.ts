@@ -100,7 +100,6 @@ export class EmployeeBackgroundInfoComponent implements OnInit {
   }
 
   onTabClick(tabIndex) {
-     
     this.selectedTab = tabIndex;
     this.ckeditorContentEnglish = '';
     this.ckeditorContentDari = '';
