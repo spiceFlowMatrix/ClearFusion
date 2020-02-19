@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             var query = _dbContext.EmployeeDetail
                     .Include(e => e.EmployeeProfessionalDetail)
                     .ThenInclude(p => p.professionDetails)
-                    .Where(x => x.EmployeeProfessionalDetail.OfficeId == request.OfficeId && x.IsDeleted == false)
+                    .Where(x => request.OfficeIds.Contains(x.EmployeeProfessionalDetail.OfficeId.Value) && x.IsDeleted == false)
                     .Select(x => new {
                         EmployeeTypeId = x.EmployeeTypeId,
                         EmployeeID = x.EmployeeID,
