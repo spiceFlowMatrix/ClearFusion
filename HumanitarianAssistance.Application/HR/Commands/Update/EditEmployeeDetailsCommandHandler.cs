@@ -35,8 +35,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update {
                         employeeinfo.FatherName = request.EmployeeBasicDetail.FatherName;
                         employeeinfo.GradeId = request.EmployeeProfessionalDetails.JobGrade;
                         employeeinfo.PermanentAddress = request.EmployeeBasicDetail.PermanentAddress;
-                        //   employeeinfo.City = request.City;
-                        //  employeeinfo.District = request.EmployeeBasicDetail.District;
+                        employeeinfo.City = request.EmployeeBasicDetail.District;
+                        employeeinfo.District = request.EmployeeBasicDetail.District;
                         employeeinfo.ProvinceId = request.EmployeeBasicDetail.Province;
                         employeeinfo.CountryId = request.EmployeeBasicDetail.Country;
                         employeeinfo.Phone = request.EmployeeBasicDetail.PhoneNo;

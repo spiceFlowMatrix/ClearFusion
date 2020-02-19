@@ -391,7 +391,7 @@ export class AddEmployeeComponent implements OnInit {
             this.districtList$ = of(
               response.data.Districtlist.map(element => {
                 return {
-                  value: element.DistrictID,
+                  value: element.District,
                   name: element.District
                 } as IDropDownModel;
               })
@@ -628,7 +628,7 @@ export class AddEmployeeComponent implements OnInit {
               MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
               Country: x.data.EmployeeDetailList[0].CountryId,
               Province: x.data.EmployeeDetailList[0].ProvinceId,
-              // District: x.data.EmployeeDetailList[0].EmployeeName,
+              District: x.data.EmployeeDetailList[0].District,
               BirthPlace: x.data.EmployeeDetailList[0].BirthPlace,
               TinNumber: x.data.EmployeeDetailList[0].TinNumber,
               PassportNumber: x.data.EmployeeDetailList[0].PassportNo,

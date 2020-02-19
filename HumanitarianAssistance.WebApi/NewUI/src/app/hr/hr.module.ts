@@ -1,5 +1,3 @@
-
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { AssignLeaveComponent } from './components/employee-leave/assign-leave/assign-leave.component';
 import { EmployeeLeaveAddComponent } from './components/employee-leave/employee-leave-add/employee-leave-add.component';
 import { NgModule } from '@angular/core';
@@ -65,8 +63,12 @@ import { EmployeeAdvanceListComponent } from './components/employee_advance/empl
 import { NewAdvanceRequestComponent } from './components/employee_advance/new-advance-request/new-advance-request.component';
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
 import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
-import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
+import { NgxMaterialTimepickerModule } from '../../../node_modules/ngx-material-timepicker';
+import {
+  TranslateModule,
+  TranslateLoader,
+  TranslateService
+} from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
@@ -75,7 +77,9 @@ import { AddAdvanceRecoveryComponent } from './components/employee-salary-config
 import { AddOpeningPensionComponent } from './components/add-employee/add-opening-pension/add-opening-pension.component';
 // tslint:disable-next-line: max-line-length
 import { IncrementDecrementSalaryComponent } from './components/employee-salary-config/increment-decrement-salary/increment-decrement-salary.component';
+// tslint:disable-next-line: max-line-length
 import { AddHistoryOutsideOrganizationComponent } from './components/employee-history/add-history-outside-organization/add-history-outside-organization.component';
+// tslint:disable-next-line: max-line-length
 import { EditEmployeeAttendanceComponent } from './components/employee-attendance/edit-employee-attendance/edit-employee-attendance.component';
 import { AddEmployeeAppraisalComponent } from './components/employee-appraisal/add-employee-appraisal/add-employee-appraisal.component';
 import { EmployeeAppraisalComponent } from './components/employee-appraisal/employee-appraisal.component';
@@ -83,13 +87,11 @@ import { AddAppraisalMembersComponent } from './components/employee-appraisal/ad
 import { EmployeeTrainingComponent } from './components/employee-appraisal/employee-training/employee-training.component';
 import { AddStrongPointsComponent } from './components/employee-appraisal/add-strong-points/add-strong-points.component';
 import { AddWeakPointsComponent } from './components/employee-appraisal/add-weak-points/add-weak-points.component';
-import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
-import {MatTooltipModule} from '@angular/material/tooltip';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { AuditLogsComponent } from './components/audit-logs/audit-logs.component';
 import { AdministerPayrollComponent } from './components/administer-payroll/administer-payroll.component';
 import { EmployeeAnalyticalComponent } from './components/employee-analytical/employee-analytical.component';
 import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
-
 
 @NgModule({
   declarations: [
@@ -190,10 +192,7 @@ import { EmployeeTerminationComponent } from './components/employee-termination/
       }
     })
   ],
-  providers: [
-    TranslateService,
-    HttpClient,
-  ],
+  providers: [TranslateService, HttpClient],
   entryComponents: [
     EmployeeLeaveAddComponent,
     AssignLeaveComponent,
