@@ -5,15 +5,15 @@
     </h4>
   </div>
   <div class="col-sm-1">
-      <button mat-stroked-button color="accent" (click)="openPdfOptionDialog()">
-          <mat-icon aria-hidden="false" aria-label="Example home icon">
-            vertical_align_bottom </mat-icon
-          >Export Pdf
-        </button>
-        <!-- <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon> -->
+    <button mat-stroked-button color="accent" (click)="openPdfOptionDialog()">
+      <mat-icon aria-hidden="false" aria-label="Example home icon">
+        vertical_align_bottom </mat-icon>Export Pdf
+    </button>
+    <!-- <mat-icon class="icon_cursor padding_top_5px" aria-label="download" (click)="onExportPdf()">vertical_align_bottom</mat-icon> -->
   </div>
   <div class="col-sm-7">
-        <mat-icon class="pull-right icon_cursor" aria-label="cancel" (click)="closeProgramAreaSectorModal()">clear</mat-icon>
+    <mat-icon class="pull-right icon_cursor" aria-label="cancel" (click)="closeProgramAreaSectorModal()">clear
+    </mat-icon>
   </div>
 </div>
 <div *ngIf="projectOtherDetailPageFlag; else projectListTemplate" class="col-sm-12">
@@ -160,8 +160,7 @@
                                   'provinceSelction',
                                   provinceMultiSelectModel.ProvinceId
                                 )
-                              " name="provinceSelction"
-                    multiple>
+                              " name="provinceSelction" multiple>
                     <mat-option *ngFor="let item of ProvinceSelectionList" [value]="item.value">{{ item.label }}
                     </mat-option>
                   </mat-select>
@@ -186,7 +185,8 @@
                     <mat-option *ngFor="let item of DistrictMultiSelectList" [value]="item.value">{{ item.label }}
                     </mat-option>
                   </mat-select>
-                  <mat-spinner class="center_loader custom_load" *ngIf="provinceDistrictFlag || districtFlag;" diameter="20">
+                  <mat-spinner class="center_loader custom_load" *ngIf="provinceDistrictFlag || districtFlag;"
+                    diameter="20">
                   </mat-spinner>
                 </mat-form-field>
 
@@ -200,7 +200,7 @@
               </div>
             </div><br>
             <div class="row">
-              <div class="col-sm-6">
+              <div class="col-sm-4">
                 <!-- <div class="autoComplete">
                   <mat-form-field class="example-full-width">
                     <input type="text" placeholder="Select Sector" [value]="Sector" aria-label="Number" matInput
@@ -216,21 +216,19 @@
                 </div> -->
 
 
-                <lib-search-dropdown
-                placeholder="Sector"
-                [multiSelect]="true"
-                placeholderSearchLabel="Search Sector..."
-                noEntriesFoundLabel="No matching sector found"
-                [dataSource]="Sectorlist"
-                [selectedValue]="SectorIds"
-                (openedChange)="
+                <lib-search-dropdown placeholder="Sector" [multiSelect]="true" placeholderSearchLabel="Search Sector..."
+                  noEntriesFoundLabel="No matching sector found" [dataSource]="Sectorlist" [selectedValue]="SectorIds"
+                  (openedChange)="
                 onOpenedSectorMultiSelectChange($event)
-                      "
-              >
-              </lib-search-dropdown>
+                      ">
+                </lib-search-dropdown>
+
               </div>
-              <div class="col-sm-6">
-                <div class="autoComplete">
+              <div class="col-sm-2">
+                <hum-button [type]="'add'" [text]="'ADD'" (click)="openAddSectorDetail()"></hum-button>
+              </div>
+              <div class="col-sm-4">
+                <!-- <div class="autoComplete">
                   <mat-form-field class="example-full-width">
                     <input type="text" placeholder="Select Program" [value]="Program" aria-label="Number" matInput
                       [formControl]="myControl" [matAutocomplete]="autoNumberss">
@@ -242,7 +240,17 @@
                     <mat-spinner class="center_loader custom_load" *ngIf="programListFlag;" diameter="20"></mat-spinner>
                   </mat-form-field>
                   <button *ngIf="isEditingAllowed" type="button" (click)="AddProgram(myControl)">+</button>
-                </div>
+                </div> -->
+
+                <lib-search-dropdown placeholder="Program" [multiSelect]="true"
+                  placeholderSearchLabel="Search Program..." noEntriesFoundLabel="No matching sector found"
+                  [dataSource]="Programlist" [selectedValue]="ProgramIds" (openedChange)="
+                onOpenedProgramMultiSelectChange($event)
+                      ">
+                </lib-search-dropdown>
+              </div>
+              <div class="col-sm-2">
+                <button *ngIf="isEditingAllowed" type="button" (click)="openAddProgramDetail()">+</button>
               </div>
             </div><br>
             <div class="row">
@@ -294,13 +302,12 @@
               <div class="form-group  ">
                 <mat-form-field class="example-full-width">
                   <textarea rows="4" matInput #ProjectGoalID type="text" [(ngModel)]="projectotherDetail.projectGoal"
-                    placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal"
-                    (focusout)="
+                    placeholder="Project Goal" name="projectGoal" [formControl]="projectGoal" (focusout)="
                         onProjectotherDetailsChange(
                           'projectGoal',
                           ProjectGoalID.value
                         )
-                      " [disableControl]="!isEditingAllowed" ></textarea>
+                      " [disableControl]="!isEditingAllowed"></textarea>
 
                   <mat-error *ngIf="projectGoal.hasError('required')">
                     Project Goal is <strong>required</strong>
@@ -311,14 +318,14 @@
             <div class="col-sm-6">
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
-                  <textarea rows="4" matInput #ProjectObjectiveID type="text" [(ngModel)]="projectotherDetail.projectObjective"
-                     placeholder="Project Objective" name="projectObjective"
-                    [formControl]="projectObjective" (focusout)="
+                  <textarea rows="4" matInput #ProjectObjectiveID type="text"
+                    [(ngModel)]="projectotherDetail.projectObjective" placeholder="Project Objective"
+                    name="projectObjective" [formControl]="projectObjective" (focusout)="
                       onProjectotherDetailsChange(
                         'projectObjective',
                         ProjectObjectiveID.value
                       )
-                    " [disableControl]="!isEditingAllowed" ></textarea>
+                    " [disableControl]="!isEditingAllowed"></textarea>
 
                   <mat-error *ngIf="projectObjective.hasError('required')">
                     Project Objective is <strong>required</strong>
@@ -359,14 +366,14 @@
             <div class="col-sm-12">
               <div class="form-group ">
                 <mat-form-field class="example-full-width">
-                  <textarea rows="4" matInput #MainActivitiesID type="text" [(ngModel)]="projectotherDetail.mainActivities"
-                     placeholder="Main Activities" name="mainActivities" [formControl]="mainActivities"
-                    (focusout)="
+                  <textarea rows="4" matInput #MainActivitiesID type="text"
+                    [(ngModel)]="projectotherDetail.mainActivities" placeholder="Main Activities" name="mainActivities"
+                    [formControl]="mainActivities" (focusout)="
                       onProjectotherDetailsChange(
                         'mainActivities',
                         MainActivitiesID.value
                       )
-                    " [disableControl]="!isEditingAllowed" ></textarea>
+                    " [disableControl]="!isEditingAllowed"></textarea>
 
                   <mat-error *ngIf="mainActivities.hasError('required')">
                     Main Activities is <strong>required</strong>
@@ -481,11 +488,9 @@
           <h5><strong> Gender Consideration</strong></h5>
           <div class="row">
             <div class="col-sm-6">
-              <lib-search-dropdown placeholder="Strength Consideration"
-                [multiSelect]="false"
+              <lib-search-dropdown placeholder="Strength Consideration" [multiSelect]="false"
                 placeholderSearchLabel="Search Strength Consideration..."
-                noEntriesFoundLabel="No matching Strength found"
-                [dataSource]="strengthDataSource"
+                noEntriesFoundLabel="No matching Strength found" [dataSource]="strengthDataSource"
                 [selectedValue]="projectotherDetail.StrengthConsiderationId"
                 (openedChange)="openedStrengthChange($event,'strength')">
               </lib-search-dropdown>

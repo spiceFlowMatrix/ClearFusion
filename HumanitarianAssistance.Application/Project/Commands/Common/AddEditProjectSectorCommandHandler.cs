@@ -27,7 +27,6 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
             try
             {
                 var existRecord = await _dbContext.ProjectSector.Where(x => x.IsDeleted == false && x.ProjectId == request.ProjectId).ToListAsync();
-                List<ProjectSector> listObj = new List<ProjectSector>();
                 if (request.SectorIds != null)
                 {
                     if (existRecord.Any())

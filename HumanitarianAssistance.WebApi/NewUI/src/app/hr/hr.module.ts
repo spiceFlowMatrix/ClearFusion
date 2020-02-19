@@ -66,7 +66,6 @@ import { NewAdvanceRequestComponent } from './components/employee_advance/new-ad
 import { AdvanceHistoryComponent } from './components/employee_advance/advance-history/advance-history.component';
 import { SetEmployeeAttendanceComponent } from './components/set-employee-attendance/set-employee-attendance.component';
 import {NgxMaterialTimepickerModule} from '../../../node_modules/ngx-material-timepicker';
-import { TranslateModule, TranslateLoader, TranslateService } from '@ngx-translate/core';
 import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { SeeDaysComponent } from './components/employee-leave/see-days/see-days.component';
@@ -88,8 +87,6 @@ import {MatTooltipModule} from '@angular/material/tooltip';
 import { AuditLogsComponent } from './components/audit-logs/audit-logs.component';
 import { AdministerPayrollComponent } from './components/administer-payroll/administer-payroll.component';
 import { EmployeeAnalyticalComponent } from './components/employee-analytical/employee-analytical.component';
-import { EmployeeTerminationComponent } from './components/employee-termination/employee-termination.component';
-
 
 @NgModule({
   declarations: [
