@@ -22,7 +22,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create {
         public int? MaritalStatus { get; set; }
         public int? Country { get; set; }
         public int? Province { get; set; }
-        public int? District { get; set; }
+        public string District { get; set; }
         public string BirthPlace { get; set; }
         public string TinNumber { get; set; }
         public string PassportNumber { get; set; }
