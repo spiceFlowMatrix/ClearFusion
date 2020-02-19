@@ -30,24 +30,9 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                 List<ProjectSector> listObj = new List<ProjectSector>();
                 if (request.SectorIds != null)
                 {
-                    if (existRecord.Count == 0)
+                    if (existRecord.Any())
                     {
-                        foreach (var item in request.SectorIds)
-                        {
-                            ProjectSector obj = new ProjectSector();
-                            obj.ProjectId = request.ProjectId;
-                            obj.SectorId = item;
-                            obj.IsDeleted = false;
-                            obj.CreatedById = request.CreatedById;
-                            obj.CreatedDate = DateTime.UtcNow;
-                            listObj.Add(obj);
-                        }
-                        await _dbContext.ProjectSector.AddRangeAsync(listObj);
-                        await _dbContext.SaveChangesAsync();
-                    }
-                    else
-                    {
-
+                        // edit exiting
                         existRecord.ForEach(x => x.IsDeleted = true);
                         _dbContext.ProjectSector.UpdateRange(existRecord);
                         await _dbContext.SaveChangesAsync();
@@ -63,9 +48,20 @@ namespace HumanitarianAssistance.Application.Project.Commands.Common
                             await _dbContext.ProjectSector.AddAsync(sec);
                             await _dbContext.SaveChangesAsync();
                         }
-                        // _mapper.Map(model, existRecord);
-
-
+                    }
+                    else
+                    {
+                       foreach (var item in request.SectorIds)
+                        {
+                            ProjectSector obj = new ProjectSector();
+                            obj.ProjectId = request.ProjectId;
+                            obj.SectorId = item;
+                            obj.IsDeleted = false;
+                            obj.CreatedById = request.CreatedById;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            await _dbContext.ProjectSector.AddAsync(obj);
+                            await _dbContext.SaveChangesAsync();
+                        }
                     }
 
                 }
