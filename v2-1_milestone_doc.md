@@ -342,3 +342,5 @@ This section lists out transcripts of all the remaining open tasks that must be 
 ### Bug fixes
 
 1. [Salary Pension PDF export is broken - #360](https://drive.google.com/open?id=1COr6kVz4anqVb4GDTb1BkBDrvFiN-nMd)
+2. [Editing voucher date is not updating the date in the voucher details control panel - #408](https://drive.google.com/open?id=1-kCOzTAc3MuBlnSC1vE0iXDJbFE2PfRV)
+3. [When the transactions are saved, all the existing transactions disappeared in the production system of the end-user - #404](https://drive.google.com/open?id=1-khmpMmhV5Hrgs86AuRZhxfs5ti_FJ6as)
