@@ -43,3 +43,11 @@
 
 #### commits
 > #### [a789d0e1ffd659b01685af93f9f4783417c51a31](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/merge_requests/509/diffs?commit_id=a789d0e1ffd659b01685af93f9f4783417c51a31)
+
+## 5. Timeout on HTTP requests for file uploads should be increased. [#376](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/376)
+
+#### Issue Transcript
+> #### Due to the internet limitations on end-users, they need a longer time to be able to successfully complete uploads for larger files. However, increasing the timeout on such requests can add performance problems for the API. The development team needs to do some experiments on-site with end-users so as to effectively identify a good timeout to set for file uploads. After an acceptable timeout is identified and agreed upon, the API will be updated accordingly..
+
+#### commits
+> #### [912a7b54a9815a56d0036c97f3dd084d0b01e811](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/merge_requests/525/diffs?commit_id=912a7b54a9815a56d0036c97f3dd084d0b01e811)
