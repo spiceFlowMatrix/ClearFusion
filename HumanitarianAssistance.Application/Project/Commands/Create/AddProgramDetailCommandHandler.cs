@@ -31,88 +31,85 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public async Task<ApiResponse> Handle(AddProgramDetailCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
-            if (request != null && !string.IsNullOrWhiteSpace(request.ProgramName))
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                long LatestCodeId = 0;
-                var code = string.Empty;
-                try
+                if (request != null && !string.IsNullOrWhiteSpace(request.ProgramName))
                 {
-                    ProgramDetail obj = _mapper.Map<AddProgramDetailCommand, ProgramDetail>(request);
-
-
-                    var data = await _dbContext.ProgramDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProgramName.Trim().ToLower() == request.ProgramName.Trim().ToLower()); //  Contains(model.ProgramName);                               
-
-
-                    if (data == null)
+                    long LatestCodeId = 0;
+                    var code = string.Empty;
+                    try
                     {
-                        var ProgramDetail = await _dbContext.ProgramDetail
-                                                            .OrderByDescending(x => x.ProgramId)
-                                                            .FirstOrDefaultAsync(x => x.IsDeleted == false);
-                        if (ProgramDetail == null)
-                        {
-                            LatestCodeId = 1;
-                            code = ProjectUtility.GenerateCode(LatestCodeId);
-                        }
-                        else
-                        {
-                            LatestCodeId = ProgramDetail.ProgramId + 1;
-                            code = ProjectUtility.GenerateCode(LatestCodeId);
-                        }
-                        obj.ProgramName = request.ProgramName;
-                        obj.IsDeleted = false;
-                        obj.ProgramCode = code;
-                        obj.CreatedById = request.CreatedById;
-                        obj.CreatedDate = DateTime.UtcNow;
-                        await _dbContext.ProgramDetail.AddAsync(obj);
-                        await _dbContext.SaveChangesAsync();
+                        ProgramDetail obj = _mapper.Map<AddProgramDetailCommand, ProgramDetail>(request);
 
-                        if (obj.ProgramId != 0)
+
+                        var data = await _dbContext.ProgramDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.ProgramName.Trim().ToLower() == request.ProgramName.Trim().ToLower()); //  Contains(model.ProgramName);                               
+
+
+                        if (data == null)
                         {
-                            ProjectProgramModel projectProgramModel = new ProjectProgramModel
+                            var ProgramDetail = await _dbContext.ProgramDetail
+                                                                .OrderByDescending(x => x.ProgramId)
+                                                                .FirstOrDefaultAsync(x => x.IsDeleted == false);
+                            if (ProgramDetail == null)
                             {
-                                ProgramId = obj.ProgramId,
-                                ProjectId = request.ProjectId.Value,
-                                ProjectProgramId = 0
-                            };
-
-                            var addEditProjectProgram = await _iProjectServices.AddEditProjectProgram(projectProgramModel, request.CreatedById);
-
-                            if (addEditProjectProgram.StatusCode == 200)
-                            {
-                                response.data.ProgramDetail = obj;
-                                response.StatusCode = StaticResource.successStatusCode;
-                                response.Message = "Success";
+                                LatestCodeId = 1;
+                                code = ProjectUtility.GenerateCode(LatestCodeId);
                             }
                             else
                             {
-                                throw new Exception("Project Program could not be saved");
+                                LatestCodeId = ProgramDetail.ProgramId + 1;
+                                code = ProjectUtility.GenerateCode(LatestCodeId);
                             }
+                            obj.ProgramName = request.ProgramName;
+                            obj.IsDeleted = false;
+                            obj.ProgramCode = code;
+                            obj.CreatedById = request.CreatedById;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            await _dbContext.ProgramDetail.AddAsync(obj);
+                            await _dbContext.SaveChangesAsync();
+
+                            if (obj.ProgramId != 0)
+                            {
+                                ProjectProgram pro = new ProjectProgram();
+                                pro.ProjectId = request.ProjectId != null ? request.ProjectId.Value : 0;
+                                pro.ProgramId = obj.ProgramId;
+                                pro.IsDeleted = false;
+                                pro.CreatedById = request.CreatedById;
+                                pro.CreatedDate = request.CreatedDate;
+                                await _dbContext.ProjectProgram.AddAsync(pro);
+                                await _dbContext.SaveChangesAsync();
+
+                            }
+                            response.StatusCode = StaticResource.successStatusCode;
+
                         }
+                        else
+                        {
+                            response.StatusCode = StaticResource.NameAlreadyExist;
+                            response.Message = StaticResource.ListNameAlreadyExist;
+                        }
+                        transaction.Commit();
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        response.StatusCode = StaticResource.NameAlreadyExist;
-                        response.Message = StaticResource.ListNameAlreadyExist;
+                        transaction.Rollback();
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.SomethingWrong + ex.Message;
                     }
+
                 }
-                catch (Exception ex)
+                else if (request != null && string.IsNullOrWhiteSpace(request.ProgramName))
+                {//check for emptystring
+                    response.StatusCode = StaticResource.notValid;
+                    response.Message = StaticResource.validData;
+                }
+                else if (request == null)
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.SomethingWrong + ex.Message;
+                    response.StatusCode = StaticResource.NameAlreadyExist;
                 }
 
+                return response;
             }
-            else if (request != null && string.IsNullOrWhiteSpace(request.ProgramName))
-            {//check for emptystring
-                response.StatusCode = StaticResource.notValid;
-                response.Message = StaticResource.validData;
-            }
-            else if (request == null)
-            {
-                response.StatusCode = StaticResource.NameAlreadyExist;
-            }
-
-            return response;
         }
     }
 }

@@ -214,7 +214,6 @@ export class TrialBalanceReportComponent implements OnInit {
 
   //#region  Get Office Code in Add, Edit Dropdown
   getOfficeCodeList() {
-    debugger;
     this.accountservice
       .GetAllOfficeCodeList()
       .subscribe(

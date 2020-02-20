@@ -428,20 +428,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy {
                 this.Programlist,
                 'ProgramName'
               );
-
-              // this.filteredOptions = this.myControl.valueChanges.pipe(
-              //   startWith<string | ProgramModel>(''),
-              //   map(ProgramId =>
-              //     typeof ProgramId === 'string'
-              //       ? ProgramId
-              //       : ProgramId.ProgramName
-              //   ),
-              //   map(ProgramName =>
-              //     ProgramName
-              //       ? this._filter(ProgramName)
-              //       : this.Programlist.slice()
-              //   )
-              // );
             }
             this.getProjectProgramById(this.ProjectId);
             this.programListFlag = false;
@@ -808,7 +794,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy {
 
   //#region AddeditSelectSectorvalue when choose from dropdown
   AddeditSelectSectorvalue(event: any) {
-    debugger;
     // this.sectorListFlag = true;
     if (event != null && event !== undefined) {
       const projectSectorModel: ProjectSectorModel = {
@@ -2303,7 +2288,6 @@ export class ProgramAreaSectorComponent implements OnInit, OnDestroy {
   }
 
   getProjectSectorById(projectId: any) {
-    debugger;
     const Id = projectId;
     const obj = this.Sectorlist;
     this.projectListService
@@ -2349,13 +2333,10 @@ openAddSectorDetail(): void {
   // refresh the list after new request created
 
   dialogRef.componentInstance.sectorDataEmit.subscribe(element => {
-    debugger;
-    dialogRef.componentInstance.isFormSubmitted = false;
-   this.GetAllSectorList();
+    this.GetAllSectorList();
   });
   dialogRef.afterClosed().subscribe(res => {
     dialogRef.componentInstance.isFormSubmitted = false;
-   this.GetAllSectorList();
   })
 }
 //#endregion
@@ -2365,13 +2346,11 @@ openAddProgramDetail(): void{
     data: {Id: this.ProjectId}
   });
   dialogRef.componentInstance.programDataEmit.subscribe(element => {
-    dialogRef.componentInstance.isFormSubmitted = false;
    this.GetAllProgramList();
   });
 
   dialogRef.afterClosed().subscribe(res => {
-    dialogRef.componentInstance.isFormSubmitted = false;
-   this.GetAllProgramList();
+     dialogRef.componentInstance.isFormSubmitted = false;
   });
 }
 

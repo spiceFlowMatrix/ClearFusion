@@ -995,42 +995,22 @@ export class ProjectListService {
 
   //#region "addProjectSector"
   AddProjectSectorDetail(data: any) {
-    debugger;
     return this.globalService
     .post(
       this.appurl.getApiUrl() + GLOBAL.API_Project_AddSectorDetails,
       data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.ResponseData,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
     );
+
   }
   //#endregion
 
   //#region "addProjectProgram"
   AddProjectProgramDetail(data: any) {
-    debugger;
     return this.globalService
     .post(
       this.appurl.getApiUrl() + GLOBAL.API_Project_AddProgramDetails,data
-    )
-    .pipe(
-      map(x => {
-        const responseData: IResponseData = {
-          data: x.ResponseData,
-          statusCode: x.StatusCode,
-          message: x.Message
-        };
-        return responseData;
-      })
     );
+
   }
   //#endregion
 }

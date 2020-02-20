@@ -31,86 +31,83 @@ namespace HumanitarianAssistance.Application.Project.Commands.Create
         public async Task<ApiResponse> Handle(AddSectorDetailsCommand request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
-            long LatestCodeId = 0;
-            if (request != null && !string.IsNullOrWhiteSpace(request.SectorName))
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                var code = string.Empty;
-
-                try
+                long LatestCodeId = 0;
+                if (request != null && !string.IsNullOrWhiteSpace(request.SectorName))
                 {
-                    var data = _dbContext.SectorDetails.FirstOrDefault(x => x.IsDeleted == false && x.SectorName.Trim().ToLower() == request.SectorName.Trim().ToLower());
+                    var code = string.Empty;
 
-                    if (data == null)
+                    try
                     {
-                        SectorDetails obj = new SectorDetails();
-                        var sectorDetail = _dbContext.SectorDetails
-                                                     .OrderByDescending(x => x.SectorId)
-                                                     .FirstOrDefault(x => x.IsDeleted == false);
-                        if (sectorDetail == null)
-                        {
-                            LatestCodeId = 1;
-                            code = ProjectUtility.GenerateCode(LatestCodeId);
-                        }
-                        else
-                        {
-                            LatestCodeId = sectorDetail.SectorId + 1;
-                            code = ProjectUtility.GenerateCode(LatestCodeId);
-                        }
-                        obj.SectorName = request.SectorName;
-                        obj.IsDeleted = false;
-                        obj.SectorCode = code;
-                        obj.CreatedById = request.CreatedById;
-                        obj.CreatedDate = DateTime.UtcNow;
-                        await _dbContext.SectorDetails.AddAsync(obj);
-                        await _dbContext.SaveChangesAsync();
+                        var data = _dbContext.SectorDetails.FirstOrDefault(x => x.IsDeleted == false && x.SectorName.Trim().ToLower() == request.SectorName.Trim().ToLower());
 
-                        if (obj.SectorId != 0)
+                        if (data == null)
                         {
-                            ProjectSectorModel projectSectorModel = new ProjectSectorModel()
+                            SectorDetails obj = new SectorDetails();
+                            var sectorDetail = _dbContext.SectorDetails
+                                                         .OrderByDescending(x => x.SectorId)
+                                                         .FirstOrDefault(x => x.IsDeleted == false);
+                            if (sectorDetail == null)
                             {
-                                SectorId = obj.SectorId,
-                                ProjectId = request.ProjectId,
-                                ProjectSectorId = 0
-                            };
-
-
-                            var addEditProjectSector = await _iProjectServices.AddEditProjectSector(projectSectorModel, request.CreatedById);
-
-                            if (addEditProjectSector.StatusCode == 200)
-                            {
-                                response.StatusCode = StaticResource.successStatusCode;
-                                response.data.SectorDetails = obj;
-                                response.Message = "Success";
+                                LatestCodeId = 1;
+                                code = ProjectUtility.GenerateCode(LatestCodeId);
                             }
                             else
                             {
-                                throw new Exception("Project Sector could not be saved");
+                                LatestCodeId = sectorDetail.SectorId + 1;
+                                code = ProjectUtility.GenerateCode(LatestCodeId);
                             }
-                        }
-                    }
-                    else
-                    {
-                        response.StatusCode = StaticResource.NameAlreadyExist;
-                        response.Message = StaticResource.ListNameAlreadyExist;
-                    }
+                            obj.SectorName = request.SectorName;
+                            obj.IsDeleted = false;
+                            obj.SectorCode = code;
+                            obj.CreatedById = request.CreatedById;
+                            obj.CreatedDate = DateTime.UtcNow;
+                            await _dbContext.SectorDetails.AddAsync(obj);
+                            await _dbContext.SaveChangesAsync();
 
+                            if (obj.SectorId != 0)
+                            {
+
+                                ProjectSector sectorObj = new ProjectSector();
+                                sectorObj.ProjectId = request.ProjectId;
+                                sectorObj.SectorId = obj.SectorId;
+                                sectorObj.IsDeleted = false;
+                                sectorObj.CreatedById = request.CreatedById;
+                                sectorObj.CreatedDate = request.CreatedDate;
+                                await _dbContext.ProjectSector.AddAsync(sectorObj);
+                                await _dbContext.SaveChangesAsync();
+
+                            }
+                            response.StatusCode = StaticResource.successStatusCode;
+                        }
+                        else
+                        {
+                            response.StatusCode = StaticResource.NameAlreadyExist;
+                            response.Message = StaticResource.ListNameAlreadyExist;
+                        }
+                        transaction.Commit();
+                        response.Message = "Success";
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        response.StatusCode = StaticResource.failStatusCode;
+                        response.Message = StaticResource.SomethingWrong + ex.Message;
+                    }
                 }
-                catch (Exception ex)
+                else if (request != null && string.IsNullOrWhiteSpace(request.SectorName)) //check for emptystring
                 {
-                    response.StatusCode = StaticResource.failStatusCode;
-                    response.Message = StaticResource.SomethingWrong + ex.Message;
+                    response.StatusCode = StaticResource.notValid;
+                    response.Message = StaticResource.validData;
                 }
+                else if (request == null)
+                {
+                    response.StatusCode = StaticResource.NameAlreadyExist;
+                }
+
+                return response;
             }
-            else if (request != null && string.IsNullOrWhiteSpace(request.SectorName)) //check for emptystring
-            {
-                response.StatusCode = StaticResource.notValid;
-                response.Message = StaticResource.validData;
-            }
-            else if (request == null)
-            {
-                response.StatusCode = StaticResource.NameAlreadyExist;
-            }
-            return response;
         }
 
     }

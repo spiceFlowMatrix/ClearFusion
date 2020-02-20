@@ -15,6 +15,7 @@ export class AddSectorDetailComponent implements OnInit {
   isFormSubmitted = false;
   projectId: number;
   sectorDataEmit = new EventEmitter<any>();
+  err = null;
   constructor(
     private fb: FormBuilder,
     public projectListService: ProjectListService,
@@ -29,25 +30,36 @@ export class AddSectorDetailComponent implements OnInit {
     this.projectId = this.data.Id;
   }
   onFormSubmit(formdata: any) {
-    debugger;
+    this.err = null;
     if (
       formdata !== undefined &&
       formdata != null &&
-      this.addSectorDetailForm.valid && this.projectId !== undefined
+      this.addSectorDetailForm.valid &&
+      this.projectId !== undefined
     ) {
+      this.isFormSubmitted = true;
+
       const sectorModel: SectorModel = {
         SectorName: this.addSectorDetailForm.get('SectorName').value,
         ProjectId: this.projectId
       };
-      this.projectListService
-        .AddProjectSectorDetail(sectorModel)
-        .subscribe(response => {
-          if (response.statusCode === 200) {
-              this.sectorDataEmit.emit();
+      this.projectListService.AddProjectSectorDetail(sectorModel).subscribe(
+        response => {
+          if (response.StatusCode === 200) {
+            this.sectorDataEmit.emit(true);
+            this.isFormSubmitted = false;
+            this.dialogRef.close();
+          } if (response.StatusCode === 420) {
+            this.err = 'Program already exist.';
+            this.isFormSubmitted = false;
           }
-        });
+        },
+        error => {
+          this.sectorDataEmit.emit(true);
+          this.isFormSubmitted = false;
+        }
+      );
     }
-    this.dialogRef.close();
   }
   onCancelPopup() {
     this.dialogRef.close();

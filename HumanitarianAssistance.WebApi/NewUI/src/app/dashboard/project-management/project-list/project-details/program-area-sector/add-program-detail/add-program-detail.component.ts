@@ -14,6 +14,8 @@ export class AddProgramDetailComponent implements OnInit {
   addProgramDetailForm: FormGroup;
   isFormSubmitted = false;
   projectId: number;
+  err = null;
+
   programDataEmit = new EventEmitter<any>();
   constructor(
     private fb: FormBuilder,
@@ -22,39 +24,47 @@ export class AddProgramDetailComponent implements OnInit {
     public routeActive: ActivatedRoute,
     public route: Router,
     @Inject(MAT_DIALOG_DATA) public data: any
-  ) {
-
-  }
+  ) {}
 
   ngOnInit() {
-    debugger;
     this.addProgramDetailForm = this.fb.group({
       ProgramName: [null, Validators.required]
     });
 
-     this.projectId = this.data.Id;
+    this.projectId = this.data.Id;
     console.log(this.projectId);
   }
   onFormSubmit(formdata: any) {
-    debugger;
+    this.err = null;
     if (
       formdata !== undefined &&
       formdata != null &&
-      this.addProgramDetailForm.valid && this.projectId !== undefined
+      this.addProgramDetailForm.valid &&
+      this.projectId !== undefined
     ) {
+      this.isFormSubmitted = true;
       const programModel: ProgramModel = {
         ProgramName: this.addProgramDetailForm.get('ProgramName').value,
         ProjectId: this.projectId
       };
-      this.projectListService
-        .AddProjectProgramDetail(programModel)
-        .subscribe(response => {
-          if (response.statusCode === 200) {
-            this.programDataEmit.emit();
+      this.projectListService.AddProjectProgramDetail(programModel).subscribe(
+        response => {
+          if (response.StatusCode === 200) {
+            this.programDataEmit.emit(true);
+            this.isFormSubmitted = false;
+            this.dialogRef.close();
           }
-        });
+          if (response.StatusCode === 420) {
+            this.err = 'Program already exist.';
+            this.isFormSubmitted = false;
+          }
+        },
+        error => {
+          this.programDataEmit.emit(true);
+          this.isFormSubmitted = false;
+        }
+      );
     }
-    this.dialogRef.close();
   }
 
   onCancelPopup() {
