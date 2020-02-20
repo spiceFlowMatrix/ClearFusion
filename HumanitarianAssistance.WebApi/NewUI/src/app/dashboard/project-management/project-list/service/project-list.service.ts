@@ -1013,4 +1013,9 @@ export class ProjectListService {
 
   }
   //#endregion
+   //#region "GetProjectCodeById"
+   GetProjectCodeById(url: string) {
+    return this.globalService.getDataById(url);
+  }
+  //#endregion
 }

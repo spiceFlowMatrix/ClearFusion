@@ -64,6 +64,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             PermanentAddress = x.PermanentAddress,
                             CurrentAddress = x.CurrentAddress,
                             City = x.City,
+                            District = x.District,
                             ProvinceId = x.ProvinceId,
                             ProvinceName = x.ProvinceDetails.ProvinceName ?? null,
                             CountryId = x.CountryId,

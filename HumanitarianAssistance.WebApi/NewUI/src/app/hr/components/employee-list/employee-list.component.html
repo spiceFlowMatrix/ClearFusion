@@ -2,9 +2,15 @@
     <span class="action_header">Employees
         <hum-button [type]="'add'" [text]="'ADD EMPLOYEE'" routerLink="/hr/addEmployee"></hum-button>
         <!-- <hum-button [type]="'delete'" [text]="'DELETE EMPLOYEE'" (click)="deleteEmployee()"></hum-button> -->
-        <button mat-button [matMenuTriggerFor]="OfficeMenu">
+        <!-- <button mat-button [matMenuTriggerFor]="OfficeMenu">
             <h5 style="color: #0390D1;">{{selectedOffice.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i></h5>
-        </button>
+        </button> -->
+        <mat-select class="officeCustomStyle" placeholder="Offices" [formControl]="Office" multiple style="width:10%; font-size: 14px;">
+          <mat-option #allSelected (click)="toggleAllSelection()" [value]="0">All</mat-option>
+          <mat-option *ngFor="let office of officeDropdown" [value]="office.OfficeId" (click)="togglePerOne(allSelected.viewValue)">
+            {{office.OfficeName}}
+          </mat-option>
+        </mat-select>
         <button mat-button [disabled]="(this.selection.selected.length === 0)" (click)="setAttendance(picker)">
             <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">SET ATTENDANCE
             </h5>
@@ -12,7 +18,7 @@
         <mat-form-field style="width:1px;visibility:hidden;">
             <!-- <input matInput [matDatepicker]="picker" (dateChange)="onDateChanged($event)"> -->
             <!-- <mat-datepicker #picker ></mat-datepicker> -->
-            <input [matDatepickerFilter]="myFilter" matInput [satDatepicker]="picker"
+            <input matInput [satDatepicker]="picker"
                 (dateChange)="onDateChanged($event)">
             <sat-datepicker #picker [rangeMode]="true">
             </sat-datepicker>
@@ -38,10 +44,10 @@
         <button mat-button [disabled]="(this.selection.selected.length === 0)" [matMenuTriggerFor]="AdministerSalaryMenu">
           <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">ADMINISTER PAYROLL &nbsp;<i class="fas fa-caret-down"></i></h5>
         </button>
-        <mat-menu #OfficeMenu="matMenu">
+        <!-- <mat-menu #OfficeMenu="matMenu">
             <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async"
                 mat-menu-item>{{office.name}}</button>
-        </mat-menu>
+        </mat-menu> -->
         <mat-menu #SalaryReconfigureMenu="matMenu">
             <button (click)="setFixedSalary()" mat-menu-item>Set a Fixed Salary</button>
             <button (click)="incrementDecrementSalary()" mat-menu-item>Increment/Decrement Salary</button>
@@ -124,14 +130,24 @@
                 <mat-cell *matCellDef="let element"> {{element.FatherName}} </mat-cell>
             </ng-container>
 
+            <ng-container matColumnDef="Designation">
+              <mat-header-cell *matHeaderCellDef> Designation </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.Designation}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="Sex">
+              <mat-header-cell *matHeaderCellDef> Sex </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.Sex}} </mat-cell>
+            </ng-container>
+
             <ng-container matColumnDef="EmploymentStatus">
                 <mat-header-cell *matHeaderCellDef> Employment Status </mat-header-cell>
                 <mat-cell *matCellDef="let element"> {{element.EmploymentStatus}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="Profession">
-                <mat-header-cell *matHeaderCellDef> Profession </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.Profession}}
+            <ng-container matColumnDef="DateRange">
+                <mat-header-cell *matHeaderCellDef> Date Range </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.DateRange}}
                 </mat-cell>
             </ng-container>
 

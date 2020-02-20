@@ -27,7 +27,9 @@ namespace HumanitarianAssistance.Application.HR.Queries
             var query = _dbContext.EmployeeDetail
                     .Include(e => e.EmployeeProfessionalDetail)
                     .ThenInclude(p => p.professionDetails)
-                    .Where(x => x.EmployeeProfessionalDetail.OfficeId == request.OfficeId && x.IsDeleted == false)
+                    .Include(e => e.EmployeeProfessionalDetail)
+                    .ThenInclude(p => p.DesignationDetails)
+                    .Where(x => request.OfficeIds.Contains(x.EmployeeProfessionalDetail.OfficeId.Value) && x.IsDeleted == false)
                     .Select(x => new {
                         EmployeeTypeId = x.EmployeeTypeId,
                         EmployeeID = x.EmployeeID,
@@ -37,6 +39,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         Profession = x.EmployeeProfessionalDetail.professionDetails.ProfessionName,
                         SexId = x.SexId,
                         SexName = x.SexId == (int)Gender.MALE ? "Male" : x.SexId == (int)Gender.FEMALE ? "Female" : x.SexId == (int)Gender.OTHER ? "Other" : null,
+                        Designation = (x.EmployeeProfessionalDetail.DesignationId != null) ? (x.EmployeeProfessionalDetail.DesignationDetails.Designation): "N/A",
+                        DateRange = (x.EmployeeProfessionalDetail.HiredOn != null) ? x.EmployeeProfessionalDetail.HiredOn.Value.ToShortDateString(): "N/A"
                      });
             if(request.EmploymentStatusFilter != 0)
             {

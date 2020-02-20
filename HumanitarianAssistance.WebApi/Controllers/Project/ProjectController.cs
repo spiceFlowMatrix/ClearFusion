@@ -1819,6 +1819,23 @@ namespace HumanitarianAssistance.WebApi.Controllers.Project
         public async Task<ApiResponse> GetProjectBudgetLinesByProjectIds([FromBody] List<long?> projectIds)
         {
             return await _mediator.Send(new GetBudgetLinesByMultipleProjectIdsQuery { projectIds = projectIds });
+        }  
+        
+        [HttpGet]
+        public async Task<IActionResult> GetProjectCodeByProjectId([FromQuery] int id)
+        {
+            var result= await _mediator.Send(new GetProjectCodeByProjectIdQuery { ProjectId = id });
+            return Ok(result);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddProjectProposalFileDetail([FromBody] AddProjectProposalFileDetailCommand request)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            request.CreatedById = userId;
+            request.CreatedDate = DateTime.UtcNow;
+            var result= await _mediator.Send(request);
+            return Ok(result);
         }
     }
 }

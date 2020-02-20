@@ -24,7 +24,7 @@ export class SetEmployeeAttendanceComponent implements OnInit {
     private commonLoader: CommonLoaderService) {
       this.attendanceForm = this.fb.group({
         AttendanceDate: [null],
-        EmployeeAttendance: this.fb.array([this.createAttendanceEntry(0, null, new Date(), new Date(), 1, 0)])
+        EmployeeAttendance: this.fb.array([this.createAttendanceEntry(0, null, new Date(), new Date(), 1, 0, 0)])
       });
     }
 
@@ -32,14 +32,15 @@ export class SetEmployeeAttendanceComponent implements OnInit {
     this.initializeAttendanceFormArray();
   }
 
-  createAttendanceEntry(EmployeeId, EmployeeName, InTime, OutTime, Attendance, AttendanceGroupId): FormGroup {
+  createAttendanceEntry(EmployeeId, EmployeeName, InTime, OutTime, Attendance, AttendanceGroupId, OfficeId): FormGroup {
     return this.fb.group({
       EmployeeId: [EmployeeId],
       EmployeeName: [EmployeeName],
       InTime: [InTime],
       OutTime: [OutTime],
       Attendance: [Attendance],
-      AttendanceGroupId: [AttendanceGroupId]
+      AttendanceGroupId: [AttendanceGroupId],
+      OfficeId: [OfficeId]
     });
   }
 
@@ -51,7 +52,7 @@ export class SetEmployeeAttendanceComponent implements OnInit {
         .push(this.createAttendanceEntry(element.EmployeeId, element.Name,
         this.datePipe.transform(element.InTime, 'shortTime'),
         this.datePipe.transform(element.OutTime, 'shortTime'), element.Attendance,
-        element.AttendanceGroupId));
+        element.AttendanceGroupId, element.OfficeId));
     });
   }
 
@@ -64,7 +65,7 @@ export class SetEmployeeAttendanceComponent implements OnInit {
     this.data.AttendanceDates.forEach(val => {
       const model = {
         AttendanceDate: StaticUtilities.getLocalDate(val.toUTCString()),
-        OfficeId: this.data.OfficeId,
+        OfficeIds: this.data.OfficeId,
         EmployeeAttendance: []
       };
       value.EmployeeAttendance.forEach(element => {
@@ -86,7 +87,8 @@ export class SetEmployeeAttendanceComponent implements OnInit {
             this.convert12hTimeToMinutes(element.OutTime)
           ).toUTCString(),
           AttendanceGroupId: element.AttendanceGroupId,
-          Date: StaticUtilities.getLocalDate(val.toUTCString())
+          Date: StaticUtilities.getLocalDate(val.toUTCString()),
+          OfficeId: element.OfficeId
         };
         model.EmployeeAttendance.push(obj);
       });

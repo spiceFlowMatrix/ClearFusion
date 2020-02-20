@@ -44,6 +44,9 @@ import { FileSourceEntityTypes } from '../enum';
       case FileSourceEntityTypes.TenderBidContractLetter:
       objectName = 'TenderBidContractLetter/' + entityId + '/';
       break;
+      case FileSourceEntityTypes.ProjectProposal:
+      objectName = 'Project-Management/' + entityId + '/';
+      break;
     }
 
     return objectName;
