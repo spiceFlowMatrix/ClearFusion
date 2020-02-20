@@ -16,7 +16,7 @@ These are all the planning related details at the end of the milestone when it w
 | -------------------- | ------------------------------------------------------------ |
 | **Version**          | v2.1                                                         |
 | **Start Date**       | 18th February, 2020                                          |
-| **Due Date**         | N/A                                                          |
+| **Due Date**         |  20th February, 2020                                                         |
 | **Change history**   | [See this section of report](#issues-manifest-history) for detailed log of issue tracking throughout the milestone |
 
 ## Planned issues/tasks
