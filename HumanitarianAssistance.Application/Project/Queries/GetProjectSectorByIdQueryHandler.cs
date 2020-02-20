@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using HumanitarianAssistance.Application.Infrastructure;
@@ -9,23 +10,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HumanitarianAssistance.Application.Project.Queries
 {
-    public class GetProjectSectorByIdQueryHandler: IRequestHandler<GetProjectSectorByIdQuery, ApiResponse>
+    public class GetProjectSectorByIdQueryHandler : IRequestHandler<GetProjectSectorByIdQuery, ApiResponse>
     {
         private HumanitarianAssistanceDbContext _dbContext;
         public GetProjectSectorByIdQueryHandler(HumanitarianAssistanceDbContext dbContext)
         {
             _dbContext = dbContext;
         }
-        
 
-         public async Task<ApiResponse> Handle(GetProjectSectorByIdQuery request, CancellationToken cancellationToken)
+
+        public async Task<ApiResponse> Handle(GetProjectSectorByIdQuery request, CancellationToken cancellationToken)
         {
             ApiResponse response = new ApiResponse();
 
             try
             {
                 var Projectsector = await _dbContext.ProjectSector
-                       .FirstOrDefaultAsync(x => !x.IsDeleted && x.ProjectId == request.ProjectId);
+                                                    .Where(x => x.IsDeleted == false && 
+                                                                x.ProjectId == request.ProjectId)
+                                                    .ToListAsync();
                 response.data.projectSector = Projectsector;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
@@ -38,6 +41,6 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
             return response;
         }
-        
+
     }
 }

@@ -1,8 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { PurchaseListComponent } from 'src/app/store/components/purchase-list/purchase-list.component';
-import { DesignationListingComponent } from './components/designation-listing/designation-listing.component';
 import { Router } from '@angular/router';
-import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Component({
@@ -49,11 +46,16 @@ export class ConfigurationComponent implements OnInit {
         link: './attendance-groups',
         index: 5
       },
+      {
+        label: 'CONTRACT CLAUSES',
+        link: './contract-clauses',
+        index: 6
+      },
     ];
   }
 
   ngOnInit() {
-    this.router.events.subscribe((res) => {
+    this.router.events.subscribe(() => {
       this.activeLinkIndex = this.navLinks.indexOf(this.navLinks.find(tab => tab.link === '.' + this.router.url));
     });
     this.globalService.setMenuHeaderName(this.setConfigurationHeader);

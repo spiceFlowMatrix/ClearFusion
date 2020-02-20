@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
 
             try
             {
-                var list = await _dbContext.SectorDetails.Where(x => x.IsDeleted == false).ToListAsync();
+                var list = await _dbContext.SectorDetails.Where(x => x.IsDeleted == false).OrderByDescending(x=> x.SectorName).ToListAsync();
                 response.data.sectorDetails = list;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

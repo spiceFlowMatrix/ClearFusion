@@ -4,7 +4,7 @@ export class EmployeeFilterModel {
     // LastNameFilter;
     GenderFilter;
     EmployeeIdFilter;
-    OfficeId;
+    OfficeIds;
     PageSize;
     PageIndex;
 }
@@ -15,6 +15,9 @@ export interface EmployeeDetailList {
   Name: string;
   FatherName: string;
   EmploymentStatus: string;
-  Profession: string;
+  // Profession: string;
+  Sex: string;
+  Designation: string;
+  DateRange: string;
 }
 

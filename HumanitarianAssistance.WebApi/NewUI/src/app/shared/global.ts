@@ -248,9 +248,11 @@ export class GLOBAL {
   public static API_Project_AddEditProjectproposals = 'Project/AddEditProjectproposals';
   public static API_Project_GetProjectproposalsById = 'Project/GetProjectproposalsById';
   public static API_Project_GetProjectproposalDocumnetsById = 'Project/GetProjectproposalDocumentsById';
+  public static API_Project_AddProjectProposalFileDetail = 'Project/AddProjectProposalFileDetail';
 
 
   public static API_Project_StartProposalDragAndDropFile = 'Project/StartProposalDragAndDropFile';
+  public static API_Project_GetProjectCodeByProjectId = 'Project/GetProjectCodeByProjectId';
   public static API_Project_UploadReviewFile = 'Project/UploadReviewFile';
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
   public static API_Project_GetApprovalProjectDetailById = 'Project/GetApprovalProjectDetailById';
@@ -818,6 +820,17 @@ export class GLOBAL {
   public static API_EmployeeDetail_RejectAppraisalDetail = 'EmployeeDetail/RejectAppraisalDetail';
 
   //#endregion
+
+  public static API_Code_GetAllContractTypeContent = 'Code/GetAllContractTypeContent';
+  public static API_Code_SaveContractContent = 'Code/SaveContractContent';
+
+  // #region "Project sector and Program"
+  public static API_Project_AddProjectSectorDetail = 'Project/AddProjectSectorDetail';
+  public static API_Project_AddProjectProgramDetail = 'Project/AddProjectProgramDetail';
+
+
+  //#endregion
+
 }
 
 

@@ -206,7 +206,7 @@
             <app-proposal-document
               (isProposalDocumentAvailable)="changeDocumentAvailableFlag($event)"
               (changeStartDate)="changeStartDate($event)"
-            ></app-proposal-document>
+            [projectCode]="projectCode"></app-proposal-document>
           </div>
         </div>
       </div>

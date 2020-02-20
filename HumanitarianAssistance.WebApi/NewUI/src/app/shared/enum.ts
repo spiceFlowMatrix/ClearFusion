@@ -572,7 +572,7 @@ export enum FileSourceEntityTypes {
   TenderProposalDocument = 18,
   TenderRFPDocument = 19,
   TenderAnnouncementDocument = 20,
-  TenderBidContractLetter = 21
+  TenderBidContractLetter = 21,
 }
 //#endregion
 //#region "EmployeeType"

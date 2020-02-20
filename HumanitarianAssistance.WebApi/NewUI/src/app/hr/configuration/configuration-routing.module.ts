@@ -1,3 +1,4 @@
+import { ContractClausesComponent } from './components/contract-clauses/contract-clauses.component';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { ConfigurationComponent } from './configuration.component';
@@ -29,6 +30,9 @@ const routes: Routes = [
       },
       {
         path: 'attendance-groups', component: AttendanceGroupMasterComponent
+      },
+      {
+        path: 'contract-clauses', component: ContractClausesComponent
       },
       {
         path: '', redirectTo: 'general', pathMatch: 'full'

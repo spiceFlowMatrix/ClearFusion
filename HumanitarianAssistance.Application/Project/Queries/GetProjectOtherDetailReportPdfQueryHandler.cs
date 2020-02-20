@@ -37,7 +37,7 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 var projectdetails=await _dbContext.LoadStoredProc("get_project_other_detail_pdf")
                                         .WithSqlParam("projectid", request.ProjectId)                           
                                         .ExecuteStoredProc<ProjectOtherDetailPdfModel>();
-                var detail=projectdetails.FirstOrDefault();
+                var detail = projectdetails.FirstOrDefault();
                 var newdetail=_mapper.Map<ProjectOtherDetailNewPdfModel>(detail);
                 var flags=_mapper.Map<ProjectPdfFlags>(request);
                 newdetail.flags=flags;

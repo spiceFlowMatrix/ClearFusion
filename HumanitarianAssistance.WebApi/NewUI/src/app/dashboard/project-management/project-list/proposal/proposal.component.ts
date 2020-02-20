@@ -38,6 +38,7 @@ export class ProposalComponent implements OnInit, OnChanges, OnDestroy {
   proposalModel: ProposalDocModel;
   currencyList: CurrencyModel[];
   IsApproved?: boolean = null;
+  projectCode = '';
   pageId = ApplicationPages.Proposal;
 
   // flags
@@ -76,6 +77,7 @@ export class ProposalComponent implements OnInit, OnChanges, OnDestroy {
     // this.ProjectId = +this.routeActive.snapshot.paramMap.get('id');
     this.initForms();
     this.getProposalDetail(this.projectId);
+    this.getProjectCode();
     this.getAllCurrency();
     this.getScreenSize();
     this.isEditingAllowed = this.localStorageService.IsEditingAllowed(
@@ -276,6 +278,24 @@ export class ProposalComponent implements OnInit, OnChanges, OnDestroy {
   changeStartDate(data: any) {
     this.proposalModel.ProposalStartDate = new Date();
   }
+
+   //#region "getProjectCode"
+   getProjectCode() {
+    this.projectListService
+      .GetProjectCodeById(this.appurl.getApiUrl() + GLOBAL.API_Project_GetProjectCodeByProjectId + '?id=' + this.projectId)
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(
+        data => {
+          if (data) {
+            this.projectCode = data;
+          }
+        },
+        error => {
+          console.log(error);
+        }
+      );
+  }
+  //#endregion
 
   ngOnDestroy() {
     this.destroyed$.next(true);

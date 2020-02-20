@@ -7975,8 +7975,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasKey("ProjectSectorId");
 
-                    b.HasIndex("ProjectId")
-                        .IsUnique();
+                    b.HasIndex("ProjectId");
 
                     b.HasIndex("SectorId");
 
@@ -11297,12 +11296,12 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectProgram", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProgramDetail", "ProgramDetail")
-                        .WithMany()
+                        .WithMany("ProjectProgram")
                         .HasForeignKey("ProgramId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
-                        .WithMany()
+                        .WithMany("ProjectProgram")
                         .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -11326,12 +11325,12 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.Project.ProjectSector", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.ProjectDetail", "ProjectDetail")
-                        .WithOne("ProjectSector")
-                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.Project.ProjectSector", "ProjectId")
+                        .WithMany("ProjectSector")
+                        .HasForeignKey("ProjectId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.Project.SectorDetails", "SectorDetails")
-                        .WithMany()
+                        .WithMany("ProjectSector")
                         .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

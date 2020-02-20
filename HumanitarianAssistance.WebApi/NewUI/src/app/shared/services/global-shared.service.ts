@@ -11,6 +11,7 @@ import { SignedUrlObjectName } from '../file-management/signed-url-object-name';
 import { concatMap } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
+import { FileSourceEntityTypes } from '../enum';
 
 @Injectable({
   providedIn: 'root'
@@ -82,7 +83,7 @@ export class GlobalSharedService {
   //#endregion
 
   //#region "uploadFile"
-  uploadFile(pageId: number, entityId: any, file: any, documentTypeId: any = null) {
+  uploadFile(pageId: number, entityId: any, file: any, documentTypeId: any = null, projectModel: any = null) {
     let objectName = SignedUrlObjectName.getSignedURLObjectName(pageId, entityId);
 
     if (objectName == null && objectName === '' && objectName === undefined) {
@@ -118,16 +119,25 @@ export class GlobalSharedService {
       }), concatMap(res1 => {
         // console.log('res1', res1);
           if (res1['status'] === 200) {
-            const data: FileModel = {
-              FileName: file.name,
-              FilePath: objectName,
-              FileSize: file.size,
-              FileType: file.type,
-              PageId: pageId,
-              RecordId: entityId,
-              DocumentTypeId: documentTypeId
-            };
-            return this.saveUploadedFileInfo(data);
+            if (pageId === FileSourceEntityTypes.ProjectProposal) {
+              projectModel.FilePath = objectName;
+              projectModel.FileName = file.name;
+              projectModel.Extension = file.type;
+
+              return this.saveUploadedProjectFileInfo(projectModel);
+
+            } else {
+              const data: FileModel = {
+                FileName: file.name,
+                FilePath: objectName,
+                FileSize: file.size,
+                FileType: file.type,
+                PageId: pageId,
+                RecordId: entityId,
+                DocumentTypeId: documentTypeId
+              };
+              return this.saveUploadedFileInfo(data);
+            }
        } else {
         throw new Error('Could not upload file');
        }
@@ -154,6 +164,17 @@ export class GlobalSharedService {
           };
           return responseData;
         })
+      );
+  }
+  //#endregion
+
+  //#region "saveUploadedFileInfo"
+  saveUploadedProjectFileInfo(data: any) {
+    return this.globalService
+      .post(
+        this.appurl.getApiUrl() +
+          GLOBAL.API_Project_AddProjectProposalFileDetail,
+        data
       );
   }
   //#endregion

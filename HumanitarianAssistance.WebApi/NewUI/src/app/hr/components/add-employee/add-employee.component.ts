@@ -391,7 +391,7 @@ export class AddEmployeeComponent implements OnInit {
             this.districtList$ = of(
               response.data.Districtlist.map(element => {
                 return {
-                  value: element.DistrictID,
+                  value: element.District,
                   name: element.District
                 } as IDropDownModel;
               })
@@ -544,6 +544,7 @@ export class AddEmployeeComponent implements OnInit {
           x => {
             if (x.StatusCode === 200) {
               this.toastr.success('Employee Successfully Added');
+              this.employeeId = x.data.EmployeeDetailModel.EmployeeID;
               this.routeBackToListing();
             } else {
               this.toastr.warning(x.Message);
@@ -627,7 +628,7 @@ export class AddEmployeeComponent implements OnInit {
               MaritalStatus: x.data.EmployeeDetailList[0].MaritalStatus,
               Country: x.data.EmployeeDetailList[0].CountryId,
               Province: x.data.EmployeeDetailList[0].ProvinceId,
-              // District: x.data.EmployeeDetailList[0].EmployeeName,
+              District: x.data.EmployeeDetailList[0].District,
               BirthPlace: x.data.EmployeeDetailList[0].BirthPlace,
               TinNumber: x.data.EmployeeDetailList[0].TinNumber,
               PassportNumber: x.data.EmployeeDetailList[0].PassportNo,
@@ -729,7 +730,11 @@ export class AddEmployeeComponent implements OnInit {
   }
 
   routeBackToListing() {
+    if (this.employeeId > 0) {
     this.router.navigate(['/hr/employee/' + this.employeeId]);
+    } else {
+      this.router.navigate(['/hr/employees']);
+    }
   }
 }
 

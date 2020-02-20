@@ -9,7 +9,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
     {
         public List<int> EmpIds { get; set; }
         public int Month { get; set; }
-        public int OfficeId { get; set; }
+        public List<int> OfficeId { get; set; }
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
     }
