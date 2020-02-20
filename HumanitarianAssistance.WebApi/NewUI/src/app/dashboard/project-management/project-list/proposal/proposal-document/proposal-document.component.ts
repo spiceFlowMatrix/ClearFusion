@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, Output, EventEmitter, Input } from '@angular/core';
 import {
   FileTypes,
   ProposalFileDetailsModel
@@ -11,6 +11,8 @@ import { GLOBAL } from 'src/app/shared/global';
 import { ReplaySubject } from 'rxjs/internal/ReplaySubject';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
 import { StaticUtilities } from 'src/app/shared/static-utilities';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { FileSourceEntityTypes } from 'src/app/shared/enum';
 
 @Component({
   selector: 'app-proposal-document',
@@ -22,6 +24,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
 
   @Output() isProposalDocumentAvailable = new EventEmitter<boolean>();
   @Output() changeStartDate = new EventEmitter<any>();
+  @Input() projectCode;
 
   projectId: number;
   selectedFileType: any;
@@ -50,7 +53,8 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
     private routeActive: ActivatedRoute,
     private appurl: AppUrlService,
     private projectListService: ProjectListService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private globalSharedService: GlobalSharedService
   ) {
     this.docUrl = this.appurl.getDocUrl();
   }
@@ -70,7 +74,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
     this.projectListService
       .GetProjectproposalDocumentById(
         this.appurl.getApiUrl() +
-          GLOBAL.API_Project_GetProjectproposalDocumnetsById,
+        GLOBAL.API_Project_GetProjectproposalDocumnetsById,
         projectid
       )
       .pipe(takeUntil(this.destroyed$))
@@ -88,7 +92,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                       ProposalWebLink: element.ProposalWebLink,
                       ProposalExtType: element.ProposalExtType,
                       UserName: element.UserName,
-                      CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate ),
+                      CreatedDate: StaticUtilities.setLocalDate(element.CreatedDate),
                       ProposalDocumentType: this.getFileTypeName(
                         element.ProposalDocumentTypeId
                       )
@@ -128,15 +132,43 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
             }
           }
         },
-        error => {}
+        error => { }
       );
   }
 
   uploadProposalFile(files: FileList) {
     this.fileToUpload = files.item(0);
     const selectedFileType = this.selectedFileType;
-    this.uploadProposalDocument(this.fileToUpload, selectedFileType);
+    this.uploadProjectFiles();
   }
+
+  uploadProjectFiles() {
+    const model: any = {
+      ProjectId: this.projectId,
+      FilePath: '',
+      FileName: '',
+      Extension: '',
+      ProposalTypeId: this.selectedFileType
+    };
+
+    this.documentFileLoader = true;
+
+    this.globalSharedService.uploadFile(FileSourceEntityTypes.ProjectProposal, this.projectCode,
+                          this.fileToUpload, null, model).subscribe(x => {
+      if (x) {
+        this.documentFileLoader = false;
+        this.getProposalDocuments(this.projectId);
+        if (this.fileDetailsModel.length === 1) {
+          this.onFirstFileUploaded();
+        }
+      }
+    }, error => {
+      this.documentFileLoader = false;
+      this.toastr.warning(error);
+    });
+  }
+
+
 
   uploadProposalDocument(fileToUpload: File, selectedFileType: any) {
     this.documentFileLoader = true;
@@ -155,7 +187,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
       this.projectListService
         .uploadEDIFile(
           this.appurl.getApiUrl() +
-            GLOBAL.API_Project_StartProposalDragAndDropFile,
+          GLOBAL.API_Project_StartProposalDragAndDropFile,
           this.projectId,
           formData
         )
@@ -184,7 +216,7 @@ export class ProposalDocumentComponent implements OnInit, OnDestroy {
                 //     responseData.ProposalDocumentTypeId
                 //   )
                 // });
-                 this.getProposalDocuments(this.projectId);
+                this.getProposalDocuments(this.projectId);
                 if (this.fileDetailsModel.length === 1) {
                   this.onFirstFileUploaded();
                 }

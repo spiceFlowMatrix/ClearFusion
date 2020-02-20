@@ -248,9 +248,11 @@ export class GLOBAL {
   public static API_Project_AddEditProjectproposals = 'Project/AddEditProjectproposals';
   public static API_Project_GetProjectproposalsById = 'Project/GetProjectproposalsById';
   public static API_Project_GetProjectproposalDocumnetsById = 'Project/GetProjectproposalDocumentsById';
+  public static API_Project_AddProjectProposalFileDetail = 'Project/AddProjectProposalFileDetail';
 
 
   public static API_Project_StartProposalDragAndDropFile = 'Project/StartProposalDragAndDropFile';
+  public static API_Project_GetProjectCodeByProjectId = 'Project/GetProjectCodeByProjectId';
   public static API_Project_UploadReviewFile = 'Project/UploadReviewFile';
   public static API_Project_UploadFinalizeFile = 'Project/UploadFinalizeFile';
   public static API_Project_GetApprovalProjectDetailById = 'Project/GetApprovalProjectDetailById';
