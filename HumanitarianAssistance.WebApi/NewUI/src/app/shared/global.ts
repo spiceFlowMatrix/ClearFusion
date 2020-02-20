@@ -823,6 +823,14 @@ export class GLOBAL {
 
   public static API_Code_GetAllContractTypeContent = 'Code/GetAllContractTypeContent';
   public static API_Code_SaveContractContent = 'Code/SaveContractContent';
+
+  // #region "Project sector and Program"
+  public static API_Project_AddProjectSectorDetail = 'Project/AddProjectSectorDetail';
+  public static API_Project_AddProjectProgramDetail = 'Project/AddProjectProgramDetail';
+
+
+  //#endregion
+
 }
 
 

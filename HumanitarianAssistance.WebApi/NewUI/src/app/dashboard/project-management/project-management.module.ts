@@ -88,6 +88,8 @@ import { ProjectOtherDetailPdfComponent } from './project-list/project-details/p
 import { ProjectHiringModule } from './project-hiring/project-hiring.module';
 import { ProjectLogisticsModule } from './project-logistics/project-logistics.module';
 import { InterviewDetailComponent } from './project-hiring/interview-detail/interview-detail.component';
+import { AddSectorDetailComponent } from './project-list/project-details/program-area-sector/add-sector-detail/add-sector-detail.component';
+import { AddProgramDetailComponent } from './project-list/project-details/program-area-sector/add-program-detail/add-program-detail.component';
 
 @NgModule({
   imports: [
@@ -174,7 +176,9 @@ import { InterviewDetailComponent } from './project-hiring/interview-detail/inte
     ProposalDocumentComponent,
     AddProjectIndicatorComponent,
     AddQuestionsDialogComponent,
-    ProjectOtherDetailPdfComponent
+    ProjectOtherDetailPdfComponent,
+    AddSectorDetailComponent,
+    AddProgramDetailComponent
 
   ],
   providers: [
@@ -203,7 +207,9 @@ import { InterviewDetailComponent } from './project-hiring/interview-detail/inte
     EditCandidateDetailDialogComponent,
     AddProjectIndicatorComponent,
     AddQuestionsDialogComponent,
-    ProjectOtherDetailPdfComponent
+    ProjectOtherDetailPdfComponent,
+    AddSectorDetailComponent,
+    AddProgramDetailComponent
   ]
 })
 export class ProjectManagementModule {}

@@ -176,9 +176,9 @@ namespace HumanitarianAssistance.Application.Infrastructure {
         //public ICollection<ProjectDetailModel> ProjectDetailModel { get; set; }
         public ProjectDetailModel ProjectDetailModel1 { get; set; }
         public ProjectOtherDetail OtherProjectDetailById { get; set; }
-        public ProjectProgram projectProgram { get; set; }
+        public List<ProjectProgram> projectProgram { get; set; }
         public ProjectArea projectArea { get; set; }
-        public ProjectSector projectSector { get; set; }
+        public List<ProjectSector> projectSector { get; set; }
         public bool ProjectWinLoss { get; set; }
         public IList<ProvinceDetailModel> ProvinceDetailsList { get; set; }
         public List<int?> CountryMultiSelectById { get; set; }

@@ -14,6 +14,6 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public long SectorId { get; set; }
         public string SectorName { get; set; }
         public string SectorCode { get; set; }
-
+        public List<ProjectSector> ProjectSector { get; set; }
     }
 }

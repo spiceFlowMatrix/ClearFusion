@@ -24,7 +24,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             ApiResponse response = new ApiResponse();
             try
             {
-                var list = await _dbContext.ProgramDetail.Where(x => !x.IsDeleted).ToListAsync();
+                var list = await _dbContext.ProgramDetail.Where(x => x.IsDeleted == false).OrderByDescending(x=> x.ProgramName).ToListAsync();
                 response.data.programDetails = list;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";

@@ -108,9 +108,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                                  BudgetLine = z.ProjectBudgetLineDetail == null ? "" : z.ProjectBudgetLineDetail.BudgetCode,
                                                  Project = z.ProjectDetail == null ? "" : z.ProjectDetail.ProjectCode,
                                                  Job = z.ProjectJobDetail == null ? "" : z.ProjectJobDetail.ProjectJobCode,
-                                                 Sector = (z.ProjectDetail != null && z.ProjectDetail.ProjectSector != null &&
-                                                             z.ProjectDetail.ProjectSector.SectorDetails != null) ?
-                                                                             z.ProjectDetail.ProjectSector.SectorDetails.SectorCode : ""
+                                                 Sector = ((z.ProjectDetail != null && z.ProjectDetail.ProjectSector.Count>0) ?
+                                                                             z.ProjectDetail.ProjectSector.FirstOrDefault().SectorDetails.SectorCode : "")
                                              }).ToList()
                                          }).ToListAsync();
 

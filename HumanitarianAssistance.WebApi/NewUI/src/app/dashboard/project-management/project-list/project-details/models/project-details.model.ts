@@ -124,6 +124,7 @@ export interface ProjectProgramModel {
   ProjectProgramId?: number;
   ProjectId?: number;
   ProgramId?: number;
+  ProgramIds?: number;
 }
 export interface ProjectAreaModel {
   ProjectAreaId?: number;
@@ -134,6 +135,7 @@ export interface ProjectSectorModel {
   ProjectSectorId?: number;
   ProjectId?: number;
   SectorId?: number;
+  SectorIds?: number[];
 }
 export interface ApproveProjectDetailModel {
   ProjectId?: number;

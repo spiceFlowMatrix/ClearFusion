@@ -273,6 +273,8 @@ export class ProjectListService {
     return this.globalService.getList(url);
   }
 
+
+
   GetAllAreaList(url: string) {
     return this.globalService.getList(url);
   }
@@ -977,8 +979,43 @@ export class ProjectListService {
   }
   //#endregion
 
+
+  //#region "sector filter"
+  sortDropdown(dataSource: any[], fieldName: string) {
+    // Sorted in Asc
+    return dataSource.sort((x, y) => {
+      // tslint:disable-next-line:curly
+      if (x[fieldName] < y[fieldName]) return -1;
+      // tslint:disable-next-line:curly
+      if (x[fieldName] > y[fieldName]) return 1;
+      return 0;
+    });
+  }
+  //#endregion
+
+  //#region "addProjectSector"
+  AddProjectSectorDetail(data: any) {
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_Project_AddSectorDetails,
+      data
+    );
+
+  }
+  //#endregion
+
+  //#region "addProjectProgram"
+  AddProjectProgramDetail(data: any) {
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_Project_AddProgramDetails,data
+    );
+
+  }
+  //#endregion
    //#region "GetProjectCodeById"
    GetProjectCodeById(url: string) {
     return this.globalService.getDataById(url);
   }
+  //#endregion
 }
