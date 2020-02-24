@@ -15,12 +15,15 @@
         </h4>
       </div>
     </div>
-    <div id="err">
-      <div  *ngIf="err!==null" class="col-sm-12 alert alert-warning"><span >{{err}}</span></div>
+    <div id="errorId">
+      <div  *ngIf="formDir.submitted && !employeeAppraisalForm.valid" class="col-sm-12 alert alert-warning"><span >{{err}}</span></div>
+    </div>
+    <div id="alreadyExistId">
+      <div *ngIf = "errMesg!==null" class="col-sm-12 alert alert-warning"><span >{{errMesg}}</span></div>
     </div>
     <div class="row">
       <form class="example-form" [formGroup]="employeeAppraisalForm"
-        (ngSubmit)="onFormSubmit(this.employeeAppraisalForm.value)">
+        (ngSubmit)="onFormSubmit(this.employeeAppraisalForm.value)" #formDir="ngForm">
         <div class="col-sm-12">
           <div class="col-sm-3">
             <lib-hum-dropdown formControlName="AppraisalPeriod"
