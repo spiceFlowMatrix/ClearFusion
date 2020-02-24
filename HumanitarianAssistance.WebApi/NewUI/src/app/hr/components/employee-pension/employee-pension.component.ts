@@ -606,6 +606,7 @@ export class EmployeePensionComponent implements OnInit {
               })
             );
           } else {
+            this.setPensionDate = null;
             // this.toastr.warning(x.Message);
           }
         },
@@ -708,7 +709,7 @@ export class EmployeePensionComponent implements OnInit {
       );
       dialogRef.afterClosed().subscribe(() => {});
     } else {
-      this.toastr.warning('Please set date pension date first');
+      this.toastr.warning('Please set pension date first');
     }
   }
 
