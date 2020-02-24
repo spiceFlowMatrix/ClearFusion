@@ -92,7 +92,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                   },
                   delete: false,
                   download: false,
-                  edit: true
+                  edit: false
                 }
               ]) : ([
                   {
@@ -103,7 +103,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                     },
                     delete: false,
                     download: false,
-                    edit: true
+                    edit: false
                   },
                   {
                     button: {
@@ -113,7 +113,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                     },
                     delete: false,
                     download: false,
-                    edit: true
+                    edit: false
                   },
                   {
                     button: {
@@ -123,7 +123,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                     },
                     delete: false,
                     download: false,
-                    edit: true
+                    edit: false
                   },
                   {
                     button: {
@@ -133,7 +133,7 @@ export class EmployeeAdvanceListComponent implements OnInit {
                     },
                     delete: false,
                     download: false,
-                    edit: true
+                    edit: false
                   }])
             };
           }));
