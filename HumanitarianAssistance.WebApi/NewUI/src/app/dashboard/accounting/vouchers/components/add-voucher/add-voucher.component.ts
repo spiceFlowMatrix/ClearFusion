@@ -123,7 +123,7 @@ export class AddVoucherComponent implements OnInit {
     const voucherData: IAddVoucherModel = {
       VoucherNo: this.voucherNo !== NaN ? this.voucherNo : 0,
       CurrencyId: data.value.CurrencyId,
-      VoucherDate: data.value.VoucherDate,
+      VoucherDate: StaticUtilities.getLocalDate(data.value.VoucherDate) ,
       ChequeNo: data.value.ChequeNo,
       Description: data.value.Description,
       JournalCode: data.value.JournalCode,
