@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
             {
                 try
                 {
-                    EmployeeAppraisalDetails ifExistEmpRecord = await _dbContext.EmployeeAppraisalDetails.Where(x => x.EmployeeId == request.EmployeeId && x.AppraisalStatus == false && x.IsDeleted == false && x.CurrentAppraisalDate.Date.Day == request.CurrentAppraisalDate.Date.Day).FirstOrDefaultAsync();
+                    EmployeeAppraisalDetails ifExistEmpRecord = await _dbContext.EmployeeAppraisalDetails.Where(x => x.EmployeeId == request.EmployeeId  && x.IsDeleted == false && x.CurrentAppraisalDate.Date.Day == request.CurrentAppraisalDate.Date.Day).FirstOrDefaultAsync();
                     if (ifExistEmpRecord == null)
                     {
                         EmployeeAppraisalDetails empArraidalDetial = new EmployeeAppraisalDetails()
@@ -167,7 +167,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     }
                     else
                     {
-                        throw new Exception("Appraisal already done");
+                        throw new Exception("Appraisal already exist for the selected date");
                     }
                 }
                 catch (Exception ex)
