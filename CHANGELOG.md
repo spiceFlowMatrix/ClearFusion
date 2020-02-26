@@ -1,6 +1,6 @@
 # Change Log
 
-## [ Version  [3.0](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/milestones/12) ] - `(25-Feb-2017)`
+## [ Version  [3.0](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/milestones/12) ] - `(26-Feb-2020)`
 
 ## Enhancements
  - ### Updated Employee Listing table [Issue #363](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/363) [b683b504 ](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/b683b504c299961ec1763a22886212841893317e)- `18-02-2020` 
