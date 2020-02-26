@@ -18,6 +18,7 @@ export interface EmployeeDetailList {
   // Profession: string;
   Sex: string;
   Designation: string;
-  DateRange: string;
+  CreatedDate: string;
+  HiredDate: string;
 }
 
