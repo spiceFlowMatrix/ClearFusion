@@ -88,5 +88,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public bool IsResigned { get; set; }
         public int ResignationStatus { get; set; }
         public  virtual ICollection<InterviewDetails> InterviewDetails { get; set; }
+        public EmployeeBasicSalaryDetail EmployeeBasicSalaryDetail { get; set; }
+        public List<EmployeeSalaryAnalyticalInfo> EmployeeAnalyticalList { get; set; }
     }
 }

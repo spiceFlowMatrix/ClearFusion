@@ -13,6 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         [Column(Order = 1)]
         public long AttendanceId { get; set; }
         public int EmployeeId { get; set; }
+        [ForeignKey("EmployeeId")]
         public EmployeeDetail EmployeeDetails { get; set; }
         public DateTime? InTime { get; set; }
         public DateTime? OutTime { get; set; }
@@ -20,6 +21,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int? HoverTimeHours { get; set; }
         public int AttendanceTypeId { get; set; } //1 = P, 2 = A, 3 = L
         public int? LeaveReasonId { get; set; }
+        [ForeignKey("LeaveReasonId")]
         public LeaveReasonDetail LeaveReasonDetail { get; set; }
         public DateTime Date { get; set; }
         public string Remarks { get; set; }

@@ -16,13 +16,17 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int EmployeeSalaryAnalyticalInfoId { get; set; }
         public long? AccountNo { get; set; }
         public long ProjectId { get; set; }
+        [ForeignKey("ProjectId")]
         public ProjectDetail ProjectDetail { get; set; }
         public long BudgetlineId { get; set; }
+        [ForeignKey("BudgetlineId")]
         public ProjectBudgetLineDetail ProjectBudgetLine { get; set; }
         public double SalaryPercentage { get; set; }
         public int EmployeeID { get; set; }
+        [ForeignKey("EmployeeID")]
         public EmployeeDetail EmployeeDetail { get; set; }
         public long? HiringRequestId { get; set; }
+        [ForeignKey("HiringRequestId")]
         public ProjectHiringRequestDetail ProjectHiringRequestDetail { get; set; }
         [ForeignKey("AccountNo")]
         public ChartOfAccountNew ChartOfAccountNew { get; set; }
