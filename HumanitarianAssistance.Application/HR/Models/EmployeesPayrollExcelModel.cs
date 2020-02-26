@@ -6,9 +6,21 @@ namespace HumanitarianAssistance.Application.HR.Models
     {
         public EmployeesPayrollExcelModel()
         {
+            HeaderAndFooter = new HeaderAndFooter();
+            PayrollExcelData= new List<PayrollExcelData>();
+        }
+
+        public HeaderAndFooter HeaderAndFooter { get; set; }
+        public List<PayrollExcelData> PayrollExcelData { get; set; }
+    }
+
+    public class PayrollExcelData 
+    {
+        public PayrollExcelData()
+        {
             EmployeeAnalyticalInfoList = new List<EmployeeAnalyticalInfo>();
         }
-        public HeaderAndFooter HeaderAndFooter { get; set; }
+        
         public int EmployeeId { get; set; }
         public string Name { get; set; }
         public string Designation { get; set; }
@@ -28,6 +40,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public double Advance { get; set; }
         public double Pension { get; set; }
         public double NetSalary { get; set; }
+        public string Month { get; set; }
         public List<EmployeeAnalyticalInfo> EmployeeAnalyticalInfoList { get; set; }
     }
     
@@ -45,6 +58,6 @@ namespace HumanitarianAssistance.Application.HR.Models
         public string Project { get; set; }
         public string Job { get; set; }
         public string BudgetLine { get; set; }
-        public int Percentage { get; set; }
+        public double Percentage { get; set; }
     }
 }

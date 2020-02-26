@@ -125,14 +125,14 @@ export class EmployeeListComponent implements OnInit {
       this.allSelected.deselect();
       this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
       this.getFilteredEmployeeList(this.filterModel);
-     return false;
+      return false;
     }
-   if (this.Office.value.length === this.officeDropdown.length) {
-    this.allSelected.select();
-   }
-   this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
-   this.getFilteredEmployeeList(this.filterModel);
- }
+    if (this.Office.value.length === this.officeDropdown.length) {
+      this.allSelected.select();
+    }
+    this.filterModel.OfficeIds = this.Office.value.filter(x => x !== 0);
+    this.getFilteredEmployeeList(this.filterModel);
+  }
 
   // selectedOfficeChanged(office) {
   //   this.selectedOffice = {
@@ -394,5 +394,38 @@ export class EmployeeListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(() => {
 
     });
+  }
+
+  exportPayrollExcel(month, monthName) {
+    debugger;
+    const employeeIds = this.selection.selected.map(s => s.EmployeeId );
+    const model = {
+      Month: month,
+      OfficeId: this.Office.value,
+      SelectedEmployees: employeeIds
+    };
+
+    this.employeeListService.exportPayrollExcel(model).subscribe(res => {
+      if (res) {
+        this.commonLoader.hideLoader();
+      } else {
+        this.toastr.warning('Something went wrong');
+        this.commonLoader.hideLoader();
+      }
+    }, err => {
+      this.toastr.warning(err);
+      this.commonLoader.hideLoader();
+    });
+
+  }
+
+  disableExportPdf() {
+    if (this.Office.value.length === 0 || this.Office.value.length > 1) {
+      return true;
+    } else if (this.selection.selected.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

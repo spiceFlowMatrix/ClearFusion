@@ -66,6 +66,8 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public EmployeeProfessionalDetail EmployeeProfessionalDetail { get; set; }
         public EmployeeSalaryDetails EmployeeSalaryDetails { get; set; }
         public List<EmployeePayroll> EmployeePayrollList { get; set; }
+        public List<AccumulatedSalaryHeadDetail> AccumulatedSalaryHeadDetailList { get; set; }
+        public List<EmployeeBonusFineSalaryHead> EmployeeBonusFineSalaryHeadList { get; set; }
         public string Extension { get; set; }
         public string DocumentGUID { get; set; }
         public int? DocumentType { get; set; }
