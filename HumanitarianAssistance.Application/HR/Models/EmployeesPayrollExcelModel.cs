@@ -1,0 +1,50 @@
+using System.Collections.Generic;
+
+namespace HumanitarianAssistance.Application.HR.Models
+{
+    public class EmployeesPayrollExcelModel
+    {
+        public EmployeesPayrollExcelModel()
+        {
+            EmployeeAnalyticalInfoList = new List<EmployeeAnalyticalInfo>();
+        }
+        public HeaderAndFooter HeaderAndFooter { get; set; }
+        public int EmployeeId { get; set; }
+        public string Name { get; set; }
+        public string Designation { get; set; }
+        public string Gender { get; set; }
+        public string Currency { get; set; }
+        public string Office { get; set; }
+        public double BasicPay { get; set; }
+        public int AttendedHours { get; set; }
+        public int AbsentHours { get; set; }
+        public double Salary { get; set; }
+        public double Bonus { get; set; }
+        public double GrossSalary { get; set; }
+        public double CapacityBuilding { get; set; }
+        public double Security { get; set; }
+        public double SalaryTax { get; set; }
+        public double Fine { get; set; }
+        public double Advance { get; set; }
+        public double Pension { get; set; }
+        public double NetSalary { get; set; }
+        public List<EmployeeAnalyticalInfo> EmployeeAnalyticalInfoList { get; set; }
+    }
+    
+    public class HeaderAndFooter
+    {
+        public string Header { get; set; }
+        public string SubHeader { get; set; }
+        public string Currency { get; set; }
+        public string Office { get; set; }
+        public string Date { get; set; }
+    }
+
+    public class EmployeeAnalyticalInfo 
+    {
+        public string Project { get; set; }
+        public string Job { get; set; }
+        public string BudgetLine { get; set; }
+        public int Percentage { get; set; }
+    }
+}

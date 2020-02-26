@@ -264,6 +264,14 @@ namespace HumanitarianAssistance.WebApi.Controllers
                var file = await _mediator.Send(model);
             return File(file, "application/pdf", "MonthlyPaySlipReport.pdf");
         }
+
+        [HttpPost]
+        [Produces(contentType: "application/pdf")]
+        public async Task<IActionResult> GetEmployeesPayrollExcel([FromBody]GetEmployeesPayrollExcelQuery model)
+        {
+            var file = await _mediator.Send(model);
+            return File(file, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "EmployeesPayrollExcel.xlsx");
+        }
     }
 }
 
