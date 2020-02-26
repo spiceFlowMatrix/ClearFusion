@@ -33,7 +33,7 @@ export class EmployeeListComponent implements OnInit {
   employeeList: EmployeeDetailList[] = [];
   selection = new SelectionModel<EmployeeDetailList>(true, []);
   displayedColumns = ['select', 'Code', 'Name',
-    'FatherName', 'Designation', 'Sex', 'EmploymentStatus', 'DateRange'];
+    'FatherName', 'Designation', 'Sex', 'EmploymentStatus', 'CreatedDate', 'HiredDate'];
   filterModel: EmployeeFilterModel = {
     EmployeeIdFilter: null, EmploymentStatusFilter: 0, NameFilter: null,
     PageIndex: 0, PageSize: 10, OfficeIds: [], GenderFilter: 0
@@ -160,7 +160,8 @@ export class EmployeeListComponent implements OnInit {
             // LastName: element.LastName,
             EmploymentStatus: EmploymentStatus[element.EmployeeTypeId],
             // Profession: (element.Profession === undefined) ? 'N/A' : element.Profession,
-            DateRange: element.DateRange
+            HiredDate: element.HiredDate,
+            CreatedDate: element.CreatedDate
           });
         });
         this.employeeDataSource = new MatTableDataSource<EmployeeDetailList>(this.employeeList);

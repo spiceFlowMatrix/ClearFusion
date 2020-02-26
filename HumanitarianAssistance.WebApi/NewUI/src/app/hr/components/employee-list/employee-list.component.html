@@ -145,11 +145,17 @@
                 <mat-cell *matCellDef="let element"> {{element.EmploymentStatus}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="DateRange">
-                <mat-header-cell *matHeaderCellDef> Date Range </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.DateRange}}
+            <ng-container matColumnDef="CreatedDate">
+                <mat-header-cell *matHeaderCellDef> Created Date </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CreatedDate}}
                 </mat-cell>
             </ng-container>
+
+            <ng-container matColumnDef="HiredDate">
+              <mat-header-cell *matHeaderCellDef> Hired Date </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.HiredDate}}
+              </mat-cell>
+          </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToDetails(row)"></mat-row>
