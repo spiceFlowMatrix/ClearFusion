@@ -13,6 +13,10 @@ using Microsoft.AspNetCore.Routing;
 using iText.Html2pdf;
 using iText.Kernel.Pdf;
 using iText.Kernel.Geom;
+using iText.Layout.Font;
+using iText.Html2pdf.Resolver.Font;
+using iText.IO.Font;
+using Microsoft.AspNetCore.Hosting;
 
 namespace HumanitarianAssistance.Application.CommonServices
 {
@@ -21,12 +25,15 @@ namespace HumanitarianAssistance.Application.CommonServices
         private readonly IRazorViewEngine _razorViewEngine;
         private readonly IServiceProvider _serviceProvider;
         private readonly ITempDataProvider _tempDataProvider;
+        private readonly IHostingEnvironment _env;
 
-        public PdfExportService(IRazorViewEngine razorViewEngine, IServiceProvider serviceProvider, ITempDataProvider tempDataProvider)
+
+        public PdfExportService(IRazorViewEngine razorViewEngine, IServiceProvider serviceProvider, ITempDataProvider tempDataProvider,IHostingEnvironment env)
         {
             _razorViewEngine = razorViewEngine;
             _serviceProvider = serviceProvider;
             _tempDataProvider = tempDataProvider;
+            _env = env;
         }
 
         public async Task<byte[]> ExportToPdf(object model, string viewName, bool isLandscape=false)
@@ -72,13 +79,23 @@ namespace HumanitarianAssistance.Application.CommonServices
                     // convert string to pdf in stream & then destroy the stream 
                     using (var pdfWriter = new PdfWriter(_stream))
                     {
-                        
                         pdfWriter.SetCloseStream(false);
                         ConverterProperties cp = new ConverterProperties();
                         PdfDocument doc = new PdfDocument(pdfWriter);
                         if(isLandscape){
                             doc.SetDefaultPageSize(PageSize.A4.Rotate());
                         }
+
+                            // string[] fonts= {                                
+                            //    // _env.WebRootFileProvider.GetFileInfo ("Fonts/Arial.ttf")?.PhysicalPath,
+                            //     _env.WebRootFileProvider.GetFileInfo ("Fonts/Arial.ttf")?.PhysicalPath,
+                            // };
+                            // FontProvider fontProvider = new DefaultFontProvider(false, false, false);
+                            //  foreach (string font in fonts) {
+                            // FontProgram fontProgram = FontProgramFactory.CreateFont(font);                            
+                            // fontProvider.AddFont(fontProgram);                              
+                            // }                          
+                            // cp.SetFontProvider(fontProvider);                            
                         // CAUTION : Don't remove using block from here, it used to destroy the stream once pdf is generated
                         using (var document = HtmlConverter.ConvertToDocument(stringWriter.ToString(), doc,cp)) { }
                     }
