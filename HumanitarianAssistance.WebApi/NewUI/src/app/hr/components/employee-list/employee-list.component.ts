@@ -408,11 +408,13 @@ export class EmployeeListComponent implements OnInit {
     this.employeeListService.exportPayrollExcel(model).subscribe(res => {
       if (res) {
         this.commonLoader.hideLoader();
+        this.toastr.warning(res);
       } else {
         this.toastr.warning('Something went wrong');
         this.commonLoader.hideLoader();
       }
     }, err => {
+      debugger;
       this.toastr.warning(err);
       this.commonLoader.hideLoader();
     });

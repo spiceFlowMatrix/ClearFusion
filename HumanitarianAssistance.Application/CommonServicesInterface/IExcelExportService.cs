@@ -8,6 +8,6 @@ namespace HumanitarianAssistance.Application.CommonServicesInterface
     public interface IExcelExportService
     {
         byte[] ExportToExcel(List<ExpandoObject> model, string worksheetName, string excelHeaderString, bool calculateSum, List<int> calculateSumOnKeyIndex);
-        byte[] ExportEmployeePayrollExcel(EmployeesPayrollExcelModel model, List<string> headers);
+        byte[] ExportEmployeePayrollExcel(EmployeesPayrollExcelModel model, List<string> headers, List<int> calculateSumOnKeyIndex);
     }
 }

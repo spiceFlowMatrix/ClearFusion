@@ -115,7 +115,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
 
 
-        public byte[] ExportEmployeePayrollExcel(EmployeesPayrollExcelModel model, List<string> headers)
+        public byte[] ExportEmployeePayrollExcel(EmployeesPayrollExcelModel model, List<string> headers, List<int> calculateSumOnKeyIndex)
         {
             byte[] result;
             int rowCount = 7;
@@ -174,7 +174,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         Rng.Value = "Currency: " + model.HeaderAndFooter.Currency;
                         Rng.Style.Font.Size = 11;
                         Rng.Style.Font.Bold = true;
-                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     using (ExcelRange Rng = worksheet.Cells[5, 1])
@@ -182,7 +182,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         Rng.Value = "Office: " + model.HeaderAndFooter.Office;
                         Rng.Style.Font.Size = 11;
                         Rng.Style.Font.Bold = true;
-                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     using (ExcelRange Rng = worksheet.Cells[6, 1])
@@ -190,7 +190,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         Rng.Value = "Payment Date: " + model.HeaderAndFooter.Date;
                         Rng.Style.Font.Size = 11;
                         Rng.Style.Font.Bold = true;
-                        Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                        //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
                     using (ExcelRange Rng = worksheet.Cells[7, 1, 7, headers.Count])
@@ -209,38 +209,87 @@ namespace HumanitarianAssistance.Application.CommonServices
                         cell++;
                     }
 
+                    int sNo = 1;
                     // //Column values
                     foreach (var item in model.PayrollExcelData)
                     {
-                        int cellCount = 2;
+                        // int cellCount = 2;
                         worksheet.Row(rowCount++).Height = 15;
 
-                        for(int i=0; i< headers.Count; i++)
-                        {
-                            rowCount++
-                            worksheet.Cells[rowCount, 1]
+                        worksheet.Cells[rowCount, 1].Value = sNo;
+                        worksheet.Cells[rowCount, 2].Value = item.Month;
+                        worksheet.Cells[rowCount, 3].Value = item.EmployeeId;
+                        worksheet.Cells[rowCount, 4].Value = item.Name;
+                        worksheet.Cells[rowCount, 5].Value = item.Designation;
+                        worksheet.Cells[rowCount, 6].Value = item.Gender;
+                        worksheet.Cells[rowCount, 7].Value = item.Currency;
+                        worksheet.Cells[rowCount, 8].Value = item.Office;
+                        worksheet.Cells[rowCount, 9].Value = item.BasicPay;
+                        worksheet.Cells[rowCount, 10].Value = item.AttendedHours;
+                        worksheet.Cells[rowCount, 11].Value = item.AbsentHours;
+                        worksheet.Cells[rowCount, 12].Value = item.Salary;
+                        worksheet.Cells[rowCount, 13].Value = item.Bonus;
+                        worksheet.Cells[rowCount, 14].Value = item.GrossSalary;
+                        worksheet.Cells[rowCount, 15].Value = item.CapacityBuilding;
+                        worksheet.Cells[rowCount, 16].Value = item.Security;
+                        worksheet.Cells[rowCount, 17].Value = item.SalaryTax;
+                        worksheet.Cells[rowCount, 18].Value = item.Fine;
+                        worksheet.Cells[rowCount, 19].Value = item.Advance;
+                        worksheet.Cells[rowCount, 20].Value = item.Pension;
+                        worksheet.Cells[rowCount, 21].Value = item.NetSalary;
 
+                        int count = 1;
+                        foreach (var analytical in item.EmployeeAnalyticalInfoList)
+                        {
+                            worksheet.Cells[rowCount, 22].Value = analytical.Project;
+                            worksheet.Cells[rowCount, 23].Value = analytical.Job;
+                            worksheet.Cells[rowCount, 24].Value = analytical.BudgetLine;
+                            worksheet.Cells[rowCount, 25].Value = analytical.Percentage;
+
+                            if (count != item.EmployeeAnalyticalInfoList.Count)
+                            {
+                                rowCount++;
+                            }
                         }
 
-                        // foreach (var property in item)
-                        // {
-                        //     worksheet.Cells[rowCount, cellCount].Value = property;
-                        //     cellCount++;
-                        // }
+                        sNo++;
                     }
 
-                    // if (calculateSum)
-                    // {
-                    //     foreach (int index in calculateSumOnKeyIndex)
-                    //     {
-                    //         string text = StaticFunctions.GetCharacterFromACIICode(index); //get Alphabet character
-                    //         string col= text + (model.Count+5); // +5 to skip first 4 rows and last row where sum will be displayed
-                    //         string formula= $"SUM({text}1:{text}{model.Count.ToString()})";
-                    //         worksheet.Cells[text + (model.Count+5).ToString()].Formula = $"SUM({text}5:{text}{(model.Count +4).ToString()})";
-                    //     }
-                    // }
+                    worksheet.Cells[rowCount, 1, rowCount, 8].Merge = true;
+                    worksheet.Cells[rowCount, 1, rowCount, 8].Value = "Grand Total";
+                    worksheet.Cells[rowCount, 1, rowCount, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
+                    foreach (int index in calculateSumOnKeyIndex)
+                    {
+                        string text = StaticFunctions.GetCharacterFromACIICode(index); //get Alphabet character
+                        //string col = text + (rowCount); // +5 to skip first 4 rows and last row where sum will be displayed
+                        //string formula = $"SUM({text}1:{text}{rowCount.ToString()})";
+                        worksheet.Cells[text + (rowCount).ToString()].Formula = $"SUM({text}8:{text}{(rowCount - 1).ToString()})";
+                    }
                     // worksheet.Cells.AutoFitColumns();
+
+                    worksheet.Cells[rowCount + 2, 2, rowCount + 2, 3].Merge = true;
+                    worksheet.Cells[rowCount + 2, 2, rowCount + 2, 3].Value = "Prepared By";
+                    worksheet.Cells[rowCount + 2, 2, rowCount + 2, 3].Style.Font.Bold  = true;
+
+                    worksheet.Cells[rowCount + 2, 12, rowCount + 2, 13].Merge = true;
+                    worksheet.Cells[rowCount + 2, 12, rowCount + 2, 13].Value = "Checked By";
+                    worksheet.Cells[rowCount + 2, 12, rowCount + 2, 13].Style.Font.Bold  = true;
+
+                    worksheet.Cells[rowCount + 2, 21, rowCount + 2, 22].Merge = true;
+                    worksheet.Cells[rowCount + 2, 21, rowCount + 2, 22].Value = "Approved By";
+                    worksheet.Cells[rowCount + 2, 21, rowCount + 2, 22].Style.Font.Bold = true;
+
+                    worksheet.Cells[rowCount + 4, 2, rowCount + 4, 3].Merge = true;
+                    worksheet.Cells[rowCount + 4, 2, rowCount + 4, 3].Value = "Date: "+ model.HeaderAndFooter.Date;
+
+                    worksheet.Cells[rowCount + 4, 12, rowCount + 4, 13].Merge = true;
+                    worksheet.Cells[rowCount + 4, 12, rowCount + 4, 13].Value = "Date: "+ model.HeaderAndFooter.Date;
+
+                    worksheet.Cells[rowCount + 4, 21, rowCount + 4, 22].Merge = true;
+                    worksheet.Cells[rowCount + 4, 21, rowCount + 4, 22].Value = "Date: "+ model.HeaderAndFooter.Date;
+
+
                     worksheet.Calculate();
                     result = package.GetAsByteArray();
                 }

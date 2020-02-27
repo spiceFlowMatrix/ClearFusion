@@ -22,7 +22,10 @@ namespace HumanitarianAssistance.Application.HR.Models
         }
         
         public int EmployeeId { get; set; }
+        public int? CurrencyId { get; set; }
+        public int? OfficeId { get; set; }
         public string Name { get; set; }
+        public string EmployeeCode { get; set; }
         public string Designation { get; set; }
         public string Gender { get; set; }
         public string Currency { get; set; }
@@ -41,6 +44,10 @@ namespace HumanitarianAssistance.Application.HR.Models
         public double Pension { get; set; }
         public double NetSalary { get; set; }
         public string Month { get; set; }
+        public string Project { get; set; }
+        public string Job { get; set; }
+        public string BudgetLine { get; set; }
+        public double Percentage { get; set; }
         public List<EmployeeAnalyticalInfo> EmployeeAnalyticalInfoList { get; set; }
     }
     

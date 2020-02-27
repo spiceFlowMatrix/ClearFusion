@@ -11,7 +11,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System;
-
+using HumanitarianAssistance.Domain.Entities.Accounting;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
@@ -98,26 +98,30 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 //     query= query.Where(x=> x.EmployeeDetail.EmployeeAnalyticalList.Select(y=> y.ProjectId).Contains(request.ProjectIds));
                 // }
 
-                var office = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x=> x.IsDeleted == false && request.OfficeId.Contains(x.OfficeId));
+                var office = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && request.OfficeId.Contains(x.OfficeId));
 
                 model.HeaderAndFooter = new HeaderAndFooter
                 {
-                    Date= DateTime.Now.ToShortDateString(),
-                    Header= "Coordination of Humanitarian Assistance",
-                    SubHeader= "Payroll Report",
-                    Office= office.OfficeCode
+                    Date = DateTime.Now.ToShortDateString(),
+                    Header = "Coordination of Humanitarian Assistance",
+                    SubHeader = "Payroll Report",
+                    Office = office.OfficeCode
                 };
 
-                model.PayrollExcelData = query.Select(x => new PayrollExcelData
+                var data = query.Select(x => new PayrollExcelData
                 {
                     EmployeeId = x.EmployeeId,
                     Name = x.EmployeeDetail.EmployeeName,
+                    EmployeeCode = x.EmployeeDetail.EmployeeCode,
                     Designation = x.EmployeeDetail.EmployeeProfessionalDetail.DesignationDetails != null ?
                                                 x.EmployeeDetail.EmployeeProfessionalDetail.DesignationDetails.Designation : "",
                     Gender = (x.EmployeeDetail.SexId.HasValue ? (x.EmployeeDetail.SexId == (int)Gender.MALE ? "Male" :
                                                               x.EmployeeDetail.SexId == (int)Gender.FEMALE ? "Female" : "Other") : ""),
+
+                    CurrencyId = x.EmployeeDetail.EmployeeBasicSalaryDetail.CurrencyId,
                     Currency = x.EmployeeDetail.EmployeeBasicSalaryDetail.CurrencyId.HasValue ?
                               x.EmployeeDetail.EmployeeBasicSalaryDetail.CurrencyDetails.CurrencyName : "",
+                    OfficeId = x.EmployeeDetail.EmployeeProfessionalDetail.OfficeId,
                     Office = x.EmployeeDetail.EmployeeProfessionalDetail.OfficeDetail.OfficeCode,
                     Month = CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(x.Month),
                     BasicPay = x.EmployeeDetail.EmployeeBasicSalaryDetail.BasicSalary,
@@ -128,6 +132,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     //                 y.Date.Month == x.Month && y.Date.Year == x.Year && y.AttendanceTypeId == AttendanceType.A)
                     //                 .Select(z=> z.OutTime.Value -z.InTime.Value).DefaultIfEmpty(0).Sum()
                     AbsentHours = 0,
+                    NetSalary = 0,
                     Salary = x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
                              y.Month == x.Month && y.Year == x.Year && y.SalaryComponentId == (int)AccumulatedSalaryHead.GrossSalary) != null ?
                             x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
@@ -175,18 +180,84 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                     Project = z.ProjectDetail != null ? (z.ProjectDetail.ProjectCode + z.ProjectDetail.ProjectName) : "",
                                                     Job = (z.ProjectBudgetLine != null && z.ProjectBudgetLine.ProjectJobDetail != null) ? z.ProjectBudgetLine.ProjectJobDetail.ProjectJobCode : ""
                                                 }).ToList()) : x.EmployeeDetail.EmployeeAnalyticalList.Count > 0 ?
-                                                (x.EmployeeDetail.EmployeeAnalyticalList.Where(t => x.IsDeleted == false &&
-                                                request.ProjectIds.Contains(t.ProjectId)).Select(z => new EmployeeAnalyticalInfo
+                                                (x.EmployeeDetail.EmployeeAnalyticalList.Where(t => x.IsDeleted == false).Select(z => new EmployeeAnalyticalInfo
                                                 {
                                                     Percentage = z.SalaryPercentage,
                                                     BudgetLine = z.ProjectBudgetLine != null ? (z.ProjectBudgetLine.BudgetCode + z.ProjectBudgetLine.BudgetName) : "",
-                                                    Project = z.ProjectDetail != null ? (z.ProjectDetail.ProjectCode + z.ProjectDetail.ProjectName) : "",
+                                                    Project = z.ProjectDetail != null ? (z.ProjectDetail.ProjectCode + "-" + z.ProjectDetail.ProjectName) : "",
                                                     Job = (z.ProjectBudgetLine != null && z.ProjectBudgetLine.ProjectJobDetail != null) ? z.ProjectBudgetLine.ProjectJobDetail.ProjectJobCode : ""
                                                 }).ToList()) : new List<EmployeeAnalyticalInfo>()
                 }).ToList();
 
-                model.PayrollExcelData.ForEach(x => x.NetSalary = x.GrossSalary + x.Bonus - x.Fine - x.CapacityBuilding - x.Security - x.SalaryTax -
+                data.ForEach(x => x.NetSalary = x.GrossSalary + x.Bonus - x.Fine - x.CapacityBuilding - x.Security - x.SalaryTax -
                              x.SalaryTax - x.Advance - x.Pension);
+
+                List<string> EmployeeCodes = data.Where(x => x.EmployeeAnalyticalInfoList.Count == 0).Select(x => x.EmployeeCode).ToList();
+
+                if (EmployeeCodes.Any())
+                {
+                    throw new Exception(string.Format("Salary Percentage not present for Employees {0}", String.Join(",", EmployeeCodes)));
+                }
+
+                List<ExchangeRateDetail> exchangeRates = await _dbContext.ExchangeRateDetail.Where(x => x.IsDeleted == false &&
+                                                                x.Date.Date == DateTime.Now.Date && request.OfficeId.Contains(x.OfficeId)).ToListAsync();
+
+                List<PayrollExcelData> PayrollExcelData = new List<PayrollExcelData>();
+
+                var currencyAFG = await _dbContext.CurrencyDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.CurrencyId == (int)Currency.AFG);
+
+                foreach (var item in data)
+                {
+                    double rate = 1;
+                    if (item.CurrencyId != (int)Currency.AFG)
+                    {
+                        var exchangeRate = exchangeRates.FirstOrDefault(x => x.FromCurrency == item.CurrencyId && x.ToCurrency == (int)Currency.AFG);
+
+                        if (exchangeRate == null)
+                        {
+                            var currency = await _dbContext.CurrencyDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.CurrencyId == item.CurrencyId);
+                            var officeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.OfficeId == item.OfficeId);
+                            throw new Exception(string.Format("Exchange rate not defined for currency {0} and Office {1}", currency.CurrencyCode, officeDetail.OfficeCode));
+                        }
+                    }
+
+                    foreach (var analytical in item.EmployeeAnalyticalInfoList)
+                    {
+                        PayrollExcelData excelData = new PayrollExcelData
+                        {
+                            AbsentHours = item.AbsentHours,
+                            Advance = (item.Advance * rate * analytical.Percentage) / 100,
+                            AttendedHours = item.AttendedHours,
+                            BasicPay = (item.BasicPay * rate * analytical.Percentage) / 100,
+                            Bonus = item.Bonus * rate,
+                            CapacityBuilding = (item.CapacityBuilding * rate * analytical.Percentage) / 100,
+                            Currency = currencyAFG.CurrencyCode,
+                            Designation = item.Designation,
+                            BudgetLine = analytical.BudgetLine,
+                            Fine = item.Fine * rate,
+                            Gender = item.Gender,
+                            GrossSalary = item.GrossSalary * rate,
+                            Job = analytical.Job,
+                            Month = item.Month,
+                            Name = item.Name,
+                            NetSalary = (item.NetSalary * rate * analytical.Percentage) / 100,
+                            EmployeeId = item.EmployeeId,
+                            Office = item.Office,
+                            Pension = (item.Pension * rate * analytical.Percentage) / 100,
+                            Project = analytical.Project,
+                            Percentage = analytical.Percentage,
+                            Salary = ((item.BasicPay * rate * analytical.Percentage) / 100) - ,
+                            SalaryTax = (item.SalaryTax * rate * analytical.Percentage) / 100,
+                            Security = (item.Security * rate * analytical.Percentage) / 100,
+                        };
+                    }
+                }
+
+                List<int> calculateSumOnKeyIndex = new List<int>
+               {
+
+                   8,9,10,11,12,13,14,15,16,17,18,19,20
+               };
 
                 List<string> headers = new List<string>
                 {
@@ -196,7 +267,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 };
 
 
-                return _excelExportService.ExportEmployeePayrollExcel(model, headers);
+                return _excelExportService.ExportEmployeePayrollExcel(model, headers, calculateSumOnKeyIndex);
             }
             catch (Exception ex)
             {
