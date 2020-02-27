@@ -3,15 +3,17 @@ using System;
 using HumanitarianAssistance.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    partial class HumanitarianAssistanceDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200226050541_addForeignKeysInTblEmployeeSalaryAnalyticalInfo")]
+    partial class addForeignKeysInTblEmployeeSalaryAnalyticalInfo
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -3386,8 +3388,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<int>("EmployeeId");
 
                     b.Property<double>("GrossSalary");
-
-                    b.Property<double>("HourlyRate");
 
                     b.Property<bool>("IsDeleted");
 

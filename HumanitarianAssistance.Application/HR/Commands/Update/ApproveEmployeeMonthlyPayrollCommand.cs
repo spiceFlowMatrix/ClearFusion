@@ -10,6 +10,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
         public double NetSalary { get; set; }
         public int Month { get; set; }
         public int EmployeeId { get; set; }
+        public double HourlyRate { get; set; }
         public List<AccumulatedSalaryHead> SalaryHeadList { get; set; }
     }
 
