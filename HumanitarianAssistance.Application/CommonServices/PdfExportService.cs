@@ -86,17 +86,16 @@ namespace HumanitarianAssistance.Application.CommonServices
                             doc.SetDefaultPageSize(PageSize.A4.Rotate());
                         }
 
-                            string[] fonts= {
-                                _env.WebRootFileProvider.GetFileInfo ("Fonts/BNAZNNBD.ttf")?.PhysicalPath,
-                                _env.WebRootFileProvider.GetFileInfo ("Fonts/NotoSans-Regular.ttf")?.PhysicalPath,
-                                _env.WebRootFileProvider.GetFileInfo ("Fonts/BNAZANIN.ttf")?.PhysicalPath
-                            };
-                            FontProvider fontProvider = new DefaultFontProvider(false, false, false);
-                             foreach (string font in fonts) {
-                            FontProgram fontProgram = FontProgramFactory.CreateFont(font);
-                            fontProvider.AddFont(fontProgram);  
-                            }                          
-                            cp.SetFontProvider(fontProvider);
+                            // string[] fonts= {                                
+                            //    // _env.WebRootFileProvider.GetFileInfo ("Fonts/Arial.ttf")?.PhysicalPath,
+                            //     _env.WebRootFileProvider.GetFileInfo ("Fonts/Arial.ttf")?.PhysicalPath,
+                            // };
+                            // FontProvider fontProvider = new DefaultFontProvider(false, false, false);
+                            //  foreach (string font in fonts) {
+                            // FontProgram fontProgram = FontProgramFactory.CreateFont(font);                            
+                            // fontProvider.AddFont(fontProgram);                              
+                            // }                          
+                            // cp.SetFontProvider(fontProvider);                            
                         // CAUTION : Don't remove using block from here, it used to destroy the stream once pdf is generated
                         using (var document = HtmlConverter.ConvertToDocument(stringWriter.ToString(), doc,cp)) { }
                     }
