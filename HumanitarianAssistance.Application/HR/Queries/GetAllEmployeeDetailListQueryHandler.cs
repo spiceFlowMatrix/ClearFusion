@@ -40,7 +40,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         SexId = x.SexId,
                         SexName = x.SexId == (int)Gender.MALE ? "Male" : x.SexId == (int)Gender.FEMALE ? "Female" : x.SexId == (int)Gender.OTHER ? "Other" : null,
                         Designation = (x.EmployeeProfessionalDetail.DesignationId != null) ? (x.EmployeeProfessionalDetail.DesignationDetails.Designation): "N/A",
-                        DateRange = (x.EmployeeProfessionalDetail.HiredOn != null) ? x.EmployeeProfessionalDetail.HiredOn.Value.ToShortDateString(): "N/A"
+                        HiredDate = (x.EmployeeProfessionalDetail.HiredOn != null) ? x.EmployeeProfessionalDetail.HiredOn.Value.ToShortDateString(): "",
+                        CreatedDate = (x.CreatedDate != null) ? x.CreatedDate.Value.ToShortDateString(): "",
                      });
             if(request.EmploymentStatusFilter != 0)
             {
