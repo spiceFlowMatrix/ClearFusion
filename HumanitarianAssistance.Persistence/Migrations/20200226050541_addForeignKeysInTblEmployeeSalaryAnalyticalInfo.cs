@@ -6,27 +6,27 @@ namespace HumanitarianAssistance.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail");
+            // migrationBuilder.DropIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail",
-                column: "EmployeeId",
-                unique: true);
+            // migrationBuilder.CreateIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail",
+            //     column: "EmployeeId",
+            //     unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail");
+            // migrationBuilder.DropIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail");
 
-            migrationBuilder.CreateIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail",
-                column: "EmployeeId");
+            // migrationBuilder.CreateIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail",
+            //     column: "EmployeeId");
         }
     }
 }

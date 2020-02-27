@@ -2331,8 +2331,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
+                        //.IsUnique();
 
                     b.ToTable("EmployeeBasicSalaryDetail");
                 });
