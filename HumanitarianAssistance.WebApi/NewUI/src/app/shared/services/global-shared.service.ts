@@ -8,10 +8,12 @@ import { Subject } from 'rxjs/internal/Subject';
 import { IMenuList } from '../dbheader/dbheader.component';
 import { FileModel } from '../file-management/file-management-model';
 import { SignedUrlObjectName } from '../file-management/signed-url-object-name';
-import { concatMap } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { concatMap, catchError, tap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { FileSourceEntityTypes } from '../enum';
+import { HttpErrorResponse } from '@angular/common/http';
+import 'rxjs/add/operator/catch';
 
 @Injectable({
   providedIn: 'root'
@@ -194,6 +196,11 @@ export class GlobalSharedService {
         map(event => {
           // get filename from header
           const contentDisposition = event.headers.get('Content-Disposition');
+          const exmessage = event.headers.get('ExMessage');
+
+          if (exmessage) {
+           return this.handleDownloadPdfError(exmessage);
+          }
           const filename = contentDisposition
             .split(';')[1]
             .split('filename')[1]
@@ -211,7 +218,8 @@ export class GlobalSharedService {
           anchor.click();
 
           return event;
-        })
+        }),
+        catchError(this.handleError)
       );
   }
   //#endregion
@@ -240,4 +248,16 @@ export class GlobalSharedService {
     }
     return of(yearDropDown);
   }
+  handleError(error) {
+    debugger;
+    return throwError(error);
+  }
+
+  private handleDownloadPdfError(error: any) {
+    debugger;
+    return {
+      error: true,
+      message: error
+    };
+}
 }

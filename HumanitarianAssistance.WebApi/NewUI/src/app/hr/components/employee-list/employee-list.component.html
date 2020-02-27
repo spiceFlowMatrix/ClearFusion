@@ -44,6 +44,9 @@
         <button mat-button [disabled]="(this.selection.selected.length === 0)" [matMenuTriggerFor]="AdministerSalaryMenu">
           <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">ADMINISTER PAYROLL &nbsp;<i class="fas fa-caret-down"></i></h5>
         </button>
+        <button mat-button [disabled]="disableExportPdf()" [matMenuTriggerFor]="PayrollExcelMenu">
+          <h5 [ngStyle]="{'color':  disableExportPdf() ? 'inherit' : '#0390D1' }">EXPORT PAYROLL &nbsp;<i class="fas fa-caret-down"></i></h5>
+        </button>
         <!-- <mat-menu #OfficeMenu="matMenu">
             <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async"
                 mat-menu-item>{{office.name}}</button>
@@ -55,6 +58,9 @@
         <mat-menu #AdministerSalaryMenu="matMenu" class="monthMenu">
             <button (click)="administerPayroll(item.value, item.name)" mat-menu-item *ngFor="let item of MonthsList$ | async">{{item.name}}</button>
         </mat-menu>
+        <mat-menu #PayrollExcelMenu="matMenu" class="monthMenu">
+          <button (click)="exportPayrollExcel(item.value, item.name)" mat-menu-item *ngFor="let item of MonthsList$ | async">{{item.name}}</button>
+      </mat-menu>
     </span>
     <div class="action_section">
     </div>
@@ -145,11 +151,17 @@
                 <mat-cell *matCellDef="let element"> {{element.EmploymentStatus}} </mat-cell>
             </ng-container>
 
-            <ng-container matColumnDef="DateRange">
-                <mat-header-cell *matHeaderCellDef> Date Range </mat-header-cell>
-                <mat-cell *matCellDef="let element"> {{element.DateRange}}
+            <ng-container matColumnDef="CreatedDate">
+                <mat-header-cell *matHeaderCellDef> Created Date </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.CreatedDate}}
                 </mat-cell>
             </ng-container>
+
+            <ng-container matColumnDef="HiredDate">
+              <mat-header-cell *matHeaderCellDef> Hired Date </mat-header-cell>
+              <mat-cell *matCellDef="let element"> {{element.HiredDate}}
+              </mat-cell>
+          </ng-container>
 
             <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
             <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="navigateToDetails(row)"></mat-row>

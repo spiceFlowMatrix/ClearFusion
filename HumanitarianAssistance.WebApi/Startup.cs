@@ -21,6 +21,13 @@ using Microsoft.Extensions.FileProviders;
 using System.IO;
 using HumanitarianAssistance.WebApi.SignalRHub;
 using Northwind.WebUI.Common;
+using Stackdriver;
+using Google.Cloud.Diagnostics.AspNetCore;
+using Google.Cloud.Diagnostics.Common;
+using Microsoft.Extensions.Logging;
+using Google.Cloud.Logging.V2;
+using Google.Apis.Auth.OAuth2;
+using Grpc.Auth;
 
 namespace HumanitarianAssistance.WebApi
 {
@@ -46,6 +53,30 @@ namespace HumanitarianAssistance.WebApi
             // Database connection
             Console.WriteLine("Connection string: {0}\n", connectionString);
             services.AddDbContextPool<HumanitarianAssistanceDbContext>(options => options.UseNpgsql(connectionString));
+            services.Configure<StackdriverOptions>(
+                Configuration.GetSection("Stackdriver")); //Environment.GetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS")
+            var googleCredential = GoogleCredential.FromFile(Directory.GetCurrentDirectory() + "/clear-fusion-193608-0deb8499ba04.json");
+            var channel = new Grpc.Core.Channel(
+                LoggingServiceV2Client.DefaultEndpoint.Host,
+                googleCredential.ToChannelCredentials());
+            services.AddGoogleExceptionLogging(options =>
+            {
+                options.ProjectId = Configuration["Stackdriver:ProjectId"];
+                options.ServiceName = Configuration["Stackdriver:ServiceName"];
+                options.Version = Configuration["Stackdriver:Version"];
+                options.Options = ErrorReportingOptions.Create(
+                EventTarget.ForLogging(
+                    projectId: Configuration["Stackdriver:ProjectId"], 
+                    loggingClient: LoggingServiceV2Client.Create(channel)));
+            });
+            
+            // Add trace service.
+            // services.AddGoogleTrace(options =>
+            // {
+            //     options.ProjectId = Configuration["Stackdriver:ProjectId"];
+            //     options.Options = TraceOptions.Create(
+            //         bufferOptions: BufferOptions.NoBuffer());
+            // });
 
             // identity
             services.AddIdentity<AppUser, IdentityRole>(o =>
@@ -115,7 +146,7 @@ namespace HumanitarianAssistance.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -138,6 +169,14 @@ namespace HumanitarianAssistance.WebApi
             //     Path.Combine(Directory.GetCurrentDirectory(), @"wwwroot")),
             //     RequestPath = new PathString("/Docs")
             // });
+            var googleCredential = GoogleCredential.FromFile(Directory.GetCurrentDirectory() + "/clear-fusion-193608-0deb8499ba04.json");
+            var channel = new Grpc.Core.Channel(
+                LoggingServiceV2Client.DefaultEndpoint.Host,
+                googleCredential.ToChannelCredentials());
+            loggerFactory.AddGoogle(Configuration["Stackdriver:ProjectId"], null , LoggingServiceV2Client.Create(channel));
+            app.UseGoogleExceptionLogging();
+            // Configure trace service.
+            // app.UseGoogleTrace();
 
             app.UseStaticFiles();
             app.UseCookiePolicy();

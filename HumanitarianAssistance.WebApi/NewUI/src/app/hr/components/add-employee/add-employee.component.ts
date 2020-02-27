@@ -536,6 +536,8 @@ export class AddEmployeeComponent implements OnInit {
     ) {
       this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
       this.employeeAllDetails.EmployeeBasicDetail = this.employeeDetailForm.value;
+      this.employeeProfessionalDetailForm.controls['HiredOn'].setValue(StaticUtilities.getLocalDate
+        (this.employeeProfessionalDetailForm.controls['HiredOn'].value));
       this.employeeAllDetails.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
       this.employeeAllDetails.EmployeePensionDetail.PensionList = this.pensionList;
       this.employeeService
@@ -578,6 +580,8 @@ export class AddEmployeeComponent implements OnInit {
       }
       this.employeeDetailForm.controls['EmployeeId'].setValue(this.employeeId);
       this.employeeAllDetails.EmployeeBasicDetail = this.employeeDetailForm.value;
+      this.employeeProfessionalDetailForm.controls['HiredOn'].setValue(StaticUtilities.getLocalDate
+        (this.employeeProfessionalDetailForm.controls['HiredOn'].value));
       this.employeeAllDetails.EmployeeProfessionalDetails = this.employeeProfessionalDetailForm.value;
       this.employeeAllDetails.EmployeePensionDetail.PensionList = this.pensionList;
       this.employeeService

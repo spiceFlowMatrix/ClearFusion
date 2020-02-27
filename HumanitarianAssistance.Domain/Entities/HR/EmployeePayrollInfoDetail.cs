@@ -15,6 +15,7 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public int Year { get; set; }
         public double NetSalary { get; set; }
         public double GrossSalary { get; set; }
+         public double HourlyRate { get; set; }
         public int EmployeeId { get; set; }
         public bool IsSalaryApproved { get; set; }
         // [ForeignKey("CurrencyId")]

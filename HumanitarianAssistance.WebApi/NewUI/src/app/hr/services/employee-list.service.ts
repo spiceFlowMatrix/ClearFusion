@@ -3,6 +3,7 @@ import { GlobalService } from 'src/app/shared/services/global-services.service';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { MatDialog } from '@angular/material';
 import { GLOBAL } from 'src/app/shared/global';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,8 @@ export class EmployeeListService {
   constructor(
     private globalService: GlobalService,
     private appurl: AppUrlService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private globalSharedService: GlobalSharedService) { }
 
   GetAllOfficeCodeList() {
     return this.globalService.getList(
@@ -85,5 +87,11 @@ export class EmployeeListService {
   createAllEmployeesToUser() {
     return this.globalService.getList(
       this.appurl.getApiUrl() + GLOBAL.API_EmployeeDetail_EmployeesToUser);
+  }
+  exportPayrollExcel(model) {
+    return this.globalSharedService.getFile(
+      this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetEmployeesPayrollExcel,
+      model
+    );
   }
 }

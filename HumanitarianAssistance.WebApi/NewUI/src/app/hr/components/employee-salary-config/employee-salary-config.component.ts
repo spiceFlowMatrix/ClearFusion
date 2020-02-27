@@ -104,6 +104,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       NetSalary: 0,
       EmployeeId: 0,
       Month: 0,
+      HourlyRate: 0,
       SalaryHeadList: []
     };
 
@@ -392,6 +393,7 @@ export class EmployeeSalaryConfigComponent implements OnInit {
       NetSalary: this.monthlySalaryBreakdown.NetSalary,
       EmployeeId: this.employeeId,
       Month: this.selectedMonth.value,
+      HourlyRate: this.monthlySalaryBreakdown.HourlyRate,
       SalaryHeadList: []
     };
 
@@ -533,6 +535,7 @@ export interface IEmployeeSalary {
   NetSalary: number;
   EmployeeId: number;
   Month: number;
+  HourlyRate: number;
   SalaryHeadList: ISalaryHead[];
 }
 
