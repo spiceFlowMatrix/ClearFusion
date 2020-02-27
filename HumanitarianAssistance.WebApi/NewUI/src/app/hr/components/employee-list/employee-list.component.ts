@@ -397,7 +397,6 @@ export class EmployeeListComponent implements OnInit {
   }
 
   exportPayrollExcel(month, monthName) {
-    debugger;
     const employeeIds = this.selection.selected.map(s => s.EmployeeId );
     const model = {
       Month: month,
@@ -408,14 +407,14 @@ export class EmployeeListComponent implements OnInit {
     this.employeeListService.exportPayrollExcel(model).subscribe(res => {
       if (res) {
         this.commonLoader.hideLoader();
-        this.toastr.warning(res);
+        if (res && res.error) {
+          this.toastr.warning(res.message);
+        }
       } else {
-        this.toastr.warning('Something went wrong');
         this.commonLoader.hideLoader();
       }
-    }, err => {
-      debugger;
-      this.toastr.warning(err);
+    }, error => {
+      this.toastr.warning(error);
       this.commonLoader.hideLoader();
     });
 

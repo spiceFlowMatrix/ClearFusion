@@ -159,8 +159,6 @@ namespace HumanitarianAssistance.Application.CommonServices
                         Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
                     }
 
-
-
                     using (ExcelRange Rng = worksheet.Cells[3, 1, 3, headers.Count])
                     {
                         Rng.Value = model.HeaderAndFooter.SubHeader;
@@ -237,57 +235,42 @@ namespace HumanitarianAssistance.Application.CommonServices
                         worksheet.Cells[rowCount, 19].Value = item.Advance;
                         worksheet.Cells[rowCount, 20].Value = item.Pension;
                         worksheet.Cells[rowCount, 21].Value = item.NetSalary;
-
-                        int count = 1;
-                        foreach (var analytical in item.EmployeeAnalyticalInfoList)
-                        {
-                            worksheet.Cells[rowCount, 22].Value = analytical.Project;
-                            worksheet.Cells[rowCount, 23].Value = analytical.Job;
-                            worksheet.Cells[rowCount, 24].Value = analytical.BudgetLine;
-                            worksheet.Cells[rowCount, 25].Value = analytical.Percentage;
-
-                            if (count != item.EmployeeAnalyticalInfoList.Count)
-                            {
-                                rowCount++;
-                            }
-                        }
-
+                        worksheet.Cells[rowCount, 22].Value = item.Project;
+                        worksheet.Cells[rowCount, 23].Value = item.Job;
+                        worksheet.Cells[rowCount, 24].Value = item.BudgetLine;
+                        worksheet.Cells[rowCount, 25].Value = item.Percentage;
                         sNo++;
                     }
 
-                    worksheet.Cells[rowCount, 1, rowCount, 8].Merge = true;
-                    worksheet.Cells[rowCount, 1, rowCount, 8].Value = "Grand Total";
-                    worksheet.Cells[rowCount, 1, rowCount, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                    worksheet.Cells[rowCount+1, 1, rowCount+1, 8].Merge = true;
+                    worksheet.Cells[rowCount+1, 1, rowCount+1, 8].Value = "Grand Total";
+                    worksheet.Cells[rowCount+1, 1, rowCount+1, 8].Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
 
                     foreach (int index in calculateSumOnKeyIndex)
                     {
                         string text = StaticFunctions.GetCharacterFromACIICode(index); //get Alphabet character
-                        //string col = text + (rowCount); // +5 to skip first 4 rows and last row where sum will be displayed
-                        //string formula = $"SUM({text}1:{text}{rowCount.ToString()})";
-                        worksheet.Cells[text + (rowCount).ToString()].Formula = $"SUM({text}8:{text}{(rowCount - 1).ToString()})";
+                        worksheet.Cells[text + (rowCount+1).ToString()].Formula = $"SUM({text}8:{text}{(rowCount).ToString()})";
                     }
                     // worksheet.Cells.AutoFitColumns();
 
-                    worksheet.Cells[rowCount + 2, 2, rowCount + 2, 3].Merge = true;
-                    worksheet.Cells[rowCount + 2, 2, rowCount + 2, 3].Value = "Prepared By";
-                    worksheet.Cells[rowCount + 2, 2, rowCount + 2, 3].Style.Font.Bold  = true;
+                    worksheet.Cells[rowCount + 3, 2, rowCount + 3, 3].Merge = true;
+                    worksheet.Cells[rowCount + 3, 2, rowCount + 3, 3].Value = "Prepared By";
+                    worksheet.Cells[rowCount + 3, 2, rowCount + 3, 3].Style.Font.Bold  = true;
+                    worksheet.Cells[rowCount + 3, 12, rowCount +3, 13].Merge = true;
+                    worksheet.Cells[rowCount + 3, 12, rowCount +3, 13].Value = "Checked By";
+                    worksheet.Cells[rowCount + 3, 12, rowCount +3, 13].Style.Font.Bold  = true;
+                    worksheet.Cells[rowCount + 3, 21, rowCount +3, 22].Merge = true;
+                    worksheet.Cells[rowCount + 3, 21, rowCount +3, 22].Value = "Approved By";
+                    worksheet.Cells[rowCount + 3, 21, rowCount +3, 22].Style.Font.Bold = true;
 
-                    worksheet.Cells[rowCount + 2, 12, rowCount + 2, 13].Merge = true;
-                    worksheet.Cells[rowCount + 2, 12, rowCount + 2, 13].Value = "Checked By";
-                    worksheet.Cells[rowCount + 2, 12, rowCount + 2, 13].Style.Font.Bold  = true;
+                    worksheet.Cells[rowCount + 5, 2, rowCount + 5, 3].Merge = true;
+                    worksheet.Cells[rowCount + 5, 2, rowCount + 5, 3].Value = "Date: "+ model.HeaderAndFooter.Date;
 
-                    worksheet.Cells[rowCount + 2, 21, rowCount + 2, 22].Merge = true;
-                    worksheet.Cells[rowCount + 2, 21, rowCount + 2, 22].Value = "Approved By";
-                    worksheet.Cells[rowCount + 2, 21, rowCount + 2, 22].Style.Font.Bold = true;
+                    worksheet.Cells[rowCount + 5, 12, rowCount + 5, 13].Merge = true;
+                    worksheet.Cells[rowCount + 5, 12, rowCount + 5, 13].Value = "Date: "+ model.HeaderAndFooter.Date;
 
-                    worksheet.Cells[rowCount + 4, 2, rowCount + 4, 3].Merge = true;
-                    worksheet.Cells[rowCount + 4, 2, rowCount + 4, 3].Value = "Date: "+ model.HeaderAndFooter.Date;
-
-                    worksheet.Cells[rowCount + 4, 12, rowCount + 4, 13].Merge = true;
-                    worksheet.Cells[rowCount + 4, 12, rowCount + 4, 13].Value = "Date: "+ model.HeaderAndFooter.Date;
-
-                    worksheet.Cells[rowCount + 4, 21, rowCount + 4, 22].Merge = true;
-                    worksheet.Cells[rowCount + 4, 21, rowCount + 4, 22].Value = "Date: "+ model.HeaderAndFooter.Date;
+                    worksheet.Cells[rowCount + 5, 21, rowCount + 5, 22].Merge = true;
+                    worksheet.Cells[rowCount + 5, 21, rowCount + 5, 22].Value = "Date: "+ model.HeaderAndFooter.Date;
 
 
                     worksheet.Calculate();

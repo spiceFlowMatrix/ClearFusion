@@ -3,7 +3,7 @@ using MediatR;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class GetEmployeesPayrollExcelQuery: IRequest<byte[]>
+    public class GetEmployeesPayrollExcelQuery: IRequest<object>
     {
        // public DateTime StartDate { get; set; }
        // public DateTime EndDate { get; set; }

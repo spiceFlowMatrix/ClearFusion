@@ -15,7 +15,7 @@ using HumanitarianAssistance.Domain.Entities.Accounting;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
-    public class GetEmployeesPayrollExcelQueryHandler : IRequestHandler<GetEmployeesPayrollExcelQuery, byte[]>
+    public class GetEmployeesPayrollExcelQueryHandler : IRequestHandler<GetEmployeesPayrollExcelQuery, object>
     {
         private HumanitarianAssistanceDbContext _dbContext;
         private readonly IExcelExportService _excelExportService;
@@ -26,7 +26,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             _dbContext = dbContext;
             _excelExportService = excelExportService;
         }
-        public async Task<byte[]> Handle(GetEmployeesPayrollExcelQuery request, CancellationToken cancellationToken)
+        public async Task<object> Handle(GetEmployeesPayrollExcelQuery request, CancellationToken cancellationToken)
         {
             byte[] result;
             try
@@ -133,6 +133,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     //                 .Select(z=> z.OutTime.Value -z.InTime.Value).DefaultIfEmpty(0).Sum()
                     AbsentHours = 0,
                     NetSalary = 0,
+                    HourlyRate= x.HourlyRate,
                     Salary = x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
                              y.Month == x.Month && y.Year == x.Year && y.SalaryComponentId == (int)AccumulatedSalaryHead.GrossSalary) != null ?
                             x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
@@ -196,15 +197,22 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 if (EmployeeCodes.Any())
                 {
-                    throw new Exception(string.Format("Salary Percentage not present for Employees {0}", String.Join(",", EmployeeCodes)));
+                    return string.Format("Salary Percentage not present for Employees {0}", String.Join(",", EmployeeCodes));
                 }
 
                 List<ExchangeRateDetail> exchangeRates = await _dbContext.ExchangeRateDetail.Where(x => x.IsDeleted == false &&
                                                                 x.Date.Date == DateTime.Now.Date && request.OfficeId.Contains(x.OfficeId)).ToListAsync();
 
-                List<PayrollExcelData> PayrollExcelData = new List<PayrollExcelData>();
+                model.PayrollExcelData = new List<PayrollExcelData>();
 
                 var currencyAFG = await _dbContext.CurrencyDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.CurrencyId == (int)Currency.AFG);
+
+                model.HeaderAndFooter.Currency = currencyAFG.CurrencyCode;
+
+                if(data.Count ==0)
+                {
+                     return "No approved payroll present for selected employees";
+                }
 
                 foreach (var item in data)
                 {
@@ -217,7 +225,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         {
                             var currency = await _dbContext.CurrencyDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.CurrencyId == item.CurrencyId);
                             var officeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.OfficeId == item.OfficeId);
-                            throw new Exception(string.Format("Exchange rate not defined for currency {0} and Office {1}", currency.CurrencyCode, officeDetail.OfficeCode));
+                            return string.Format("Exchange rate not defined for currency {0} and Office {1}", currency.CurrencyCode, officeDetail.OfficeCode);
                         }
                     }
 
@@ -246,10 +254,12 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             Pension = (item.Pension * rate * analytical.Percentage) / 100,
                             Project = analytical.Project,
                             Percentage = analytical.Percentage,
-                            Salary = ((item.BasicPay * rate * analytical.Percentage) / 100) - ,
+                            Salary = (item.BasicPay * rate) - ((item.AttendedHours * item.HourlyRate * rate) * analytical.Percentage / 100) ,
                             SalaryTax = (item.SalaryTax * rate * analytical.Percentage) / 100,
                             Security = (item.Security * rate * analytical.Percentage) / 100,
                         };
+
+                        model.PayrollExcelData.Add(excelData);
                     }
                 }
 
@@ -271,7 +281,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
             catch (Exception ex)
             {
-                throw ex;
+                return ex.Message;
             }
         }
     }

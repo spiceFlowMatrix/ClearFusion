@@ -8,10 +8,12 @@ import { Subject } from 'rxjs/internal/Subject';
 import { IMenuList } from '../dbheader/dbheader.component';
 import { FileModel } from '../file-management/file-management-model';
 import { SignedUrlObjectName } from '../file-management/signed-url-object-name';
-import { concatMap, catchError } from 'rxjs/operators';
+import { concatMap, catchError, tap } from 'rxjs/operators';
 import { Observable, of, throwError } from 'rxjs';
 import { IDropDownModel } from 'src/app/store/models/purchase';
 import { FileSourceEntityTypes } from '../enum';
+import { HttpErrorResponse } from '@angular/common/http';
+import 'rxjs/add/operator/catch';
 
 @Injectable({
   providedIn: 'root'
@@ -192,10 +194,13 @@ export class GlobalSharedService {
       )
       .pipe(
         map(event => {
-          debugger;
           // get filename from header
           const contentDisposition = event.headers.get('Content-Disposition');
           const exmessage = event.headers.get('ExMessage');
+
+          if (exmessage) {
+           return this.handleDownloadPdfError(exmessage);
+          }
           const filename = contentDisposition
             .split(';')[1]
             .split('filename')[1]
@@ -214,7 +219,7 @@ export class GlobalSharedService {
 
           return event;
         }),
-      // catchError(this.handleError),
+        catchError(this.handleError)
       );
   }
   //#endregion
@@ -247,4 +252,12 @@ export class GlobalSharedService {
     debugger;
     return throwError(error);
   }
+
+  private handleDownloadPdfError(error: any) {
+    debugger;
+    return {
+      error: true,
+      message: error
+    };
+}
 }

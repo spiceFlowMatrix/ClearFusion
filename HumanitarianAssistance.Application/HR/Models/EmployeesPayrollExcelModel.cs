@@ -48,6 +48,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public string Job { get; set; }
         public string BudgetLine { get; set; }
         public double Percentage { get; set; }
+        public double HourlyRate { get; set; }
         public List<EmployeeAnalyticalInfo> EmployeeAnalyticalInfoList { get; set; }
     }
     
