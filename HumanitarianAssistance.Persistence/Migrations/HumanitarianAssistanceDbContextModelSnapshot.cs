@@ -2329,7 +2329,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("EmployeeId");
+                    b.HasIndex("EmployeeId")
+                        .IsUnique();
 
                     b.ToTable("EmployeeBasicSalaryDetail");
                 });
@@ -3385,6 +3386,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<int>("EmployeeId");
 
                     b.Property<double>("GrossSalary");
+
+                    b.Property<double>("HourlyRate");
 
                     b.Property<bool>("IsDeleted");
 
@@ -9915,8 +9918,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .HasForeignKey("CurrencyId");
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
-                        .HasForeignKey("EmployeeId")
+                        .WithOne("EmployeeBasicSalaryDetail")
+                        .HasForeignKey("HumanitarianAssistance.Domain.Entities.HR.EmployeeBasicSalaryDetail", "EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -10233,7 +10236,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
+                        .WithMany("EmployeeAnalyticalList")
                         .HasForeignKey("EmployeeID")
                         .OnDelete(DeleteBehavior.Cascade);
 

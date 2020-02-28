@@ -37,6 +37,7 @@ namespace HumanitarianAssistance.Application.HR.Commands.Update
                     payroll.Month = request.Month;
                     payroll.Year = DateTime.UtcNow.Year;
                     payroll.EmployeeId = request.EmployeeId;
+                    payroll.HourlyRate= request.HourlyRate;
 
                     _dbContext.EmployeePayrollInfoDetail.Add(payroll);
                     await _dbContext.SaveChangesAsync();

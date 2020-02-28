@@ -1,53 +1,23 @@
 # Change Log
 
-## [ Version  [2.1](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/milestones/11) ] - `(20-Feb-2017)`
+## [ Version  [3.0](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/milestones/12) ] - `(26-Feb-2020)`
+
+## Enhancements
+ - ### Updated Employee Listing table [Issue #363](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/363) [b683b504 ](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/b683b504c299961ec1763a22886212841893317e)- `18-02-2020` 
+ - ### Added Created Date & Hired Date on Employee Listing Page [Issue #363](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/363) [8528a281 ](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/8528a281ff5ad36b7faffc732acda91c318b6a1d)- `26-02-2020`
+ - ### Test for Logging on Cleanarch environment [Issue #409](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/409) [e626d931](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/e626d93176f374a13ac50ff3774cf42f07437fb2)- `21-02-2020` 
+ - ### Api Command, Query Logging on Cleanarch environment [Issue #409](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/409) [a05e1e8a](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/a05e1e8a8736eb34c9480a0523404a3198013587)- `24-02-2020` 
+ - ### Implemented Error Reporting & Logging [Issue #409](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/409) [19a533ea](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/19a533ea4ba9332420920477b53f71384a90bca8)- `25-02-2020`
+
+ - ### Make sector and program selection in project advance details into multi-select dropdown [Issue #227](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/227) [02be434b ](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/02be434bed13fccc3a5a2f72dba21cf460cb67f8)- `18-02-2020`
+- ### Make sector and program selection in project advance details into multi-select dropdown [Issue #227](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/227) [f7cb00bf](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/f7cb00bfc34b637452cd727f1e2686a067652cce)- `19-02-2020`
+- ### Migration applied for Program Sector Multiselect [Issue #227](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/227) [95c67104](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/95c6710469652409fca11fcdd1cca7e0100961d1)- `19-02-2020`
+- ### Make sector and program selection in project advance details into multi-select dropdown [Issue #227](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/227) [12d24f49](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/12d24f49488e61f8fa603cd2c2ca46bc3093c296)- `19-02-2020`
+- ### Make sector and program selection in project advance details into multi-select dropdown [Issue #227](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/227) [8e9719c5](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/8e9719c5c50e019b804f1fcdbc2bd2f2b3b1009c)- `20-02-2020`
 
 ## Bug Fixes
-
-## 1. Editing employee requires to re-enter the Password and select City/Village/District [#402](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/401)
-
-#### Issue Transcript
-> #### If the password and city/village/district are not entered/selected, then it should require us to fill it up, but if they are added and saved, it should not ask us to enter them every time while editing employee details.
-
-#### commits
->  #### [ce38a011d71b90f8d44517914873f9e53f901616](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/merge_requests/520/diffs?commit_id=ce38a011d71b90f8d44517914873f9e53f901616)
-
-## 2. Cannot select more than one day as weekend [#400](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/400)
-
-#### Issue Transcript
-> #### All the selected days for the weekend should be saved as weekend
-
-#### commits
-> #### [27c3ad1bca15565ee3631b0abe1092c5a9b38a75](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/27c3ad1bca15565ee3631b0abe1092c5a9b38a75)
-
-## 3. The district dropdown are not getting cascaded from the province dropdown in the production system of the end-user [#399](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/399)
-
-#### Issue Transcript
-> #### The district dropdown should be cascaded from the province dropdown correctly. When we select provinces, all the districts of the selected province should be listed in the district dropdown.
-
-#### commits
-> #### No commits  
-
-#### Data mapping
-> #### Due to wrong data mapping in province with some district in databse in production corrected that.
-
-
-
-
-
-
-## 4. It shows two edit buttons in purchase procurement control panel [#393](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/393)
-
-#### Issue Transcript
-> #### There should be one edit button for each existing purchases.
-
-#### commits
-> #### [a789d0e1ffd659b01685af93f9f4783417c51a31](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/merge_requests/509/diffs?commit_id=a789d0e1ffd659b01685af93f9f4783417c51a31)
-
-## 5. Timeout on HTTP requests for file uploads should be increased. [#376](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/376)
-
-#### Issue Transcript
-> #### Due to the internet limitations on end-users, they need a longer time to be able to successfully complete uploads for larger files. However, increasing the timeout on such requests can add performance problems for the API. The development team needs to do some experiments on-site with end-users so as to effectively identify a good timeout to set for file uploads. After an acceptable timeout is identified and agreed upon, the API will be updated accordingly..
-
-#### commits
-> #### [912a7b54a9815a56d0036c97f3dd084d0b01e811](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/merge_requests/525/diffs?commit_id=912a7b54a9815a56d0036c97f3dd084d0b01e811)
+- ### Changes done on edit employee page to cascade district based on province selection [Issue #413](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/413) [71458a9d](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/71458a9dc03857ade091ff6cc9354db7b1c50e1b)- `24-02-2020`
+- ### Removed additional edit button configuration from Advance [Issue #410](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/410) [d0342064](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/d034206488613095ed6c4b52d51cfac5f953cd96)- `24-02-2020`
+- ### Changes done while editing voucher date to save correct date [Issue #408](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/408) [64de028c](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/64de028c4ae760eeef3dacf707626d6392340fc1)- `21-02-2020`
+- ### Changes done for Validation and UI state bugs in appraisals [Issue #398](https://gitlab.com/edgsolutions-engineering/clear-fusion/issues/398) [e9a32e25](https://gitlab.com/edgsolutions-engineering/clear-fusion/-/commit/e9a32e250bb2b7e93377c54ba9be7b3def33a982)- `21-02-2020`
+ 

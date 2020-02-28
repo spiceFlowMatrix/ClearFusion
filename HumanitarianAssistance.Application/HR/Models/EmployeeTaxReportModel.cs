@@ -29,5 +29,30 @@ namespace HumanitarianAssistance.Application.HR.Models
 		public string LogoPath { get; set; }
 		public string ReportDate { get; set; }
 
+		public string Image1Path {get;set;}
+		public string Image2Path {get;set;}
+		public string Image3Path {get;set;}
+		public string Image4Path {get;set;}
+		public string Image5Path {get;set;}
+		public string Image6Path {get;set;}
+		public string Image7Path {get;set;}
+		public string Image8Path {get;set;}
+		public string Image9Path {get;set;}
+		public string Image10Path {get;set;}
+		public string Image11Path {get;set;}
+		public string Image12Path {get;set;}
+		public string Image13Path {get;set;}
+		public string Image14Path {get;set;}
+		public string Image15Path {get;set;}
+		public string Image16Path {get;set;}
+		public string Image17Path {get;set;}
+		public string Image18Path {get;set;}
+		public string Image19Path {get;set;}
+		public string Image20Path {get;set;}
+		public string Image21Path {get;set;}
+		public string Image22Path {get;set;}
+		public string Image23Path {get;set;}
+		public string Image24Path {get;set;}
+
     }
 }

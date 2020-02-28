@@ -250,22 +250,23 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 model.GrossSalary = payroll.GrossSalary;
                 model.NetSalary = payroll.NetSalary;
                 model.SalaryPaid = model.NetSalary;
+                model.HourlyRate = payroll.HourlyRate;
                 model.Status = "Salary Approved";
                 model.IsSalaryApproved = true;
 
-                PayrollMonthlyHourDetail payrollHours = _dbContext.PayrollMonthlyHourDetail
-                                                                                    .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
-                                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year && x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
+                // PayrollMonthlyHourDetail payrollHours = _dbContext.PayrollMonthlyHourDetail
+                //                                                                     .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
+                //                                                                     && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year && x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
 
-                if (payrollHours == null)
-                {
-                    throw new Exception(StaticResource.PayrollDailyHoursNotSet);
-                }
+                // if (payrollHours == null)
+                // {
+                //     throw new Exception(StaticResource.PayrollDailyHoursNotSet);
+                // }
 
-                int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
+                // int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
 
-                 double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
-                 model.HourlyRate = dBasicPayPerhour;
+                //  double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (DateTime.DaysInMonth(DateTime.UtcNow.Year, request.Month) * workingHours), 2);
+                //  model.HourlyRate = dBasicPayPerhour;
 
                 List<AccumulatedSalaryHeadDetail> salaryHeads = _dbContext.AccumulatedSalaryHeadDetail.Where(x => x.IsDeleted == false &&
                                                                 x.Month == request.Month &&

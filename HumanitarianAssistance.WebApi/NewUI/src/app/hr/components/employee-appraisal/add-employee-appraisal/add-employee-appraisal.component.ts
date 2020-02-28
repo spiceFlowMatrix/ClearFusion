@@ -33,6 +33,7 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   isViewed = true;
   err = null;
+  errMesg = null;
   employeeId: number;
   employeeAppraisalPeriod: any[];
   employeeAppraisalForm: FormGroup;
@@ -920,57 +921,43 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
   //#region "onFormSubmit"
   onFormSubmit(form: IAppraisalDetailModel) {
     this.err = null;
-    if (
-      (this.employeeAppraisalForm.value
-        .GeneralProfessionalIndicatorQuestion as FormArray).length === 0 ||
-      (this.employeeAppraisalForm.value.AppraisalMembers as FormArray)
-        .length === 0 ||
-      (this.employeeAppraisalForm.value.AppraisalTraining as FormArray)
-        .length === 0 ||
-      (this.employeeAppraisalForm.value.AppraisalStrongPoints as FormArray)
-        .length === 0 ||
-      (this.employeeAppraisalForm.value.AppraisalMembers as FormArray)
-        .length === 0 ||
-      (this.employeeAppraisalForm.value.AppraisalWeakPoints as FormArray)
-        .length === 0
-    ) {
-      this.err = 'Please fill entire form';
-      document.getElementById('err').scrollIntoView();
-      return;
-    }
     if (this.employeeAppraisalForm.valid) {
-      if (
-        this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
-          undefined &&
-        this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
-          null
-      ) {
+      if (this.employeeAppraisalForm.valid) {
         if (
-          this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId']
-            .value !== undefined &&
-          this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId'] !=
+          this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
+            undefined &&
+          this.employeeAppraisalForm.get('EmployeeAppraisalDetailsId').value ==
             null
         ) {
-          form.CurrentAppraisalDate = StaticUtilities.setLocalDate(
-            form.CurrentAppraisalDate
-          );
-          form.EmployeeId = this.employeeId;
-          this.addAppraisalForm(form);
+          if (
+            this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId']
+              .value !== undefined &&
+            this.employeeAppraisalForm.controls['EmployeeAppraisalDetailsId'] !=
+              null
+          ) {
+            form.CurrentAppraisalDate = StaticUtilities.setLocalDate(
+              form.CurrentAppraisalDate
+            );
+            form.EmployeeId = this.employeeId;
+            this.addAppraisalForm(form);
+          }
+        } else {
+          this.editAppraisalForm(form);
         }
-      } else {
-        this.editAppraisalForm(form);
       }
     } else {
-      console.log('invalid');
+      this.err = 'Please fill entire form';
+      document.getElementById('errorId').scrollIntoView();
+      return;
     }
   }
+
   //#endregion
   //#region "addAppraisalForm"
   addAppraisalForm(form: IAppraisalDetailModel) {
-    this.err = null;
+    this.errMesg = null;
     this.appraisalService.addAppraisalForm(form).subscribe(
       res => {
-        console.log(res);
         if (res === true) {
           this.router.navigate(['../'], {
             relativeTo: this.routeActive,
@@ -979,8 +966,9 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         }
       },
       err => {
-        this.err = err;
-        document.getElementById('err').scrollIntoView();
+        this.errMesg = err;
+        document.getElementById('alreadyExistId').scrollIntoView();
+        return;
       }
     );
   }
@@ -988,7 +976,7 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
 
   //#region "editAppraisalForm"
   editAppraisalForm(form: IAppraisalDetailModel) {
-    this.err = null;
+    this.errMesg = null;
     this.appraisalService.editAppraisalForm(form).subscribe(
       res => {
         this.router.navigate(['../../'], {
@@ -997,8 +985,9 @@ export class AddEmployeeAppraisalComponent implements OnInit, OnChanges {
         });
       },
       err => {
-        this.err = err;
-        document.getElementById('err').scrollIntoView();
+        this.errMesg = err;
+        document.getElementById('alreadyExistId').scrollIntoView();
+        return;
       }
     );
   }
