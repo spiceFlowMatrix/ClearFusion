@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
         public bool ExpectationTransport { get; set; }
         public bool ExpectationMeal { get; set; }
         public double ProfessionalCriteriaMark { get; set; }
-        public int MarksObtain { get; set; }
+        public double MarksObtain { get; set; }
         public double TotalMarksObtain { get; set; }
     }
         public class InterviewQuestionModel {
