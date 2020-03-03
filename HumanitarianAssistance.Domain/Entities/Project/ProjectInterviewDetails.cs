@@ -13,7 +13,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public string Description { get; set; }
         public int NoticePeriod { get; set; }
         public DateTime? AvailableDate { get; set; }
-        public int WrittenTestMarks { get; set; }
+        public double WrittenTestMarks { get; set; }
         public int CurrentBase { get; set; }
         public bool CurrentTransport { get; set; }
         public bool CurrentMeal { get; set; }
@@ -27,7 +27,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project {
         public bool InterviewQuestionTwo { get; set; }
         public bool InterviewQuestionThree { get; set; }
         public double ProfessionalCriteriaMarks { get; set; }
-        public int MarksObtained { get; set; }
+        public double MarksObtained { get; set; }
         public double TotalMarksObtain { get; set; }
         public virtual List<RatingBasedCriteria> RatingBasedCriteriaList { get; set; }
         public virtual List<InterviewLanguages> InterviewLanguagesList { get; set; }

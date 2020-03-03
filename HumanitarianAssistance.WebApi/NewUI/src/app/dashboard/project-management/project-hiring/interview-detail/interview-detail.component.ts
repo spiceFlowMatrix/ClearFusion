@@ -388,8 +388,15 @@ export class InterviewDetailComponent implements OnInit {
   //#endregion
   //#region "Calculate total marks"
   WritenTextMarks(data: any) {
-    if (data.srcElement.value != null && data.srcElement.value !== undefined) {
-      this.TotalMarks(data.srcElement.value);
+    if (data.srcElement.value > 60) {
+      this.toastr.warning('Written Test Marks Should be Less Then Or Equal to 60');
+    } else {
+      if (
+        data.srcElement.value != null &&
+        data.srcElement.value !== undefined
+      ) {
+        this.TotalMarks(data.srcElement.value);
+      }
     }
   }
   TotalMarks(data: any) {
@@ -433,10 +440,10 @@ export class InterviewDetailComponent implements OnInit {
       ).Score = score.value;
     }
     this.professionalCriteriaMarks =
-      this.ratingBasedCriteriaAnswerList.reduce(
-        (sum, item) => sum + item.Score,
+      this.ratingBasedCriteriaQuestionList.reduce(
+        (sum, item) => sum + item.selected,
         0
-      ) / this.ratingBasedCriteriaAnswerList.length;
+      ) / this.ratingBasedCriteriaQuestionList.length;
     this.TotalMarks(this.interviewDetailForm.get('WrittenTestMarks').value);
     this.interviewDetailForm.controls['ProfessionalCriteriaMark'].setValue(
       this.professionalCriteriaMarks
@@ -459,10 +466,9 @@ export class InterviewDetailComponent implements OnInit {
       this.technicalAnswerList.find(x => x.QuestionId === questionId).Score =
         score.value;
     }
-    this.marksObtain = this.technicalAnswerList.reduce(
-      (sum, item) => sum + item.Score,
-      0
-    );
+    this.marksObtain =
+      this.technicalQuestionList.reduce((sum, item) => sum + item.selected, 0) /
+      this.technicalQuestionList.length;
     this.TotalMarks(this.interviewDetailForm.get('WrittenTestMarks').value);
 
     this.interviewDetailForm.controls['MarksObtain'].setValue(this.marksObtain);
@@ -600,13 +606,6 @@ export class InterviewDetailComponent implements OnInit {
         res.splice(index, 1);
         this.languagesList$ = of(res);
       });
-      // const index = (this.interviewDetailForm.controls['LanguageList']
-      //   .value as Array<any>).findIndex(
-      //   x => x.LanguageName === event.item.LanguageName
-      // );
-      // (this.interviewDetailForm.controls['LanguageList'].value as Array<
-      //   any
-      // >).splice(index, 1);
     }
   }
   actionEventsTraining(event: any) {
@@ -617,13 +616,6 @@ export class InterviewDetailComponent implements OnInit {
         res.splice(index, 1);
         this.traningList$ = of(res);
       });
-      // const index = (this.interviewDetailForm.controls['TraningList']
-      //   .value as Array<any>).findIndex(
-      //   x => x.LanguageName === event.item.LanguageName
-      // );
-      // (this.interviewDetailForm.controls['TraningList'].value as Array<
-      //   any
-      // >).splice(index, 1);
     }
   }
   actionEventsInterviewers(event: any) {
@@ -634,30 +626,17 @@ export class InterviewDetailComponent implements OnInit {
         res.splice(index, 1);
         this.interviewerList$ = of(res);
       });
-      // const index = (this.interviewDetailForm.controls['InterviewerList']
-      //   .value as Array<any>).findIndex(
-      //   x => x.EmployeeId === event.item.EmployeeId
-      // );
-      // (this.interviewDetailForm.controls['InterviewerList'].value as Array<
-      //   any
-      // >).splice(index, 1);
     }
   }
   //#endregion
   //#region "Add interview details"
   AddInterviewDetails(data: InterviewDetailModel) {
+    if (+this.totalMarksObtain > 100) {
+      this.toastr.warning('Marks Total Should be Less Then or Equal to 100');
+    } else {
     this.commonLoader.showLoader();
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
-    // data.TraningList.map(r => {
-    //   return {
-    //     TraningType: r.TraningType,
-    //     TraningName: r.TraningName,
-    //     TraningCountryAndCity: r.TraningCountryAndCity,
-    //     TraningStartDate: r.TraningStartDate,
-    //     TraningEndDate: r.TraningEndDate
-    //   } as ITraningDetailModel;
-    // });
     this.hiringRequestService.AddInterviewDetails(data).subscribe(
       (response: IResponseData) => {
         if (response.statusCode === 200) {
@@ -672,10 +651,14 @@ export class InterviewDetailComponent implements OnInit {
       }
     );
     this.commonLoader.showLoader();
+    }
   }
   //#endregion
   //#region "Add interview details"
   EditInterviewDetails(data: InterviewDetailModel) {
+    if (+this.totalMarksObtain > 100) {
+      this.toastr.warning('Marks Total Should be Less Then or Equal to 100');
+    } else {
     this.commonLoader.showLoader();
     data.CandidateId = this.candidateId;
     data.HiringRequestId = this.hiringRequestId;
@@ -685,15 +668,6 @@ export class InterviewDetailComponent implements OnInit {
     });
     this.traningList$.subscribe(res => {
       data.TraningList = res;
-      // data.TraningList.map(r => {
-      //   return {
-      //     TraningType: r.TraningType,
-      //     TraningName: r.TraningName,
-      //     TraningCountryAndCity: r.TraningCountryAndCity,
-      //     TraningStartDate: r.TraningStartDate,
-      //     TraningEndDate: r.TraningEndDate
-      //   } as ITraningDetailModel;
-      // });
     });
     data.ProfessionalCriteriaMark = this.professionalCriteriaMarks;
     data.MarksObtain = this.marksObtain;
@@ -715,6 +689,7 @@ export class InterviewDetailComponent implements OnInit {
       }
     );
     this.commonLoader.hideLoader();
+    }
   }
   //#endregion
   //#region "On submission of interview form"
@@ -801,21 +776,20 @@ export class InterviewDetailComponent implements OnInit {
     this.marksObtain = data.MarksObtain;
     this.professionalCriteriaMarks = data.ProfessionalCriteriaMark;
     this.languagesList$ = of(data.LanguageList);
-    this.traningList$ = of(data.TraningList.map(r => {
-      return {
-        TraningType: r.TraningType,
-        TraningName: r.TraningName,
-        TraningCountryAndCity: r.TraningCountryAndCity,
-        TraningStartDate: this.datePipe.transform(
-          r.TraningStartDate,
-          'MMM d, y'
-        ),
-        TraningEndDate: this.datePipe.transform(
-          r.TraningEndDate,
-          'MMM d, y'
-        )
-      } as ITraningDetailModel;
-    }));
+    this.traningList$ = of(
+      data.TraningList.map(r => {
+        return {
+          TraningType: r.TraningType,
+          TraningName: r.TraningName,
+          TraningCountryAndCity: r.TraningCountryAndCity,
+          TraningStartDate: this.datePipe.transform(
+            r.TraningStartDate,
+            'MMM d, y'
+          ),
+          TraningEndDate: this.datePipe.transform(r.TraningEndDate, 'MMM d, y')
+        } as ITraningDetailModel;
+      })
+    );
     this.interviewerList$ = of(data.InterviewerList);
     this.interviewDetails = data;
   }
