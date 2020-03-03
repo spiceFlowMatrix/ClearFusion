@@ -32,7 +32,8 @@ export class ModifyTransactionComponent implements OnInit {
 
   voucherNo: any;
   voucherDetail: any;
-  displayedColumns: string[] = ['select', 'AccountCode', 'Description', 'CreditAmount', 'DebitAmount', 'ProjectName', 'BudgetLineName', 'JobName'];
+  displayedColumns: string[] = ['select', 'AccountCode', 'Description', 'DebitAmount', 'CreditAmount',
+   'ProjectName', 'BudgetLineName', 'JobName'];
   ELEMENT_DATA: any[] = [];
   isModifyTransactions = false;
   transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
