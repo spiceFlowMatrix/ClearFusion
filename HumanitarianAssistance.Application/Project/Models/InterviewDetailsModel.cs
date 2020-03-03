@@ -16,7 +16,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public string Description { get; set; }
         public int NoticePeriod { get; set; }
         public DateTime? AvailableDate { get; set; }
-        public int WrittenTestMarks { get; set; }
+        public double WrittenTestMarks { get; set; }
         public int CurrentBase { get; set; }
         public int CurrentOther { get; set; }
         public int ExpectationBase { get; set; }
@@ -30,7 +30,7 @@ namespace HumanitarianAssistance.Application.Project.Models
         public bool ExpectationTransport { get; set; }
         public bool ExpectationMeal { get; set; }
         public double ProfessionalCriteriaMark { get; set; }
-        public int MarksObtain { get; set; }
+        public double MarksObtain { get; set; }
         public double TotalMarksObtain { get; set; }
     }
 }
