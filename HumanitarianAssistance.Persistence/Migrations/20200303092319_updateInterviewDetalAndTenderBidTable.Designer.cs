@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace HumanitarianAssistance.Persistence.Migrations
 {
     [DbContext(typeof(HumanitarianAssistanceDbContext))]
-    [Migration("20200303072946_updateInterviewDetalAndTenderBidTable")]
+    [Migration("20200303092319_updateInterviewDetalAndTenderBidTable")]
     partial class updateInterviewDetalAndTenderBidTable
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -8398,8 +8398,6 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<DateTime>("DeliveryDate");
-
                     b.Property<int>("DeliveryDateScore");
 
                     b.Property<string>("Email");
@@ -8437,6 +8435,8 @@ namespace HumanitarianAssistance.Persistence.Migrations
                     b.Property<int>("Service_Warranty");
 
                     b.Property<int>("TOR_SOWAcceptance");
+
+                    b.Property<DateTime>("TenderDeliveryDate");
 
                     b.Property<int>("WorkExperience");
 

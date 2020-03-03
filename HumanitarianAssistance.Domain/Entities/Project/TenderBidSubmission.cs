@@ -18,7 +18,7 @@ namespace HumanitarianAssistance.Domain.Entities.Project
         public string Address { get; set; }
         public string Owner { get; set; }
         public DateTime OpeningDate { get; set; }
-        public DateTime DeliveryDate { get; set; }
+        public DateTime TenderDeliveryDate { get; set; }
         public double QuotedAmount { get; set; }
         public double SecurityAmount { get; set; }
         public bool isResultQualified { get; set; }

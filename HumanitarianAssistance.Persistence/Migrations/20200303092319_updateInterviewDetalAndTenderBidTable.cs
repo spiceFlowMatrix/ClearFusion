@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore.Migrations;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace HumanitarianAssistance.Persistence.Migrations
 {
@@ -7,21 +6,19 @@ namespace HumanitarianAssistance.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "SecurityDate",
-                table: "TenderBidSubmission");
+            migrationBuilder.DropIndex(
+                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+                table: "EmployeeBasicSalaryDetail");
 
-            migrationBuilder.AlterColumn<DateTime>(
+            migrationBuilder.RenameColumn(
+                name: "SecurityDate",
+                table: "TenderBidSubmission",
+                newName: "TenderDeliveryDate");
+
+            migrationBuilder.RenameColumn(
                 name: "DeliveryDate",
                 table: "TenderBidSubmission",
-                nullable: false,
-                oldClrType: typeof(int));
-
-            migrationBuilder.AddColumn<int>(
-                name: "DeliveryDateScore",
-                table: "TenderBidSubmission",
-                nullable: false,
-                defaultValue: 0);
+                newName: "DeliveryDateScore");
 
             migrationBuilder.AlterColumn<double>(
                 name: "WrittenTestMarks",
@@ -34,25 +31,29 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 table: "ProjectInterviewDetails",
                 nullable: false,
                 oldClrType: typeof(int));
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+                table: "EmployeeBasicSalaryDetail",
+                column: "EmployeeId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
+            migrationBuilder.DropIndex(
+                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+                table: "EmployeeBasicSalaryDetail");
+
+            migrationBuilder.RenameColumn(
+                name: "TenderDeliveryDate",
+                table: "TenderBidSubmission",
+                newName: "SecurityDate");
+
+            migrationBuilder.RenameColumn(
                 name: "DeliveryDateScore",
-                table: "TenderBidSubmission");
-
-            migrationBuilder.AlterColumn<int>(
-                name: "DeliveryDate",
                 table: "TenderBidSubmission",
-                nullable: false,
-                oldClrType: typeof(DateTime));
-
-            migrationBuilder.AddColumn<DateTime>(
-                name: "SecurityDate",
-                table: "TenderBidSubmission",
-                nullable: false,
-                defaultValue: new DateTime(1, 1, 1, 0, 0, 0, 0, DateTimeKind.Unspecified));
+                newName: "DeliveryDate");
 
             migrationBuilder.AlterColumn<int>(
                 name: "WrittenTestMarks",
@@ -65,6 +66,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 table: "ProjectInterviewDetails",
                 nullable: false,
                 oldClrType: typeof(double));
+
+            migrationBuilder.CreateIndex(
+                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+                table: "EmployeeBasicSalaryDetail",
+                column: "EmployeeId");
         }
     }
 }
