@@ -31,7 +31,7 @@ export class VoucherDetailComponent implements OnInit {
 
   voucherNo: any;
   voucherDetail: any;
-  displayedColumns: string[] = ['AccountCode', 'Description', 'CreditAmount', 'DebitAmount', 'ProjectName', 'BudgetLineName', 'JobName'];
+  displayedColumns: string[] = ['AccountCode', 'Description', 'DebitAmount', 'CreditAmount', 'ProjectName', 'BudgetLineName', 'JobName'];
   ELEMENT_DATA: any[] = [];
   documentList: any[] = [];
   isModifyTransactions = false;
