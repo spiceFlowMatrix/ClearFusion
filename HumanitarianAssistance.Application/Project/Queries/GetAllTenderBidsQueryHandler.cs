@@ -81,7 +81,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                     item.OfferDocumentation +
                     item.Company_GoodsSpecification + item.Service_Warranty +
                     item.Certification_GMP_COPP + item.WorkExperience +
-                    item.DeliveryDate;
+                    item.DeliveryDateScore;
                     var percentage = (((Convert.ToDouble(sum))/100)*100);
                     item.TotalScore = getTotalScoreText(percentage);
                 }

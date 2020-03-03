@@ -29,7 +29,7 @@
         <thead>
           <tr>
             <th>Contact Name</th>
-            <th>Security Date</th>
+            <th>Delivery Date</th>
             <th>Quoted Amount</th>
             <th></th>
             <th></th>
@@ -42,8 +42,8 @@
               data.OfferDocumentation +
               data.Company_GoodsSpecification + data.Service_Warranty +
               data.Certification_GMP_COPP + data.WorkExperience +
-              data.DeliveryDate}}</td>
-            <td>{{data.SecurityDate | date: 'dd/MM/yyyy'}}</td>
+              data.DeliveryDateScore}}</td>
+            <td>{{data.TenderDeliveryDate | date: 'dd/MM/yyyy'}}</td>
             <td>{{data.QuotedAmount}}</td>
             <td><i (click)="editTenderBid(data.BidId)" class="fa fa-edit"></i></td>
             <td><i (click)="deleteTenderBid(data.BidId)" class="fa fa-trash"></i></td>
@@ -149,7 +149,7 @@
                       </tr>
                       <tr>
                         <td colspan="1" class="font_weight_500">Delivery Date</td>
-                        <td colspan="4">{{data.DeliveryDate}}</td>
+                        <td colspan="4">{{data.DeliveryDateScore}}</td>
                       </tr>
                       <tr>
                         <td colspan="1" class="font_weight_500">Certification/GMP/COPP</td>
@@ -191,7 +191,7 @@
           <thead>
             <tr>
               <th>Contact Name</th>
-              <th>Security Date</th>
+              <th>Delivery Date</th>
               <th>Quoted Amount</th>
               <th></th>
               <th></th>
@@ -204,8 +204,8 @@
                 data.OfferDocumentation +
                 data.Company_GoodsSpecification + data.Service_Warranty +
                 data.Certification_GMP_COPP + data.WorkExperience +
-                data.DeliveryDate}}</td>
-              <td>{{data.SecurityDate | date: 'dd/MM/yyyy'}}</td>
+                data.DeliveryDateScore}}</td>
+              <td>{{data.TenderDeliveryDate | date: 'dd/MM/yyyy'}}</td>
               <td>{{data.QuotedAmount}}</td>
               <td></td>
               <td></td>
@@ -311,7 +311,7 @@
                         </tr>
                         <tr>
                           <td colspan="1" class="font_weight_500">Delivery Date</td>
-                          <td colspan="4">{{data.DeliveryDate}}</td>
+                          <td colspan="4">{{data.DeliveryDateScore}}</td>
                         </tr>
                         <tr>
                           <td colspan="1" class="font_weight_500">Certification/GMP/COPP</td>

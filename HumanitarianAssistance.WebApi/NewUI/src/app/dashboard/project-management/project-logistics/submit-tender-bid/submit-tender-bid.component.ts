@@ -38,7 +38,7 @@ export class SubmitTenderBidComponent implements OnInit {
       Address: [''],
       Owner: ['', Validators.required],
       OpeningDate: ['', Validators.required],
-      SecurityDate: ['', Validators.required],
+      TenderDeliveryDate: ['', Validators.required],
       QuotedAmount: ['', Validators.required],
       SecurityAmount: ['', Validators.required],
       isResultQualified: [false, Validators.required],
@@ -53,7 +53,7 @@ export class SubmitTenderBidComponent implements OnInit {
       Service_Warranty: [0, Validators.required],
       Certification_GMP_COPP: [0, Validators.required],
       WorkExperience: [0, Validators.required],
-      DeliveryDate: [0, Validators.required],
+      DeliveryDateScore: [0, Validators.required],
       LogisticRequestsId : [this.data.RequestId]
     });
 
@@ -65,7 +65,7 @@ export class SubmitTenderBidComponent implements OnInit {
         Address: this.data.BidDetail.Address,
         Owner: this.data.BidDetail.Owner,
         OpeningDate: this.data.BidDetail.OpeningDate,
-        SecurityDate: this.data.BidDetail.SecurityDate,
+        TenderDeliveryDate: this.data.BidDetail.TenderDeliveryDate,
         QuotedAmount: this.data.BidDetail.QuotedAmount,
         SecurityAmount: this.data.BidDetail.SecurityAmount,
         isResultQualified: this.data.BidDetail.isResultQualified,
@@ -80,7 +80,7 @@ export class SubmitTenderBidComponent implements OnInit {
         Service_Warranty: this.data.BidDetail.Service_Warranty,
         Certification_GMP_COPP: this.data.BidDetail.Certification_GMP_COPP,
         WorkExperience: this.data.BidDetail.WorkExperience,
-        DeliveryDate: this.data.BidDetail.DeliveryDate
+        DeliveryDateScore: this.data.BidDetail.DeliveryDateScore
     });
   }
 }
@@ -113,7 +113,8 @@ export class SubmitTenderBidComponent implements OnInit {
     }
     if (this.data.BidDetail === undefined) {
       this.tenderBidForm.controls.OpeningDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('OpeningDate').value));
-      this.tenderBidForm.controls.SecurityDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('SecurityDate').value));
+      this.tenderBidForm.controls.TenderDeliveryDate.setValue
+      (StaticUtilities.getLocalDate(this.tenderBidForm.get('TenderDeliveryDate').value));
       this.commonLoader.showLoader();
       this.logisticservice.addTenderBid(this.tenderBidForm.value).subscribe(res => {
         if (res.StatusCode === 200 && res.CommonId.LongId != null) {
@@ -134,7 +135,8 @@ export class SubmitTenderBidComponent implements OnInit {
     } else {
       this.commonLoader.showLoader();
       this.tenderBidForm.controls.OpeningDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('OpeningDate').value));
-      this.tenderBidForm.controls.SecurityDate.setValue(StaticUtilities.getLocalDate(this.tenderBidForm.get('SecurityDate').value));
+      this.tenderBidForm.controls.TenderDeliveryDate.setValue
+      (StaticUtilities.getLocalDate(this.tenderBidForm.get('TenderDeliveryDate').value));
       const model = this.tenderBidForm.value;
       model.isContractLetterUpdated = (this.attachment.length === 0) ? false : true;
       model.BidId = this.data.BidDetail.BidId;
