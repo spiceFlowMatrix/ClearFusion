@@ -132,7 +132,7 @@
           <div class="col-sm-3">
             <mat-form-field class="example-full-width">
               <input type="text" placeholder="Search and Select Account" aria-label="Number" matInput formControlName="AccountId"
-                name="AccountId" [matAutocomplete]="matAutocomplete1">
+                (keyup)="filterAccountName($event)" name="AccountId" [matAutocomplete]="matAutocomplete1">
               <mat-autocomplete #matAutocomplete1="matAutocomplete">
                 <mat-option (onSelectionChange)="onChangeAccountValue($event,item.AccountId)"
                   *ngFor="let item of filterdOptionsAccountList | async" [value]="item.AccountName">{{item.AccountName}}
@@ -171,7 +171,7 @@
           <div class="col-sm-3">
             <mat-form-field class="example-full-width">
               <input type="text" placeholder="Search and Select Project" aria-label="Number" matInput formControlName="ProjectId"
-                name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
+              (keyup)="filterProjectName($event)" name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
               <mat-autocomplete #matAutocomplete2="matAutocomplete">
                 <mat-option (onSelectionChange)="onChangeProjectValue($event,item.ProjectId)"
                   *ngFor="let item of filterdOptionsProjectList | async" [value]="item.ProjectName">{{item.ProjectName}}
@@ -184,7 +184,7 @@
           <div class="col-sm-3">
             <mat-form-field class="example-full-width">
               <input type="text" placeholder="Search and Select BudgetLine" aria-label="Number" matInput
-                formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
+              (keyup)="filterBudgetLineName($event)" formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
               <mat-autocomplete #matAutocomplete3="matAutocomplete">
                 <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
                   *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">
@@ -304,7 +304,7 @@
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search and Select Account" aria-label="Number" matInput formControlName="AccountId"
-              name="AccountId" [matAutocomplete]="matAutocomplete1">
+            (keyup)="filterAccountName($event)" name="AccountId" [matAutocomplete]="matAutocomplete1">
             <mat-autocomplete #matAutocomplete1="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeAccountValue($event,item.AccountId)"
                 *ngFor="let item of filterdOptionsAccountList | async" [value]="item.AccountName">{{item.AccountName}}
@@ -340,7 +340,7 @@
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search and Select Project" aria-label="Number" matInput formControlName="ProjectId"
-              name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
+            (keyup)="filterProjectName($event)" name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
             <mat-autocomplete #matAutocomplete2="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeProjectValue($event,item.ProjectId)"
                 *ngFor="let item of filterdOptionsProjectList | async" [value]="item.ProjectName">{{item.ProjectName}}
@@ -352,7 +352,7 @@
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search and Select BudgetLine" aria-label="Number" matInput
-              formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
+            (keyup)="filterBudgetLineName($event)" formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
             <mat-autocomplete #matAutocomplete3="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
                 *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">

@@ -45,6 +45,9 @@ export class ModifyTransactionComponent implements OnInit {
   projectspinner = false;
   budgetlinespinner= false;
   accountList: any[] = [];
+  defaultAccountList: any[] = [];
+  defaultProjectList: any[] = [];
+  defaultBudgetLineList: any[] = [];
   projectList: any[] = [];
   jobList: any[] = [];
   budgetLineList: any[] = [];
@@ -74,30 +77,32 @@ export class ModifyTransactionComponent implements OnInit {
     this.onFormInIt();
     this.getDetailsByVoucherNo();
     this.getVoucherTransactionsByVoucherNo();
-    this.setAutoComplete();
+    this.getDefaultAccountList();
+    this.getDefaultProjectList();
+    // this.setAutoComplete();
 
   }
 
   setAutoComplete() {
 
-    this.filterdOptionsAccountList = this.addEditTransactionForm.controls[
-      'AccountId'
-    ].valueChanges.pipe(
-      startWith<string | any>(''),
-      map(value => this.filterAccountName(value))
-    );
-    this.filterdOptionsProjectList = this.addEditTransactionForm.controls[
-      'ProjectId'
-    ].valueChanges.pipe(
-      startWith<string | any>(''),
-      map(value => this.filterProjectName(value))
-    );
-    this.filterdOptionsBudgetLineList = this.addEditTransactionForm.controls[
-      'BudgetLine'
-    ].valueChanges.pipe(
-      startWith<string | any>(''),
-      map(value => this.filterBudgetLineName(value))
-    );
+    // this.addEditTransactionForm.controls[
+    //   'AccountId'
+    // ].valueChanges.pipe(
+    //   startWith<string | any>(''),
+    //   map(value => this.filterAccountName(value))
+    // );
+    // this.filterdOptionsProjectList = this.addEditTransactionForm.controls[
+    //   'ProjectId'
+    // ].valueChanges.pipe(
+    //   startWith<string | any>(''),
+    //   map(value => this.filterProjectName(value))
+    // );
+    // this.filterdOptionsBudgetLineList = this.addEditTransactionForm.controls[
+    //   'BudgetLine'
+    // ].valueChanges.pipe(
+    //   startWith<string | any>(''),
+    //   map(value => this.filterBudgetLineName(value))
+    // );
   }
   onFormInIt() {
     this.onInItAddTransactionForm();
@@ -224,46 +229,195 @@ export class ModifyTransactionComponent implements OnInit {
      this.showAddTransactionBottom = false;
    }
 
-  private filterAccountName(value: string): any[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      if (value.length >= 2) {
-        this.getFilteredAccountList(filterValue);
-        return this.accountList;
-      } else {
+  private filterAccountName(event) {
+    const filterValue = event.target.value.toLowerCase();
+    if (filterValue || filterValue !== '') {
+      if (filterValue.length >= 2) {
+       this.accountspinner = true;
         this.accountList = [];
+        this.filterdOptionsAccountList = of(this.accountList);
+        this.voucherService
+          .GetFilteredInputLevelAccountList(filterValue)
+          .subscribe(resp => {
+            this.accountList = [];
+            if (resp !== undefined && resp.AccountList.length > 0) {
+              resp.AccountList.forEach(element => {
+                this.accountList.push({
+                  AccountId: element.ChartOfAccountNewId,
+                  AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
+                });
+              });
+              this.accountspinner = false;
+            } else {
+              this.accountspinner = false;
+            }
+            this.filterdOptionsAccountList = of(this.accountList);
+            this.filterdOptionsAccountList.subscribe(console.log)
+          }, error => {
+            console.log(error);
+            this.accountspinner = false;
+          });
       }
+    } else {
+      this.filterdOptionsAccountList = of(this.defaultAccountList);
     }
   }
 
-  private filterProjectName(value: string): any[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      if (value.length >= 2) {
-        this.getFilteredProjectList(filterValue);
-        return this.projectList;
+  private getDefaultAccountList() {
+    this.accountList = [];
+    this.defaultAccountList = [];
+      this.voucherService
+        .GetFilteredInputLevelAccountList(null)
+        .subscribe(resp => {
+          this.accountList = [];
+          if (resp !== undefined && resp.AccountList.length > 0) {
+            resp.AccountList.forEach(element => {
+              this.accountList.push({
+                AccountId: element.ChartOfAccountNewId,
+                AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
+              });
+            });
+            this.defaultAccountList = this.accountList;
+            this.filterdOptionsAccountList = of(this.defaultAccountList);
+            this.accountspinner = false;
+          } else {
+            this.accountspinner = false;
+          }
+        }, error => {
+          console.log(error);
+          this.accountspinner = false;
+        });
+  }
+
+  private getDefaultProjectList() {
+    this.projectList = [];
+    this.defaultProjectList = [];
+    this.projectspinner = true;
+    this.voucherService
+      .GetFilteredProjectList(null)
+      .subscribe(resp => {
+        this.projectList = [];
+        if (resp !== undefined && resp.projectList.length > 0) {
+          resp.projectList.forEach(element => {
+            this.projectList.push({
+              ProjectId: element.ProjectId,
+              ProjectName: element.ProjectCode + '-' + element.ProjectName
+            });
+          });
+          this.defaultProjectList = this.projectList;
+          this.filterdOptionsProjectList = of(this.defaultProjectList);
+          this.projectspinner = false;
+        } else {
+          this.projectspinner = false;
+        }
+      }, error => {
+        this.projectspinner = false;
+      });
+  }
+
+  private getDefaultBudgetLineList() {
+    const model = {
+      ProjectId: this.selectedProjectId,
+      FilterValue: null
+    };
+    this.budgetlinespinner = true;
+      this.voucherService
+        .getFilteredBudgetLineList(model)
+        .subscribe(resp => {
+          this.budgetLineList = [];
+          if (resp !== undefined && resp.budgetLineList.length > 0) {
+            resp.budgetLineList.forEach(element => {
+              this.budgetLineList.push({
+                BudgetLineId: element.BudgetLineId,
+                BudgetLineName: element.BudgetLineCode + '-' + element.BudgetLineName
+              });
+            });
+            this.defaultBudgetLineList = this.budgetLineList;
+            this.filterdOptionsBudgetLineList = of(this.defaultBudgetLineList);
+            this.budgetlinespinner = false;
+          } else {
+            this.budgetlinespinner = false;
+          }
+        }, error => {
+          this.budgetlinespinner = false;
+        });
+  }
+
+  private filterProjectName(event) {
+    const filterValue = event.target.value.toLowerCase();
+    if (filterValue || filterValue !== '') {
+      if (filterValue.length >= 2) {
+        // this.getFilteredProjectList(filterValue);
+        this.projectspinner = true;
+        this.voucherService
+          .GetFilteredProjectList(filterValue)
+          .subscribe(resp => {
+            this.projectList = [];
+            this.filterdOptionsProjectList = of(this.projectList);
+            if (resp !== undefined && resp.projectList.length > 0) {
+              resp.projectList.forEach(element => {
+                this.projectList.push({
+                  ProjectId: element.ProjectId,
+                  ProjectName: element.ProjectCode + '-' + element.ProjectName
+                });
+              });
+              this.filterdOptionsProjectList = of(this.projectList);
+              this.projectspinner = false;
+            } else {
+              this.projectspinner = false;
+            }
+          }, error => {
+            this.projectspinner = false;
+          });
       } else {
         this.addEditTransactionForm.controls['BudgetLine'].disable();
         this.projectList = [];
+        this.filterdOptionsProjectList = of(this.projectList);
       }
+    } else {
+      this.filterdOptionsProjectList = of(this.defaultProjectList);
     }
   }
 
-  private filterBudgetLineName(value: string): any[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      if (value.length >= 2) {
-        this.getFilteredBudgetLineList(filterValue);
-        return this.budgetLineList;
-      } else {
-        this.budgetLineList = [];
+  private filterBudgetLineName(event) {
+    const filterValue = event.target.value.toLowerCase();
+    this.budgetLineList = [];
+    if (filterValue || filterValue !== '') {
+      if (filterValue.length >= 2) {
+        const model = {
+          ProjectId: this.selectedProjectId,
+          FilterValue: filterValue
+        };
+        this.budgetlinespinner = true;
+        this.voucherService
+        .getFilteredBudgetLineList(model)
+        .subscribe(resp => {
+          this.budgetLineList = [];
+          if (resp !== undefined && resp.budgetLineList.length > 0) {
+            resp.budgetLineList.forEach(element => {
+              this.budgetLineList.push({
+                BudgetLineId: element.BudgetLineId,
+                BudgetLineName: element.BudgetLineCode + '-' + element.BudgetLineName
+              });
+            });
+            this.filterdOptionsBudgetLineList = of(this.budgetLineList);
+            this.budgetlinespinner = false;
+          } else {
+            this.budgetlinespinner = false;
+            this.filterdOptionsBudgetLineList = of(this.budgetLineList);
+          }
+        }, error => {
+          this.budgetlinespinner = false;
+        });
       }
+    } else {
+      this.filterdOptionsBudgetLineList = of(this.defaultBudgetLineList);
     }
   }
 
   getFilteredAccountList(data: string) {
-    if (data !== undefined && data != null) {
       this.accountspinner = true;
+      this.accountList = [];
       this.voucherService
         .GetFilteredInputLevelAccountList(data)
         .subscribe(resp => {
@@ -279,10 +433,9 @@ export class ModifyTransactionComponent implements OnInit {
           } else {
             this.accountspinner = false;
           }
-        }, error=> {
+        }, error => {
           this.accountspinner = false;
         });
-    }
   }
 
   getFilteredProjectList(data: string) {
@@ -346,10 +499,13 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onChangeProjectValue(event: any, id: number) {
-    if (id !== undefined && id != null) {
-      this.selectedProjectId = id;
-      this.selectedProjectName = event.source.value;
-      this.addEditTransactionForm.controls['BudgetLine'].enable();
+    if (id !== undefined && id != null ) {
+      if (event.isUserInput) {
+        this.selectedProjectId = id;
+        this.selectedProjectName = event.source.value;
+        this.getDefaultBudgetLineList();
+        this.addEditTransactionForm.controls['BudgetLine'].enable();
+      }
     } else {
       this.addEditTransactionForm.controls['BudgetLine'].disable();
     }
