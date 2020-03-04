@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 using System;
 using HumanitarianAssistance.Domain.Entities.Accounting;
+using HumanitarianAssistance.Domain.Entities.HR;
 
 namespace HumanitarianAssistance.Application.HR.Queries
 {
@@ -28,7 +29,6 @@ namespace HumanitarianAssistance.Application.HR.Queries
         }
         public async Task<object> Handle(GetEmployeesPayrollExcelQuery request, CancellationToken cancellationToken)
         {
-            byte[] result;
             try
             {
                 EmployeesPayrollExcelModel model = new EmployeesPayrollExcelModel();
@@ -61,16 +61,18 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                             .ThenInclude(x => x.AccumulatedSalaryHeadDetailList)
                                             .Include(x => x.EmployeeDetail)
                                             .ThenInclude(x => x.EmployeeBonusFineSalaryHeadList)
-                                            // .Where(x=> x.IsDeleted == false && x.EmployeeDetail.IsDeleted == false &&
-                                            // x.Month >= request.StartDate.Month && x.Year >= request.StartDate.Year && x.Month <= request.EndDate.Month &&
-                                            // x.Year <= request.EndDate.Year && request.OfficeId.Contains(x.EmployeeDetail.EmployeeProfessionalDetail.OfficeId)).AsQueryAble();
                                             .Where(x => x.IsDeleted == false && x.EmployeeDetail.IsDeleted == false &&
-                                            x.Month == request.Month && x.Year == financialYear.StartDate.Year &&
+                                            request.Month.Contains(x.Month) && x.Year == financialYear.StartDate.Year &&
                                             request.OfficeId.Contains(x.EmployeeDetail.EmployeeProfessionalDetail.OfficeId.Value)).AsQueryable();
 
                 if (request.SelectedEmployees.Any())
                 {
                     query = query.Where(x => request.SelectedEmployees.Contains(x.EmployeeId));
+
+                    if (request.SelectedEmployees.Count != query.Select(x => x.EmployeeDetail).Distinct().Count())
+                    {
+                        return "Please ensure approved payroll is present for selected employees and months";
+                    }
                 }
 
                 if (!string.IsNullOrEmpty(request.EmployeeName))
@@ -83,26 +85,36 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     query = query.Where(x => x.EmployeeDetail.EmployeeCode.Contains(request.EmployeeCode));
                 }
 
-                if (request.Sex.HasValue)
+                if (request.Sex.HasValue && request.Sex != 0)
                 {
                     query = query.Where(x => x.EmployeeDetail.SexId == request.Sex.Value);
                 }
 
-                if (request.EmploymentStatus.HasValue)
+                if (request.EmploymentStatus.HasValue && request.EmploymentStatus != 0)
                 {
                     query = query.Where(x => x.EmployeeDetail.EmployeeProfessionalDetail.EmployeeTypeId == request.EmploymentStatus.Value);
                 }
 
-                // if(request.ProjectIds.Any())
-                // {
-                //     query= query.Where(x=> x.EmployeeDetail.EmployeeAnalyticalList.Select(y=> y.ProjectId).Contains(request.ProjectIds));
-                // }
+                if (!string.IsNullOrEmpty(request.Project))
+                {
+                    query = query.Where(x => x.EmployeeDetail.EmployeeAnalyticalList.Count > 0 && (x.EmployeeDetail.EmployeeAnalyticalList
+                                    .Select(y => y.ProjectDetail.ProjectName.Contains(request.Project) ||
+                                    y.ProjectDetail.ProjectCode.Contains(request.Project)).Count() > 0)
+                                 );
+                }
 
                 var office = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && request.OfficeId.Contains(x.OfficeId));
 
+                string months = string.Empty;
+
+                for (int i = 0; i < request.Month.Count; i++)
+                {
+                    months += CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(request.Month[i].Value) + ((i != request.Month.Count - 1) ? "," : string.Empty);
+                }
+
                 model.HeaderAndFooter = new HeaderAndFooter
                 {
-                    Date = DateTime.Now.ToShortDateString(),
+                    Months = months,
                     Header = "Coordination of Humanitarian Assistance",
                     SubHeader = "Payroll Report",
                     Office = office.OfficeCode
@@ -128,12 +140,13 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     AttendedHours = x.EmployeeDetail.EmployeeAttendance.Where(y => y.IsDeleted == false &&
                                     y.Date.Month == x.Month && y.Date.Year == x.Year && y.AttendanceTypeId == (int)AttendanceType.P)
                                     .Select(z => z.OutTime.Value.Subtract(z.InTime.Value).Hours).DefaultIfEmpty(0).Sum(),
-                    // AbsentHours = x.EmployeeDetail.EmployeeAttendance.Where(y=> y.IsDeleted == false &&
-                    //                 y.Date.Month == x.Month && y.Date.Year == x.Year && y.AttendanceTypeId == AttendanceType.A)
-                    //                 .Select(z=> z.OutTime.Value -z.InTime.Value).DefaultIfEmpty(0).Sum()
+                    AbsentDays = x.EmployeeDetail.EmployeeAttendance.Where(y => y.IsDeleted == false &&
+                                    y.Date.Month == x.Month && y.Date.Year == x.Year && y.AttendanceTypeId == (int)AttendanceType.A)
+                                    .Count(),
                     AbsentHours = 0,
                     NetSalary = 0,
-                    HourlyRate= x.HourlyRate,
+                    MonthNumber = x.Month,
+                    HourlyRate = x.HourlyRate,
                     Salary = x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
                              y.Month == x.Month && y.Year == x.Year && y.SalaryComponentId == (int)AccumulatedSalaryHead.GrossSalary) != null ?
                             x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
@@ -172,9 +185,10 @@ namespace HumanitarianAssistance.Application.HR.Queries
                              y.Month == x.Month && y.Year == x.Year && y.SalaryComponentId == (int)AccumulatedSalaryHead.Pension) != null ?
                             x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
                             y.Month == x.Month && y.Year == x.Year && y.SalaryComponentId == (int)AccumulatedSalaryHead.Pension).SalaryDeduction : 0,
-                    EmployeeAnalyticalInfoList = (request.ProjectIds != null && x.EmployeeDetail.EmployeeAnalyticalList.Count > 0) ?
-                                                (x.EmployeeDetail.EmployeeAnalyticalList.Where(r => x.IsDeleted == false &&
-                                                request.ProjectIds.Contains(r.ProjectId)).Select(z => new EmployeeAnalyticalInfo
+                    EmployeeAnalyticalInfoList = (!string.IsNullOrEmpty(request.Project) && x.EmployeeDetail.EmployeeAnalyticalList.Count > 0) ?
+                                                (x.EmployeeDetail.EmployeeAnalyticalList.Where(r => r.IsDeleted == false &&
+                                                (r.ProjectDetail.ProjectName.Contains(request.Project) || r.ProjectDetail.ProjectCode.Contains(request.Project)))
+                                                .Select(z => new EmployeeAnalyticalInfo
                                                 {
                                                     Percentage = z.SalaryPercentage,
                                                     BudgetLine = z.ProjectBudgetLine != null ? (z.ProjectBudgetLine.BudgetCode + z.ProjectBudgetLine.BudgetName) : "",
@@ -193,7 +207,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 data.ForEach(x => x.NetSalary = x.GrossSalary + x.Bonus - x.Fine - x.CapacityBuilding - x.Security - x.SalaryTax -
                              x.SalaryTax - x.Advance - x.Pension);
 
-                List<string> EmployeeCodes = data.Where(x => x.EmployeeAnalyticalInfoList.Count == 0).Select(x => x.EmployeeCode).ToList();
+                List<string> EmployeeCodes = data.Where(x => x.EmployeeAnalyticalInfoList.Count == 0).Select(x => x.EmployeeCode).Distinct().ToList();
 
                 if (EmployeeCodes.Any())
                 {
@@ -209,10 +223,19 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 model.HeaderAndFooter.Currency = currencyAFG.CurrencyCode;
 
-                if(data.Count ==0)
+                if (data.Count == 0)
                 {
-                     return "No approved payroll present for selected employees";
+                    return "No approved payroll present for employee";
                 }
+
+                List<PayrollMonthlyHourDetail> payrollHours = await _dbContext.PayrollMonthlyHourDetail
+                                                                              .Where(x => x.IsDeleted == false && request.OfficeId.Contains(x.OfficeId)
+                                                                              && request.Month.Contains(x.PayrollMonth) &&
+                                                                              x.PayrollYear == DateTime.UtcNow.Year).ToListAsync();
+
+                List<string> weeklyOff = _dbContext.HolidayWeeklyDetails.Where(x => x.IsDeleted == false &&
+                                                        x.FinancialYearId == financialYear.FinancialYearId)
+                                                        .Select(x => x.Day).ToList();
 
                 foreach (var item in data)
                 {
@@ -229,11 +252,19 @@ namespace HumanitarianAssistance.Application.HR.Queries
                         }
                     }
 
+                    int weeklyOffDays = ParticularDayInMonth(new DateTime(financialYear.StartDate.Year, item.MonthNumber, 1), weeklyOff);
+                    var payrollHourForEmployee = payrollHours.FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == item.OfficeId
+                                                                              && x.PayrollMonth == item.MonthNumber &&
+                                                                              x.PayrollYear == financialYear.StartDate.Year);
+
+                    int workingHours = payrollHourForEmployee.OutTime.Value.Subtract(payrollHourForEmployee.InTime.Value).Hours;
+                    double payToBeSubtracted = weeklyOffDays * rate * item.HourlyRate * workingHours;
+
                     foreach (var analytical in item.EmployeeAnalyticalInfoList)
                     {
                         PayrollExcelData excelData = new PayrollExcelData
                         {
-                            AbsentHours = item.AbsentHours,
+                            AbsentHours = item.AbsentDays * workingHours,
                             Advance = (item.Advance * rate * analytical.Percentage) / 100,
                             AttendedHours = item.AttendedHours,
                             BasicPay = (item.BasicPay * rate * analytical.Percentage) / 100,
@@ -244,17 +275,18 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             BudgetLine = analytical.BudgetLine,
                             Fine = item.Fine * rate,
                             Gender = item.Gender,
-                            GrossSalary = item.GrossSalary * rate,
+                            GrossSalary = (item.GrossSalary * rate * analytical.Percentage) / 100,
                             Job = analytical.Job,
                             Month = item.Month,
                             Name = item.Name,
                             NetSalary = (item.NetSalary * rate * analytical.Percentage) / 100,
                             EmployeeId = item.EmployeeId,
+                            EmployeeCode= item.EmployeeCode,
                             Office = item.Office,
                             Pension = (item.Pension * rate * analytical.Percentage) / 100,
                             Project = analytical.Project,
                             Percentage = analytical.Percentage,
-                            Salary = (item.BasicPay * rate) - ((item.AttendedHours * item.HourlyRate * rate) * analytical.Percentage / 100) ,
+                            Salary = ((item.BasicPay * rate) - ((item.AbsentHours * (item.HourlyRate * rate * analytical.Percentage / 100))* analytical.Percentage / 100)),
                             SalaryTax = (item.SalaryTax * rate * analytical.Percentage) / 100,
                             Security = (item.Security * rate * analytical.Percentage) / 100,
                         };
@@ -283,6 +315,24 @@ namespace HumanitarianAssistance.Application.HR.Queries
             {
                 return ex.Message;
             }
+        }
+
+        public static int ParticularDayInMonth(DateTime time, List<string> dayNames)
+        {
+            int weekDaysInAMonth = 0;
+
+            int daysInAMonth = DateTime.DaysInMonth(time.Year, time.Month);
+
+            for (int i = 1; i <= daysInAMonth; i++)
+            {
+                DateTime date = new DateTime(time.Year, time.Month, i);
+                string dayName = CultureInfo.CurrentCulture.DateTimeFormat.GetDayName(date.DayOfWeek);
+                if (dayNames.Contains(dayName))
+                {
+                    weekDaysInAMonth++;
+                }
+            }
+            return weekDaysInAMonth;
         }
     }
 }

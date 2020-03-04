@@ -104,22 +104,31 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                           .Include(x => x.EmployeeProfessionalDetail)
                                                           .FirstOrDefault(x => x.IsDeleted == false && x.EmployeeID == request.EmployeeId);
 
+                                                          
+                FinancialYearDetail financialYear = _dbContext.FinancialYearDetail.FirstOrDefault(x=> x.IsDeleted == false && x.IsDefault == true);
+
+                if(!employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId.HasValue)
+                {
+                    throw new Exception(StaticResource.AttendanceGroupNotSet + employeeDetail.EmployeeCode);
+                }
+
+                if(financialYear == null)
+                {
+                    throw new Exception(StaticResource.FinancialYearNotFound);
+                }
+
                 PayrollMonthlyHourDetail payrollHours = _dbContext.PayrollMonthlyHourDetail
-                                                                                    .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
-                                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == DateTime.UtcNow.Year &&
-                                                                                    x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
+                                                                  .FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == employeeDetail.EmployeeProfessionalDetail.OfficeId
+                                                                    && x.PayrollMonth == request.Month && x.PayrollYear == financialYear.StartDate.Year &&
+                                                                    x.AttendanceGroupId == employeeDetail.EmployeeProfessionalDetail.AttendanceGroupId);
 
                 if (payrollHours == null)
                 {
                     throw new Exception(StaticResource.PayrollDailyHoursNotSet);
                 }
 
-                FinancialYearDetail financialYear = _dbContext.FinancialYearDetail.FirstOrDefault(x=> x.IsDeleted == false && x.IsDefault == true);
 
-                if(financialYear == null)
-                {
-                    throw new Exception(StaticResource.FinancialYearNotFound);
-                }
+                
 
                 List<string> weeklyOff = _dbContext.HolidayWeeklyDetails.Where(x=> x.IsDeleted == false &&
                                                         x.FinancialYearId ==financialYear.FinancialYearId)
@@ -132,7 +141,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                 int workingHours = payrollHours.OutTime.Value.Subtract(payrollHours.InTime.Value).Hours;
 
-                double dBasicPayPerhour = Math.Round(basicPay.BasicSalary / (payableDaysInAMonth * workingHours), 2);
+                double dBasicPayPerhour = basicPay.BasicSalary / (payableDaysInAMonth * workingHours);
                 model.HourlyRate = dBasicPayPerhour;
 
                 //Note: default 0.045 i.e. (4.5 %)
@@ -162,7 +171,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 int overTimeMinutes = empPayrollAttendance.Select(x => x.OverTimeMinutes).DefaultIfEmpty(0).Sum();
 
                 double convertMinutesToHours = ((double)(workTimeMinutes + overTimeMinutes) / 60d);
-                model.GrossSalary = Math.Round((double)((dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus - totalFine) - (weeklyOffDays * dBasicPayPerhour *workingHours) ), 2);
+                model.GrossSalary = Math.Round((double)((dBasicPayPerhour * (workTimeHours + overtimehours + convertMinutesToHours) + totalBonus - totalFine) - (weeklyOffDays * dBasicPayPerhour *workingHours)), 2);
 
                 //Calculate pension
                 dPension = Math.Round(((double)(model.GrossSalary * pension.PensionRate) / 100), 2); // i.e. 4.5 % => 0.045

@@ -44,9 +44,16 @@
         <button mat-button [disabled]="(this.selection.selected.length === 0)" [matMenuTriggerFor]="AdministerSalaryMenu">
           <h5 [ngStyle]="{'color':  (this.selection.selected.length === 0) ? 'inherit' : '#0390D1' }">ADMINISTER PAYROLL &nbsp;<i class="fas fa-caret-down"></i></h5>
         </button>
-        <button mat-button [disabled]="disableExportPdf()" [matMenuTriggerFor]="PayrollExcelMenu">
+        <!-- <button mat-button [disabled]="disableExportPdf()" [matMenuTriggerFor]="PayrollExcelMenu">
           <h5 [ngStyle]="{'color':  disableExportPdf() ? 'inherit' : '#0390D1' }">EXPORT PAYROLL &nbsp;<i class="fas fa-caret-down"></i></h5>
-        </button>
+        </button> -->
+        <mat-select class="monthMenu" placeholder="EXPORT PAYROLL" [formControl]="Months" multiple style="width:10%; font-size: 14px;"
+                 matTooltip="EXPORT PAYROLL EXCEL" [ngStyle]="{'color': '#0390D1' }"
+                 (openedChange)="exportPayrollExcel($event)">
+          <mat-option *ngFor="let item of MonthsList$ | async" [value]="item.value">
+            {{item.name}}
+          </mat-option>
+        </mat-select>
         <!-- <mat-menu #OfficeMenu="matMenu">
             <button (click)="selectedOfficeChanged(office)" *ngFor="let office of officeDropdown$ | async"
                 mat-menu-item>{{office.name}}</button>
@@ -58,9 +65,9 @@
         <mat-menu #AdministerSalaryMenu="matMenu" class="monthMenu">
             <button (click)="administerPayroll(item.value, item.name)" mat-menu-item *ngFor="let item of MonthsList$ | async">{{item.name}}</button>
         </mat-menu>
-        <mat-menu #PayrollExcelMenu="matMenu" class="monthMenu">
+        <!-- <mat-menu #PayrollExcelMenu="matMenu" class="monthMenu">
           <button (click)="exportPayrollExcel(item.value, item.name)" mat-menu-item *ngFor="let item of MonthsList$ | async">{{item.name}}</button>
-      </mat-menu>
+      </mat-menu> -->
     </span>
     <div class="action_section">
     </div>
@@ -101,6 +108,11 @@
                     <input matInput type="text" formControlName="EmployeeId" placeholder="EmployeeId">
                 </mat-form-field>
             </div>
+            <div class="col-md-2">
+              <mat-form-field class="example-full-width">
+                  <input matInput type="text" formControlName="Project" placeholder="Project">
+              </mat-form-field>
+          </div>
         </div>
     </form>
 </div>
