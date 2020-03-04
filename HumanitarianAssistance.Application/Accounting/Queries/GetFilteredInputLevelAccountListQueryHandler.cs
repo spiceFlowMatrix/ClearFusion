@@ -24,12 +24,23 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                var accountList = await _dbContext.ChartOfAccountNew.Where(x=> x.IsDeleted == false &&
+                if(request.FilterValue == null || request.FilterValue == "null")
+                {
+                    var accountList = await _dbContext.ChartOfAccountNew.Where(x=> x.IsDeleted == false &&
+                                  x.AccountLevelId == (int)AccountLevels.InputLevel)
+                                    .OrderByDescending(x=>x.CreatedDate).Take(15).ToListAsync();
+
+                    response.Add("AccountList", accountList);
+                }
+                else 
+                {
+                    var accountList = await _dbContext.ChartOfAccountNew.Where(x=> x.IsDeleted == false &&
                                   (x.ChartOfAccountNewCode.ToLower().Contains(request.FilterValue.ToLower()) ||
                                   x.AccountName.ToLower().Contains(request.FilterValue.ToLower())) &&
                                   x.AccountLevelId == (int)AccountLevels.InputLevel).ToListAsync();
 
-                response.Add("AccountList", accountList);
+                    response.Add("AccountList", accountList);
+                }
             }
             catch(Exception ex)
             {

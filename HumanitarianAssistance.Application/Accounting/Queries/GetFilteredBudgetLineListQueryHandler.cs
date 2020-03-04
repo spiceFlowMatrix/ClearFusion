@@ -23,7 +23,24 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                var budgetLineList = await _dbContext.ProjectBudgetLineDetail.Where(x=> x.IsDeleted == false &&
+                if(String.IsNullOrEmpty(request.FilterValue))
+                {
+                    var budgetLineList = await _dbContext.ProjectBudgetLineDetail.Where(x=> x.IsDeleted == false
+                                  && x.ProjectId == request.ProjectId)
+                                  .OrderByDescending(x=>x.CreatedDate)
+                                  .Select(x=> new {
+                                      BudgetLineId= x.BudgetLineId,
+                                      BudgetLineName=  x.BudgetName,
+                                      BudgetLineCode= x.BudgetCode
+                                  })
+                                  .Take(15)
+                                  .ToListAsync();
+
+                    response.Add("budgetLineList", budgetLineList);
+                }
+                else 
+                {
+                    var budgetLineList = await _dbContext.ProjectBudgetLineDetail.Where(x=> x.IsDeleted == false &&
                                   (x.BudgetCode.ToLower().Contains(request.FilterValue.ToLower()) ||
                                   x.BudgetName.ToLower().Contains(request.FilterValue.ToLower()) && x.ProjectId == request.ProjectId
                                   ))
@@ -34,7 +51,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                   })
                                   .ToListAsync();
 
-                response.Add("budgetLineList", budgetLineList);
+                    response.Add("budgetLineList", budgetLineList);
+                }
 
             }
             catch(Exception ex)
