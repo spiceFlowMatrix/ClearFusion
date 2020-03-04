@@ -29,6 +29,8 @@ namespace HumanitarianAssistance.Application.FileManagement.Queries
             try
             {
                 string bucketName = Environment.GetEnvironmentVariable("GOOGLE_BUCKET_NAME");
+                // string bucketName = "cf-prod-cha";
+
 
                 var scopes = new string[] { "https://www.googleapis.com/auth/devstorage.read_write" };
 
