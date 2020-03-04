@@ -50,8 +50,8 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
 
   ngOnInit() {
     this.hideSupplierColums = of({
-      headers: ['Supplier', 'Item'],
-      items: ['Supplier', 'Item']
+      headers: ['Supplier', 'Item', 'Quantity', 'Total Amount' ],
+      items: ['Supplier', 'Item', 'Quantity', 'TotalAmount']
     });
     this.routeActive.params.subscribe(params => {
       this.requestId = +params['id'];
@@ -106,6 +106,8 @@ export class ComparativeStatementComponent implements OnInit, OnChanges {
             Supplier: v.SourceCode,
             ItemId: v.ItemId,
             Item: v.ItemName,
+            Quantity: v.Quantity,
+            TotalAmount: (v.FinalUnitPrice * v.Quantity),
             subItems: [{'Heading': '<b>Warranty Document</b>', 'Name': '<a href=' + v.WarrantyUrl + ' target="_blank">'
             + v.WarrantyName + '</a>'},
             {'Heading': '<b>Invoice Document</b>', 'Name': '<a href=' + v.InvoiceUrl + ' target="_blank">'

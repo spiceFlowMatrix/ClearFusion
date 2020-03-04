@@ -31,7 +31,7 @@ namespace HumanitarianAssistance.Application.Project.Commands.Update {
                     interviewDetails.Description = request.Description;
                     interviewDetails.NoticePeriod = request.NoticePeriod;
                     interviewDetails.AvailableDate = request.AvailableDate;
-                    interviewDetails.WrittenTestMarks = (int) request.WrittenTestMarks;
+                    interviewDetails.WrittenTestMarks = request.WrittenTestMarks;
                     interviewDetails.CurrentBase = request.CurrentBase;
                     interviewDetails.CurrentOther = request.CurrentOther;
                     interviewDetails.ExpectationBase = request.ExpectationBase;
