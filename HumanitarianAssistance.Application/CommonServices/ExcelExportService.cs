@@ -185,7 +185,7 @@ namespace HumanitarianAssistance.Application.CommonServices
 
                     using (ExcelRange Rng = worksheet.Cells[6, 1])
                     {
-                        Rng.Value = "Payment Date: " + model.HeaderAndFooter.Date;
+                        Rng.Value = "Payroll  Month: " + model.HeaderAndFooter.Months;
                         Rng.Style.Font.Size = 11;
                         Rng.Style.Font.Bold = true;
                         //Rng.Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
@@ -211,34 +211,34 @@ namespace HumanitarianAssistance.Application.CommonServices
                     // //Column values
                     foreach (var item in model.PayrollExcelData)
                     {
-                        // int cellCount = 2;
+                         int cellCount = 0;
                         worksheet.Row(rowCount++).Height = 15;
 
-                        worksheet.Cells[rowCount, 1].Value = sNo;
-                        worksheet.Cells[rowCount, 2].Value = item.Month;
-                        worksheet.Cells[rowCount, 3].Value = item.EmployeeId;
-                        worksheet.Cells[rowCount, 4].Value = item.Name;
-                        worksheet.Cells[rowCount, 5].Value = item.Designation;
-                        worksheet.Cells[rowCount, 6].Value = item.Gender;
-                        worksheet.Cells[rowCount, 7].Value = item.Currency;
-                        worksheet.Cells[rowCount, 8].Value = item.Office;
-                        worksheet.Cells[rowCount, 9].Value = item.BasicPay;
-                        worksheet.Cells[rowCount, 10].Value = item.AttendedHours;
-                        worksheet.Cells[rowCount, 11].Value = item.AbsentHours;
-                        worksheet.Cells[rowCount, 12].Value = item.Salary;
-                        worksheet.Cells[rowCount, 13].Value = item.Bonus;
-                        worksheet.Cells[rowCount, 14].Value = item.GrossSalary;
-                        worksheet.Cells[rowCount, 15].Value = item.CapacityBuilding;
-                        worksheet.Cells[rowCount, 16].Value = item.Security;
-                        worksheet.Cells[rowCount, 17].Value = item.SalaryTax;
-                        worksheet.Cells[rowCount, 18].Value = item.Fine;
-                        worksheet.Cells[rowCount, 19].Value = item.Advance;
-                        worksheet.Cells[rowCount, 20].Value = item.Pension;
-                        worksheet.Cells[rowCount, 21].Value = item.NetSalary;
-                        worksheet.Cells[rowCount, 22].Value = item.Project;
-                        worksheet.Cells[rowCount, 23].Value = item.Job;
-                        worksheet.Cells[rowCount, 24].Value = item.BudgetLine;
-                        worksheet.Cells[rowCount, 25].Value = item.Percentage;
+                        worksheet.Cells[rowCount, ++cellCount].Value = sNo;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Month;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.EmployeeCode;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Name;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Designation;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Gender;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Currency;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Office;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.BasicPay;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.AttendedHours;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.AbsentHours;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Salary;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Bonus;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.GrossSalary;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.CapacityBuilding;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Security;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.SalaryTax;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Fine;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Advance;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Pension;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.NetSalary;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Project;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Job;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.BudgetLine;
+                        worksheet.Cells[rowCount, ++cellCount].Value = item.Percentage;
                         sNo++;
                     }
 
@@ -264,14 +264,10 @@ namespace HumanitarianAssistance.Application.CommonServices
                     worksheet.Cells[rowCount + 3, 21, rowCount +3, 22].Style.Font.Bold = true;
 
                     worksheet.Cells[rowCount + 5, 2, rowCount + 5, 3].Merge = true;
-                    worksheet.Cells[rowCount + 5, 2, rowCount + 5, 3].Value = "Date: "+ model.HeaderAndFooter.Date;
 
                     worksheet.Cells[rowCount + 5, 12, rowCount + 5, 13].Merge = true;
-                    worksheet.Cells[rowCount + 5, 12, rowCount + 5, 13].Value = "Date: "+ model.HeaderAndFooter.Date;
 
                     worksheet.Cells[rowCount + 5, 21, rowCount + 5, 22].Merge = true;
-                    worksheet.Cells[rowCount + 5, 21, rowCount + 5, 22].Value = "Date: "+ model.HeaderAndFooter.Date;
-
 
                     worksheet.Calculate();
                     result = package.GetAsByteArray();

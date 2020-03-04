@@ -5,6 +5,7 @@ export class EmployeeFilterModel {
     GenderFilter;
     EmployeeIdFilter;
     OfficeIds;
+    ProjectFilter?;
     PageSize;
     PageIndex;
 }

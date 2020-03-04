@@ -45,6 +45,7 @@ export class EmployeeListComponent implements OnInit {
   AttendanceDates: Date[] = [];
   MonthsList$: Observable<IDropDownModel[]>;
   Office = new FormControl([]);
+  Months = new FormControl([]);
 
   constructor(
     private employeeListService: EmployeeListService,
@@ -66,7 +67,7 @@ export class EmployeeListComponent implements OnInit {
     ] as IDropDownModel[]);
     this.employeeListFilterForm = this.fb.group({
       Name: [''],
-      // LastName: [''],
+      Project: [''],
       Sex: [''],
       EmploymentStatus: [''],
       EmployeeId: ['']
@@ -175,7 +176,8 @@ export class EmployeeListComponent implements OnInit {
     this.filterModel = {
       EmployeeIdFilter: value.EmployeeId, EmploymentStatusFilter: value.EmploymentStatus,
       NameFilter: value.Name, PageIndex: 0, PageSize: 10, OfficeIds: this.Office.value.filter(x => x !== 0),
-      GenderFilter: value.Sex
+      GenderFilter: value.Sex,
+      ProjectFilter: value.Project
     };
     this.getFilteredEmployeeList(this.filterModel);
   }
@@ -397,37 +399,43 @@ export class EmployeeListComponent implements OnInit {
     });
   }
 
-  exportPayrollExcel(month, monthName) {
-    const employeeIds = this.selection.selected.map(s => s.EmployeeId );
-    const model = {
-      Month: month,
-      OfficeId: this.Office.value,
-      SelectedEmployees: employeeIds
-    };
+  exportPayrollExcel(event: any) {
+    if (!event && this.Months.value.length >0) {
+      const employeeIds = this.selection.selected.map(s => s.EmployeeId);
+      const model = {
+        Month: this.Months.value,
+        OfficeId: this.Office.value,
+        SelectedEmployees: employeeIds,
+        Project: this.filterModel.ProjectFilter,
+        EmployeeName: this.filterModel.NameFilter,
+        EmployeeCode: this.filterModel.EmployeeIdFilter,
+        Sex: this.filterModel.GenderFilter,
+        EmploymentStatus: this.filterModel.EmploymentStatusFilter
+      };
 
-    this.employeeListService.exportPayrollExcel(model).subscribe(res => {
-      if (res) {
-        this.commonLoader.hideLoader();
-        if (res && res.error) {
-          this.toastr.warning(res.message);
+      this.employeeListService.exportPayrollExcel(model).subscribe(res => {
+        if (res) {
+          this.commonLoader.hideLoader();
+          if (res && res.error) {
+            this.toastr.warning(res.message);
+          }
+        } else {
+          this.commonLoader.hideLoader();
         }
-      } else {
+      }, error => {
+        this.toastr.warning(error);
         this.commonLoader.hideLoader();
-      }
-    }, error => {
-      this.toastr.warning(error);
-      this.commonLoader.hideLoader();
-    });
-
-  }
-
-  disableExportPdf() {
-    if (this.Office.value.length === 0 || this.Office.value.length > 1) {
-      return true;
-    } else if (this.selection.selected.length === 0) {
-      return true;
-    } else {
-      return false;
+      });
     }
   }
+
+  // disableExportPdf() {
+  //   if (this.Office.value.length === 0 || this.Office.value.length > 1) {
+  //     return true;
+  //   } else if (this.selection.selected.length === 0) {
+  //     return true;
+  //   } else {
+  //     return false;
+  //   }
+  // }
 }
