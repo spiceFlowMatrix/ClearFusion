@@ -13,6 +13,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
         // public string LastNameFilter { get; set; }
         public int GenderFilter { get; set; }
         public string EmployeeIdFilter { get; set; }
+        public string ProjectFilter { get; set; }
         public List<int> OfficeIds { get; set; }
         public int PageSize { get; set; }
         public int PageIndex { get; set; }
