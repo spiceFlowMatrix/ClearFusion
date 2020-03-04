@@ -249,12 +249,10 @@ export class GlobalSharedService {
     return of(yearDropDown);
   }
   handleError(error) {
-    debugger;
     return throwError(error);
   }
 
   private handleDownloadPdfError(error: any) {
-    debugger;
     return {
       error: true,
       message: error

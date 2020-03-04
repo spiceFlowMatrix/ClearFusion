@@ -29,34 +29,27 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     .ThenInclude(p => p.professionDetails)
                     .Include(e => e.EmployeeProfessionalDetail)
                     .ThenInclude(p => p.DesignationDetails)
+                    .Include(x=> x.EmployeeAnalyticalList)
+                    .ThenInclude(x=> x.ProjectDetail)
                     .Where(x => request.OfficeIds.Contains(x.EmployeeProfessionalDetail.OfficeId.Value) && x.IsDeleted == false)
-                    .Select(x => new {
-                        EmployeeTypeId = x.EmployeeTypeId,
-                        EmployeeID = x.EmployeeID,
-                        EmployeeCode = x.EmployeeCode,
-                        Name = x.EmployeeName,
-                        FatherName= x.FatherName,
-                        Profession = x.EmployeeProfessionalDetail.professionDetails.ProfessionName,
-                        SexId = x.SexId,
-                        SexName = x.SexId == (int)Gender.MALE ? "Male" : x.SexId == (int)Gender.FEMALE ? "Female" : x.SexId == (int)Gender.OTHER ? "Other" : null,
-                        Designation = (x.EmployeeProfessionalDetail.DesignationId != null) ? (x.EmployeeProfessionalDetail.DesignationDetails.Designation): "N/A",
-                        HiredDate = (x.EmployeeProfessionalDetail.HiredOn != null) ? x.EmployeeProfessionalDetail.HiredOn.Value.ToShortDateString(): "",
-                        CreatedDate = (x.CreatedDate != null) ? x.CreatedDate.Value.ToShortDateString(): "",
-                     });
-            if(request.EmploymentStatusFilter != 0)
+                    .AsQueryable();
+            if(request.EmploymentStatusFilter != 0) 
             {
                 query = query.Where(x=> x.EmployeeTypeId == request.EmploymentStatusFilter);
             }
 
             if(!string.IsNullOrEmpty(request.NameFilter))
             {
-                query = query.Where(x=> x.Name.Contains(request.NameFilter));
+                query = query.Where(x=> x.EmployeeName.Contains(request.NameFilter));
             }
 
-            // if(!string.IsNullOrEmpty(request.LastNameFilter))
-            // {
-            //     query = query.Where(x=> x.LastName.Contains(request.LastNameFilter));
-            // }
+            if(!string.IsNullOrEmpty(request.ProjectFilter))
+            {
+                query = query.Where(x=> x.EmployeeAnalyticalList.Count> 0 && (x.EmployeeAnalyticalList
+                                .Select(y=> y.ProjectDetail.ProjectName.Contains(request.ProjectFilter) || 
+                                y.ProjectDetail.ProjectCode.Contains(request.ProjectFilter)).Count() > 0)
+                             );
+            }
 
             if(request.GenderFilter != 0)
             {
@@ -69,7 +62,21 @@ namespace HumanitarianAssistance.Application.HR.Queries
             }
 
             long count = await query.CountAsync();
-            var queryResult= await query.OrderBy(x=>x.EmployeeID).Skip(request.PageSize * request.PageIndex).Take(request.PageSize).ToListAsync();
+
+            var queryResult= await query.Select(x => new {
+                        EmployeeTypeId = x.EmployeeTypeId,
+                        EmployeeID = x.EmployeeID,
+                        EmployeeCode = x.EmployeeCode,
+                        Name = x.EmployeeName,
+                        FatherName= x.FatherName,
+                        Profession = x.EmployeeProfessionalDetail.professionDetails.ProfessionName,
+                        SexId = x.SexId,
+                        SexName = x.SexId == (int)Gender.MALE ? "Male" : x.SexId == (int)Gender.FEMALE ? "Female" : x.SexId == (int)Gender.OTHER ? "Other" : null,
+                        Designation = (x.EmployeeProfessionalDetail.DesignationId != null) ? (x.EmployeeProfessionalDetail.DesignationDetails.Designation): "N/A",
+                        HiredDate = (x.EmployeeProfessionalDetail.HiredOn != null) ? x.EmployeeProfessionalDetail.HiredOn.Value.ToShortDateString(): "",
+                        CreatedDate = (x.CreatedDate != null) ? x.CreatedDate.Value.ToShortDateString(): "",
+                     }).OrderBy(x=>x.EmployeeID).Skip(request.PageSize * request.PageIndex).Take(request.PageSize).ToListAsync();
+
             result.Add("RecordCount", count);
             result.Add("EmployeeList", queryResult);
             
