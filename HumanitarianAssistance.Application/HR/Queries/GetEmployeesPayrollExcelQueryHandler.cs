@@ -204,8 +204,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                                 }).ToList()) : new List<EmployeeAnalyticalInfo>()
                 }).ToList();
 
-                data.ForEach(x => x.NetSalary = x.GrossSalary + x.Bonus - x.Fine - x.CapacityBuilding - x.Security - x.SalaryTax -
-                             x.SalaryTax - x.Advance - x.Pension);
+                data.ForEach(x => x.NetSalary = x.GrossSalary + x.Bonus - x.Fine - x.CapacityBuilding - x.Security - 
+                            x.SalaryTax - x.Advance - x.Pension);
 
                 List<string> EmployeeCodes = data.Where(x => x.EmployeeAnalyticalInfoList.Count == 0).Select(x => x.EmployeeCode).Distinct().ToList();
 
