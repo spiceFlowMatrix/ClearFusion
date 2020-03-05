@@ -34,6 +34,7 @@ import { AngularSplitModule } from 'angular-split';
 import { SignalRService } from './shared/services/signal-r.service';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { Auth0Service } from './auth0/auth0.service';
 
 @NgModule({
   declarations: [
@@ -83,6 +84,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     CommonLoaderService,
     LocalStorageService,
     AppUrlService,
+    Auth0Service,
     LoginService,
     {
       provide: HTTP_INTERCEPTORS,
