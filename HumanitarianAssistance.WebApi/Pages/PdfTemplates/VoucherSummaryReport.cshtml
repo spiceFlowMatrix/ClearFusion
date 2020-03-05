@@ -7,203 +7,185 @@
         <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
 		<style>
 			
-			.container { margin:0 auto;max-width:900px;}
+			.container { margin:0 auto;max-width:900px; }
             .table, th, td {
                 font-size: 12px;
                 }
-			@* .print{
-				.page-break {
-				  page-break-after: always;
-				  page-break-inside: avoid;
-				  clear:both;
-				}
-				.page-break-before {
-				  page-break-before: always;
-				  page-break-inside: avoid;
-				  clear:both;
-				}
-			} *@
-
            
-            @@media print{
+            @* @@media print{
                 .footer{
-                    position:fixed;
-                    bottom: 0px;
-                    top:300px;
+                    position:absolute;
+                    bottom: 0;
                     width:100%;
-                    
+                    color: red;
                 }
+            } *@
+            @* .header{
+                position: relative;
+            } *@
+           .footer{
+              position: absolute; 
+                bottom: 0px; 
+                left: 0px; 
+                right: 0px;
+                height: 50px; 
+                margin-top:550px
+                
             }
-            
-            .footer{
-                position:fixed;
-                bottom: 0px;
-                width:100%;
-                 top:300px;
-            }
-			
-          @* @@media print {
-             .pagebreak {
-             clear: both;
-             page-break-after: always;
-           }
            
-        }
-        .pagebreak {
-             clear: both;
-             page-break-after: always !important;
-           }
-        } *@
+         
 		</style>
     </head>
     <body>
         
-    	@* <div class="container"> *@
+    
            
                 
                 @foreach (var voucher in Model.VoucherDetails)
                 {
-        <table style="width:100%;">
-                <tr>
-                    <td>
-                        <table cellpadding="5" style="width:100%;">
-                            <tr>
-                               <td width="100"><img src="@Model.Logo" alt=""></td>
-                               <td  style="font-size:14px;font-weight:bold;">COORDINATION OF HUMANITARIAN ASSISTANCE<br>&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<span style="font-size:13px;font-weight:bold;">TRANSACTION VOUCHER</span></td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                  </table>
-
-                   <table style="width:100%; page-break-after: always;">
-                <tr  >
-                	<td >
-                    	<table cellpadding="5" style="width:100%;" >
-                        	<tr>
-                            	<td width="120">Currency:</td>
-                                <td style="color:#636363;">@voucher.Currency</td>
-                                <td>&nbsp;</td>
-                                <td width="120">Cheque #:</td>
-                                <td width="120"style="color:#636363;">@voucher.Cheque</td>
-                            </tr>
-                            <tr>
-                            	<td width="120">Voucher No:</td>
-                                <td style="color:#636363;">@voucher.ReferenceNo</td>
-                                <td>&nbsp;</td>
-                                <td width="120">Journal:</td>
-                                <td style="color:#636363;">@voucher.Journal</td>
-                            </tr>
-                            <tr>
-                            	<td width="120">Date:</td>
-                                <td style="color:#636363;">@voucher.Date</td>
-                                <td>&nbsp;</td>
-                                <td width="120">Region:</td>
-                                <td style="color:#636363;">@voucher.Region</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                	<td>
-                    	<table cellpadding="5" style="width:100%;border-top:1px solid #bfbfbf;">
-                        	<tr>
-                            	<td width="120">Description:</td>
-                            	<td style="color:#636363;">@voucher.Description</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr>
-                	<td>
-                    	<table style="border:1px #636363 solid !important; width:100%;" border="1" cellspacing="0" cellpadding="5">
-                        	<tr>
-                            	<td style="border-top-color:636363;text-align:center">A/C No</td>
-                                <td style="border-top-color:636363;text-align:center">Line Item Description</td>
-                                <td style="border-top-color:636363;text-align:center">Debit</td>
-                                <td style="border-top-color:636363;text-align:center">Credit</td>
-                                <td style="border-top-color:636363;text-align:center">B/Line</td>
-                                <td style="border-top-color:636363;text-align:center">Area</td>
-                                <td style="border-top-color:636363;text-align:center">Sct</td>
-                                <td style="border-top-color:636363;text-align:center">Prj</td>
-                                <td style="border-top-color:636363;text-align:center">Job</td>
-                            </tr>
-                            @foreach (var transaction in @voucher.TransactionDetails)
-                            {
-                            <tr>
-                            	<td style="color:#636363;">@transaction.AccountNo</td>
-                                <td style="color:#636363;">@transaction.Description</td>
-                                <td  style="color:#636363;"align="right">@transaction.Debit</td>
-                                <td style="color:#636363;" align="right">@transaction.Credit</td>
-                                <td style="color:#636363;">@transaction.BudgetLine</td>
-                                <td style="color:#636363;">@transaction.Area</td>
-                                <td style="color:#636363;">@transaction.Sector</td>
-                                <td style="color:#636363;">@transaction.Project</td>
-                                <td style="color:#636363;">@transaction.Job</td>
-                            </tr>
-                            }
-                            <tr class="page-break-before">
-                            	<td style="border-top-color:636363;border-bottom-color:636363;border-left-color:636363;" colspan="2">Total:</td>
-                                <td style="color:#636363;" align="right">@voucher.TotalDebit</td>
-                                <td style="color:#636363;" align="right">@voucher.TotalCredit</td>
-                                <td style="color:#636363;" colspan="5"></td>
-                            </tr>
-                            @* <tr class="page-break-before">
-                            	<td colspan="9">&nbsp;</td>
-                            </tr> *@
-                        </table>
-                    </td>
-                </tr>
-               
-                <tr>
-                	<td>&nbsp;</td>
-                </tr>
-                <tr>
-                	<td>&nbsp;</td>
-                </tr>
-                 @* <div style="page-break-before: always;"></div>
-                </div> *@
-
-             <tr >
-                 <td class="footer">
-                    <table style="width:100%" cellspacing="0">
-                        <tr>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;">&nbsp;</td>
-                            <td width="50"></td>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;"></td>
-                            <td width="50"></td>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;"></td>
-                            <td width="50"></td>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;"></td>
-                        </tr>
-                        <tr>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
-                            <td></td>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
-                            <td></td>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
-                            <td></td>
-                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
-                        </tr>
-                        <tr>
-                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Prepared By</td>
-                            <td></td>
-                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Computerized by</td>
-                            <td></td>
-                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Checked By</td>
-                            <td></td>
-                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Approved by</td>
-                        </tr>
-                        
-                    </table>
-                </td>
-            </tr>
+                 <table style="width:100%;">
+                    <tr>
+                        <td>
+                            <table cellpadding="5" style="width:100%;">
+                                <tr>
+                                <td width="100"><img src="@Model.Logo" alt=""></td>
+                                <td  style="font-size:14px;font-weight:bold;">COORDINATION OF HUMANITARIAN ASSISTANCE<br>&nbsp; &nbsp; &nbsp;&nbsp; &nbsp; &nbsp; &nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp; &nbsp;<span style="font-size:13px;font-weight:bold;">TRANSACTION VOUCHER</span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
                  </table>
+                  <div style="width:100%; page-break-after: always" >
+                 <table style="width:100%;" >
+                   
+                    <tr >
+                        <td >
+                            <table cellpadding="5" style="width:100%;" >
+                                <tr>
+                                    <td width="120">Currency:</td>
+                                    <td style="color:#636363;">@voucher.Currency</td>
+                                    <td>&nbsp;</td>
+                                    <td width="120">Cheque #:</td>
+                                    <td width="120"style="color:#636363;">@voucher.Cheque</td>
+                                </tr>
+                                <tr>
+                                    <td width="120">Voucher No:</td>
+                                    <td style="color:#636363;">@voucher.ReferenceNo</td>
+                                    <td>&nbsp;</td>
+                                    <td width="120">Journal:</td>
+                                    <td style="color:#636363;">@voucher.Journal</td>
+                                </tr>
+                                <tr>
+                                    <td width="120">Date:</td>
+                                    <td style="color:#636363;">@voucher.Date</td>
+                                    <td>&nbsp;</td>
+                                    <td width="120">Region:</td>
+                                    <td style="color:#636363;">@voucher.Region</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table cellpadding="5" style="width:100%;border-top:1px solid #bfbfbf;">
+                                <tr>
+                                    <td width="120">Description:</td>
+                                    <td style="color:#636363;">@voucher.Description</td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <table style="border:1px #636363 solid !important; width:100%;" border="1" cellspacing="0" cellpadding="5">
+                                <tr>
+                                    <td style="border-top-color:636363;text-align:center">A/C No</td>
+                                    <td style="border-top-color:636363;text-align:center">Line Item Description</td>
+                                    <td style="border-top-color:636363;text-align:center">Debit</td>
+                                    <td style="border-top-color:636363;text-align:center">Credit</td>
+                                    <td style="border-top-color:636363;text-align:center">B/Line</td>
+                                    <td style="border-top-color:636363;text-align:center">Area</td>
+                                    <td style="border-top-color:636363;text-align:center">Sct</td>
+                                    <td style="border-top-color:636363;text-align:center">Prj</td>
+                                    <td style="border-top-color:636363;text-align:center">Job</td>
+                                </tr>
+                                @foreach (var transaction in @voucher.TransactionDetails)
+                                {
+                                <tr>
+                                    <td style="color:#636363;">@transaction.AccountNo</td>
+                                    <td style="color:#636363;">@transaction.Description</td>
+                                    <td  style="color:#636363;"align="right">@transaction.Debit</td>
+                                    <td style="color:#636363;" align="right">@transaction.Credit</td>
+                                    <td style="color:#636363;">@transaction.BudgetLine</td>
+                                    <td style="color:#636363;">@transaction.Area</td>
+                                    <td style="color:#636363;">@transaction.Sector</td>
+                                    <td style="color:#636363;">@transaction.Project</td>
+                                    <td style="color:#636363;">@transaction.Job</td>
+                                </tr>
+                                }
+                                <tr class="page-break-before">
+                                    <td style="border-top-color:636363;border-bottom-color:636363;border-left-color:636363;" colspan="2">Total:</td>
+                                    <td style="color:#636363;" align="right">@voucher.TotalDebit</td>
+                                    <td style="color:#636363;" align="right">@voucher.TotalCredit</td>
+                                    <td style="color:#636363;" colspan="5"></td>
+                                </tr>
+                                @* <tr class="page-break-before">
+                                    <td colspan="9">&nbsp;</td>
+                                </tr> *@
+                            </table>
+                        </td>
+                    </tr>
+               
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>&nbsp;</td>
+                    </tr>
+                      <tr>
+                          <td>
+
+                     
+                                </td>
+                      </tr>
+                     </table>
+                     <div  class="footer">
+                                <table cellspacing="0" >
+                                        <tr>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;">&nbsp;</td>
+                                            <td width="50"></td>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;"></td>
+                                            <td width="50"></td>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;"></td>
+                                            <td width="50"></td>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;border-top:1px solid #787878;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
+                                            <td></td>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
+                                            <td></td>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
+                                            <td></td>
+                                            <td style="border-left:1px solid #787878;border-right:1px solid #787878;"></td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Prepared By</td>
+                                            <td></td>
+                                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Computerized by</td>
+                                            <td></td>
+                                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Checked By</td>
+                                            <td></td>
+                                            <td align="center" style="width:120;border-left:1px solid #787878;border-right:1px solid #787878;border-bottom:1px solid #787878;">Approved by</td>
+                                        </tr>
+                                        
+                                    </table>
+
+                    </div>
+              </div>
                  
                 }
           
-
-        @* </div> *@
        
     </body>
 </html>
