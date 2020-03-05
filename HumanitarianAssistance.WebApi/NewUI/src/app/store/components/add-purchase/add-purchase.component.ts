@@ -25,6 +25,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   addPurchaseForm: FormGroup;
 
+  storeInventoryList: any[] = [];
+
   inventoryType$: Observable<IDropDownModel[]>;
   storeInventory$: Observable<IDropDownModel[]>;
   storeItemGroups$: Observable<IDropDownModel[]>;
@@ -397,6 +399,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             value: y.InventoryId
           };
         }));
+        x.data.forEach(element => {
+          this.storeInventoryList.push({
+            name: element.InventoryCode + '-' + element.InventoryName,
+            value: element.InventoryId
+          })
+        });
       });
   }
 
@@ -1021,6 +1029,17 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     });
 
   }
+
+//#region "onChangeStoreInventoryValue"
+onChangeStoreInventoryValue(event: any, id: number) {
+debugger;
+console.log(id);
+}
+
+filterInventoryName(event: any) {
+  debugger;
+}
+//#endregion
 
   ngOnDestroy() {
     this.destroyed$.next(true);

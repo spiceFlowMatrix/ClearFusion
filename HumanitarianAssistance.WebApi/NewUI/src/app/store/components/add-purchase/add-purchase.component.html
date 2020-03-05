@@ -26,11 +26,30 @@
             (change)="getInventoryTypeSelectedValue($event)">
           </lib-hum-dropdown>
         </div>
+
         <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['InventoryId'].hasError('required')"
             [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
             (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
         </div>
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Inventory(Master)" aria-label="Number" matInput formControlName="InventoryId"
+              (keyup)="filterInventoryName($event)" name="InventoryId" [matAutocomplete]="matAutocomplete1">
+            <mat-autocomplete #matAutocomplete1="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeStoreInventoryValue($event,item.value)"
+                *ngFor="let item of storeInventory$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <!-- <mat-spinner *ngIf="accountspinner" diameter="20" matSuffix></mat-spinner> -->
+          </mat-form-field>
+        </div>
+
+
+
+
         <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['ItemGroupId'].hasError('required')"
             [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
