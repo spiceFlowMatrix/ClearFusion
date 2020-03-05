@@ -41,8 +41,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                 else 
                 {
                     var budgetLineList = await _dbContext.ProjectBudgetLineDetail.Where(x=> x.IsDeleted == false &&
-                                  (x.BudgetCode.ToLower().Contains(request.FilterValue.ToLower()) ||
-                                  x.BudgetName.ToLower().Contains(request.FilterValue.ToLower()) && x.ProjectId == request.ProjectId
+                                  ((x.BudgetCode.ToLower().Contains(request.FilterValue.ToLower()) ||
+                                  x.BudgetName.ToLower().Contains(request.FilterValue.ToLower())) && x.ProjectId == request.ProjectId
                                   ))
                                   .Select(x=> new {
                                       BudgetLineId= x.BudgetLineId,
