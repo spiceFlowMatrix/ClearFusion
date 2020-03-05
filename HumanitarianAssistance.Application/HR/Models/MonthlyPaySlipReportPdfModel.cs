@@ -1,10 +1,11 @@
 using System;
+using System.Collections.Generic;
 
 namespace HumanitarianAssistance.Application.HR.Models {
     public class MonthlyPaySlipReportPdfModel {
-        public DateTime PaymentDate { get; set; }
-        public string SalaryMonth { get; set; }
-        public string SalaryYear { get; set; }
+        public string PaymentDate { get; set; }
+        public int? SalaryMonth { get; set; }
+        public int? SalaryYear { get; set; }
         public string EmployeeCode { get; set; }
         public string EmployeeName { get; set; }
         public string Designation { get; set; }
@@ -12,42 +13,30 @@ namespace HumanitarianAssistance.Application.HR.Models {
         public string Office { get; set; }
         public string Sex { get; set; }
 
-        public string BudgetLine { get; set; }
-        public string Program { get; set; }
-        public string Project { get; set; }
-        public string Job { get; set; }
-        public string Sector { get; set; }
-        public string Area { get; set; }
-        public string Account { get; set; }
-        public string SalaryPercentage { get; set; }
-        public string AnalyticalSalary { get; set; }
+        public List<AnalyticalInfo> AnalyticalInfo { get; set; }
 
         public double? BasicSalary { get; set; }
         public string CurrencyCode { get; set; }
-        public string Attendance { get; set; }
-        public string Absentess { get; set; }
-        public string Salary { get; set; }
+        public int Attendance { get; set; }
+        public int Absentess { get; set; }
+        public double? Salary { get; set; }
 
-        public string Food { get; set; }
-        public string Tr { get; set; }
-        public string Medical { get; set; }
-        public string AllowanceOther { get; set; }
-        public string AllowanceOther1 { get; set; }
-        public string AllowanceOther2 { get; set; }
+        public double? AllowanceAdvance { get; set; }
+        public double? AllowanceSalaryTax { get; set; }
+        public double? AllowancePension { get; set; }
+        public double? AllowanceCb { get; set; }
+        public double? AllowanceSecurity { get; set; }
+
         public double? GrossSalary { get; set; }
 
         public double? Advance { get; set; }
         public double? SalaryTax { get; set; }
-        public string Fine { get; set; }
-        public string DeductionOther { get; set; }
-        public string Pension { get; set; }
+        public double? Fine { get; set; }
+        public double? Pension { get; set; }
         public double? Cb { get; set; }
         public double? Security { get; set; }
         public double? Net { get; set; }
-        public string AFN { get; set; }
-
-        public string Other1Desc { get; set; }
-        public string Other2Desc { get; set; }
+        public string SalaryCurrencyCode { get; set; }
 
         public string ApprovedEmployeeCode { get; set; }
         public string ApprovedEmployeeName { get; set; }
@@ -55,5 +44,27 @@ namespace HumanitarianAssistance.Application.HR.Models {
 
         public string PersianChaName { get; set; }
         public string LogoPath { get; set; }
+    }
+
+    public class AnalyticalInfo {
+        public string BudgetLine { get; set; }
+        public List<ProjectProgramDetail> Program { get; set; }
+        public string Project { get; set; }
+        public JobDetail Job { get; set; }
+        public List<ProjectSectorDetail> Sector { get; set; }
+        public string Area { get; set; }
+        public string Account { get; set; }
+        public string SalaryPercentage { get; set; }
+        public double? AnalyticalSalary { get; set; }
+    }
+    public class ProjectSectorDetail {
+        public string Sector { get; set; }
+    }
+    
+    public class ProjectProgramDetail {
+        public string Program { get; set; }
+    }
+    public class JobDetail {
+        public string Job { get; set; }
     }
 }
