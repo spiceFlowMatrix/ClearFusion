@@ -286,7 +286,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             Pension = (item.Pension * rate * analytical.Percentage) / 100,
                             Project = analytical.Project,
                             Percentage = analytical.Percentage,
-                            Salary = ((item.BasicPay * rate) - ((item.AbsentHours * (item.HourlyRate * rate * analytical.Percentage / 100))* analytical.Percentage / 100)),
+                            Salary = ((item.BasicPay * rate) - ((item.AbsentHours * item.HourlyRate * rate)* analytical.Percentage / 100)),
                             SalaryTax = (item.SalaryTax * rate * analytical.Percentage) / 100,
                             Security = (item.Security * rate * analytical.Percentage) / 100,
                         };
