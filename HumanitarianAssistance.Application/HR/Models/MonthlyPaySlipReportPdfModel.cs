@@ -28,10 +28,13 @@ namespace HumanitarianAssistance.Application.HR.Models {
         public double? AllowanceSecurity { get; set; }
 
         public double? GrossSalary { get; set; }
+        public int WorkingHours { get; set; }
+        public double? HourlyRate { get; set; }
 
         public double? Advance { get; set; }
         public double? SalaryTax { get; set; }
         public double? Fine { get; set; }
+        public double? Bonus { get; set; }
         public double? Pension { get; set; }
         public double? Cb { get; set; }
         public double? Security { get; set; }

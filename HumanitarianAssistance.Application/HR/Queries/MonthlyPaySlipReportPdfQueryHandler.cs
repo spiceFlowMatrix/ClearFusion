@@ -43,9 +43,10 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                         x.Date.Month == request.Month && x.Date.Year == financialYear.StartDate.Year &&
                         x.IsDeleted == false && x.EmployeeDetails.IsDeleted == false).ToListAsync ();
                         
-                        // x.EmployeeDetail.EmployeeAttendance.Where(y => y.IsDeleted == false &&
-                        //             y.Date.Month == x.Month && y.Date.Year == x.Year && y.AttendanceTypeId == (int)AttendanceType.A)
-                        //             .Count()
+                // List<PayrollMonthlyHourDetail> payrollHours = await _dbContext.PayrollMonthlyHourDetail
+                //                                                               .Where(x => x.IsDeleted == false && request.OfficeId.Contains(x.OfficeId)
+                //                                                               && request.Month == x.PayrollMonth &&
+                //                                                               x.PayrollYear == DateTime.UtcNow.Year).ToListAsync();
                 
                 string logoPath = _env.WebRootFileProvider.GetFileInfo ("ReportLogo/logo.jpg")?.PhysicalPath;
                 string persianChaName = _env.WebRootFileProvider.GetFileInfo ("ReportLogo/PersianText.png")?.PhysicalPath;
@@ -66,6 +67,10 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                 on b.CurrencyId equals c.CurrencyId into cd from c in cd.DefaultIfEmpty ()
                 join ps in _dbContext.EmployeePayrollInfoDetail 
                 on b.EmployeeId equals ps.EmployeeId into psl from ps in psl.DefaultIfEmpty ()
+                join ph in _dbContext.PayrollMonthlyHourDetail
+                on p.OfficeId equals ph.OfficeId into phd from ph in phd.DefaultIfEmpty ()
+                where ph.AttendanceGroupId == p.AttendanceGroupId && ph.PayrollMonth == request.Month &&
+                ph.PayrollYear == financialYear.StartDate.Year
                 select new MonthlyPaySlipReportPdfModel {
                     PaymentDate = DateTime.Now.ToString("MM/dd/yyyy"),
                         SalaryMonth = request.Month,
@@ -75,6 +80,8 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                         Designation = dd.Designation,
                         Type = t.EmployeeTypeName,
                         Office = o.OfficeName,
+                        HourlyRate= ps.HourlyRate,
+                        WorkingHours = ph.OutTime.Value.Subtract(ph.InTime.Value).Hours,
                         Sex = e.SexId == (int)Gender.MALE ? "Male" : e.SexId == (int)Gender.FEMALE ? "Female" : e.SexId == (int)Gender.OTHER ? "Other" : null,
                         AnalyticalInfo = (from mp in _dbContext.EmployeeSalaryAnalyticalInfo
                                          .Where(x=>x.EmployeeID==request.EmployeeId && x.IsDeleted==false) 
@@ -110,12 +117,10 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                                             AnalyticalSalary = (b.BasicSalary * mp.SalaryPercentage) / 100
                                          }).ToList(),
                         BasicSalary = b.BasicSalary,
+                        GrossSalary = ps.GrossSalary,
                         CurrencyCode = c.CurrencyCode,
                         Attendance = empPayrollAttendance.Where(x=>x.AttendanceTypeId == (int)AttendanceType.P).Count(),
                         Absentess = empPayrollAttendance.Where(x=>x.AttendanceTypeId == (int)AttendanceType.A).Count(),
-                        Salary = _dbContext.AccumulatedSalaryHeadDetail
-                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.GrossSalary).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
-                        GrossSalary = ps.GrossSalary,
 
                         AllowanceAdvance = _dbContext.AccumulatedSalaryHeadDetail
                         .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.AdvanceRecovery).Select(x=> new {x.SalaryAllowance}).FirstOrDefault().SalaryAllowance,
@@ -135,6 +140,10 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                            y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Credit) ?
                             _dbContext.EmployeeBonusFineSalaryHead.Where(y => y.IsDeleted == false && y.EmployeeId == e.EmployeeID &&
                             y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Credit).Select(z => z.Amount).DefaultIfEmpty(0).Sum() : 0,
+                        Bonus = _dbContext.EmployeeBonusFineSalaryHead.Any(y => y.IsDeleted == false && y.EmployeeId == e.EmployeeID &&
+                           y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Debit) ?
+                            _dbContext.EmployeeBonusFineSalaryHead.Where(y => y.IsDeleted == false && y.EmployeeId == e.EmployeeID &&
+                            y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Debit).Select(z => z.Amount).DefaultIfEmpty(0).Sum() : 0,
                         Pension = _dbContext.AccumulatedSalaryHeadDetail
                         .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.Pension).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,                      
                         Cb = _dbContext.AccumulatedSalaryHeadDetail
@@ -148,6 +157,11 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                         LogoPath = logoPath,
                         PersianChaName = persianChaName
                 }).FirstOrDefaultAsync ();
+
+                if(details != null)
+                {
+                    details.Salary = (double)Math.Round((double)(details.BasicSalary - (details.Absentess* details.WorkingHours * details.HourlyRate)), 2);
+                }
                 return await _pdfExportService.ExportToPdf (details, "Pages/PdfTemplates/MonthlyPaySlipReport.cshtml", true);
             } catch (Exception ex) {
                 throw new Exception (ex.Message);
