@@ -250,6 +250,8 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             var currency = await _dbContext.CurrencyDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.CurrencyId == item.CurrencyId);
                             var officeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.OfficeId == item.OfficeId);
                             return string.Format("Exchange rate not defined for currency {0} and Office {1}", currency.CurrencyCode, officeDetail.OfficeCode);
+                        } else {
+                            rate=exchangeRate.Rate;
                         }
                     }
 
@@ -288,7 +290,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             Pension = (item.Pension * rate * analytical.Percentage) / 100,
                             Project = analytical.Project,
                             Percentage = analytical.Percentage,
-                            Salary = ((item.BasicPay * rate) - ((item.AbsentDays * workingHours * item.HourlyRate * rate)* analytical.Percentage / 100)),
+                            Salary = (((item.BasicPay * rate)* analytical.Percentage / 100) - ((item.AbsentDays * workingHours * item.HourlyRate * rate)* analytical.Percentage / 100)),
                             SalaryTax = (item.SalaryTax * rate * analytical.Percentage) / 100,
                             Security = (item.Security * rate * analytical.Percentage) / 100,
                         };
