@@ -70,7 +70,9 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                 join ph in _dbContext.PayrollMonthlyHourDetail
                 on p.OfficeId equals ph.OfficeId into phd from ph in phd.DefaultIfEmpty ()
                 where ph.AttendanceGroupId == p.AttendanceGroupId && ph.PayrollMonth == request.Month &&
-                ph.PayrollYear == financialYear.StartDate.Year
+                ph.PayrollYear == financialYear.StartDate.Year && ph.IsDeleted == false &&
+                ps.IsDeleted == false  && b.IsDeleted == false  && o.IsDeleted == false &&
+                dd.IsDeleted == false  && t.IsDeleted == false  && p.IsDeleted == false
                 select new MonthlyPaySlipReportPdfModel {
                     PaymentDate = DateTime.Now.ToString("MM/dd/yyyy"),
                         SalaryMonth = request.Month,
