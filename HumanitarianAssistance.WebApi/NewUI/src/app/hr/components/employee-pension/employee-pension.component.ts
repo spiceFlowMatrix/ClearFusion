@@ -539,31 +539,6 @@ export class EmployeePensionComponent implements OnInit {
         Position: taxDetail.Position,
         Date: taxDetail.Date
       };
-      // this.httpSvc.get('../../../../assets/fonts/arial.txt', { responseType: 'blob' }).subscribe(data => {
-      //   console.log(data);
-      // const fileReader: FileReader = new FileReader();
-      // fileReader.onloadend = function(x) {
-      //   console.log(fileReader.result);
-      //    this.fileContent = fileReader.result;
-      // };
-      // fileReader.readAsText(data);
-      // });
-      // console.log(this.fileContent);
-      // const file = this.httpSvc.get('../../../../assets/fonts/Persian.ttf', { FileTypes: 'blob' });
-      // console.log(file);
-      // const fileReader: FileReader = new FileReader();
-      // const self = this;
-      // fileReader.onloadend = function(x) {
-      //   self.fileContent = fileReader.result;
-      // }
-      // fileReader.readAsText(file);
-      // const file = fileList[0];
-      //  // '../../../../assets/fonts/Persian.ttf';
-      // const fileReader = new FileReader();
-      // fileReader.onload = (e) => {
-      //   console.log(fileReader.result);
-      // };
-      // fileReader.readAsText(file);
       const isDownload = this.pdfExportService.GenratePdfExportForSalaryPensionDetails(pdfModel);
       if (isDownload !== true) {
         this.toastr.warning('Please Try Again');
