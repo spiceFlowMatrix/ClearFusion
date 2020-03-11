@@ -251,7 +251,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             var officeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.OfficeId == item.OfficeId);
                             return string.Format("Exchange rate not defined for currency {0} and Office {1}", currency.CurrencyCode, officeDetail.OfficeCode);
                         } else {
-                            rate=exchangeRate.Rate;
+                            rate= (double)exchangeRate.Rate;
                         }
                     }
 
