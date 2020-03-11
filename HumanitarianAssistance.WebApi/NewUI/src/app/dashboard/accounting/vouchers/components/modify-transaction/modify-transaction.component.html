@@ -114,7 +114,7 @@
     </div>
     <div class="col-sm-11">
       <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionTopBtnClick()"></hum-button>
-      <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button>
+      <!-- <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button> -->
     </div>
   </div>
   <div class="row" *ngIf="showAddTransactionTop">
@@ -195,19 +195,6 @@
               <mat-spinner *ngIf="budgetlinespinner" diameter="20" matSuffix></mat-spinner>
             </mat-form-field>
           </div>
-          <!-- <div class="col-sm-3 padding_top_20">
-            <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
-          </div>
-          <div class="col-sm-3">
-            <mat-form-field>
-              <mat-label>Transaction Type</mat-label>
-              <mat-select formControlName="Type">
-                <mat-option *ngFor="let type of typeList" [value]="type.value">
-                  {{type.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div> -->
         </div>
       </div>
       <button type="submit" style="display: none;" #btnSubmit></button>
@@ -227,12 +214,6 @@
         </mat-checkbox>
       </td>
     </ng-container>
-
-    <!-- Type Column -->
-    <!-- <ng-container matColumnDef="Type">
-      <th mat-header-cell *matHeaderCellDef> Type </th>
-      <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
-    </ng-container> -->
 
     <!-- Account Column -->
     <ng-container matColumnDef="AccountCode">
@@ -275,8 +256,16 @@
       <td mat-cell *matCellDef="let element"> {{element.JobName}} </td>
     </ng-container>
 
+    <!-- Project Job Column -->
+    <ng-container matColumnDef="Edit">
+      <th mat-header-cell *matHeaderCellDef> Edit Transaction </th>
+      <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+          <a style="color: blueviolet;" mat-button (click)="editTransactionBtnClick(element)">Edit</a>
+      </td>
+    </ng-container>
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
     </tr>
   </table>
   <mat-paginator [length]="recordCount" [pageSize]="transactionPagingModel.PageSize"
@@ -286,7 +275,7 @@
   <div class="row">
     <div class="col-sm-11">
       <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionBottomBtnClick()"></hum-button>
-      <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button>
+      <!-- <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button> -->
     </div>
   </div>
   <div class="row" *ngIf="showAddTransactionBottom">
@@ -362,19 +351,6 @@
             <mat-hint>Please enter altest 3 characters to search</mat-hint>
           </mat-form-field>
         </div>
-        <!-- <div class="col-sm-3 padding_top_20">
-          <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field>
-            <mat-label>Transaction Type</mat-label>
-            <mat-select formControlName="Type">
-              <mat-option *ngFor="let type of typeList" [value]="type.value">
-                {{type.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div> -->
       </div>
     </div>
     <button type="submit" style="display: none;" #btnSubmit></button>

@@ -38,11 +38,14 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     AuditLogModel logs = new AuditLogModel () {
                         EmployeeId = (int)obj.EmployeeID,
                         TypeOfEntity = (int) TypeOfEntity.History,
+                        TypeOfEntityName = TypeOfEntity.History.ToString(),
                         EntityId = null,
                         ActionTypeId = (int) ActionType.Add,
+                        ActionTypeIdName = ActionType.Add.ToString(),
                         ActionDescription = (TypeOfEntity.History).GetDescription(),
                     };
-                    bool isLoged = await _actionLog.AuditLog (logs);
+                    await _actionLog.AuditLog (logs);
+                    _actionLog.HRMAuditLogService(logs,request);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

@@ -1,3 +1,4 @@
+using System.Net.Mail;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,11 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                     .Where (x => x.EmployeeId == request.EmployeeId &&
                         x.Date.Month == request.Month && x.Date.Year == financialYear.StartDate.Year &&
                         x.IsDeleted == false && x.EmployeeDetails.IsDeleted == false).ToListAsync ();
+                        
+                // List<PayrollMonthlyHourDetail> payrollHours = await _dbContext.PayrollMonthlyHourDetail
+                //                                                               .Where(x => x.IsDeleted == false && request.OfficeId.Contains(x.OfficeId)
+                //                                                               && request.Month == x.PayrollMonth &&
+                //                                                               x.PayrollYear == DateTime.UtcNow.Year).ToListAsync();
                 
                 string logoPath = _env.WebRootFileProvider.GetFileInfo ("ReportLogo/logo.jpg")?.PhysicalPath;
                 string persianChaName = _env.WebRootFileProvider.GetFileInfo ("ReportLogo/PersianText.png")?.PhysicalPath;
@@ -61,57 +67,103 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                 on b.CurrencyId equals c.CurrencyId into cd from c in cd.DefaultIfEmpty ()
                 join ps in _dbContext.EmployeePayrollInfoDetail 
                 on b.EmployeeId equals ps.EmployeeId into psl from ps in psl.DefaultIfEmpty ()
+                join ph in _dbContext.PayrollMonthlyHourDetail
+                on p.OfficeId equals ph.OfficeId into phd from ph in phd.DefaultIfEmpty ()
+                where ph.AttendanceGroupId == p.AttendanceGroupId && ph.PayrollMonth == request.Month &&
+                ph.PayrollYear == financialYear.StartDate.Year && ph.IsDeleted == false &&
+                ps.IsDeleted == false  && b.IsDeleted == false  && o.IsDeleted == false &&
+                dd.IsDeleted == false  && t.IsDeleted == false  && p.IsDeleted == false
                 select new MonthlyPaySlipReportPdfModel {
-                    PaymentDate = new DateTime (),
-                        SalaryMonth = "-",
-                        SalaryYear = "-",
+                    PaymentDate = DateTime.Now.ToString("MM/dd/yyyy"),
+                        SalaryMonth = request.Month,
+                        SalaryYear = financialYear.StartDate.Year,
                         EmployeeCode = e.EmployeeCode,
                         EmployeeName = e.EmployeeName,
                         Designation = dd.Designation,
                         Type = t.EmployeeTypeName,
                         Office = o.OfficeName,
-                        Sex = e.Sex,
-                        BudgetLine = "-",
-                        Program = "-",
-                        Project = "-",
-                        Job = "-",
-                        Sector = "-",
-                        Area = "-",
-                        Account = "-",
-                        SalaryPercentage = "-",
-                        AnalyticalSalary = "-",
+                        HourlyRate= ps.HourlyRate,
+                        WorkingHours = ph.OutTime.Value.Subtract(ph.InTime.Value).Hours,
+                        Sex = e.SexId == (int)Gender.MALE ? "Male" : e.SexId == (int)Gender.FEMALE ? "Female" : e.SexId == (int)Gender.OTHER ? "Other" : null,
+                        AnalyticalInfo = (from mp in _dbContext.EmployeeSalaryAnalyticalInfo
+                                         .Where(x=>x.EmployeeID==request.EmployeeId && x.IsDeleted==false) 
+                                         join acc in _dbContext.ChartOfAccountNew 
+                                         on mp.AccountNo equals acc.ChartOfAccountNewId into accl from acc in accl.DefaultIfEmpty ()
+                                         join prj in _dbContext.ProjectDetail 
+                                         on mp.ProjectId equals prj.ProjectId into prjl from prj in prjl.DefaultIfEmpty ()
+                                         select new AnalyticalInfo {
+                                            BudgetLine = mp.ProjectBudgetLine.BudgetName,
+                                            Program = (from ppd in _dbContext.ProjectProgram
+                                                      .Where(x=>x.ProjectId==prj.ProjectId && x.IsDeleted==false)
+                                                       join pd in _dbContext.ProgramDetail 
+                                                       on ppd.ProgramId equals pd.ProgramId into pdl from pd in pdl.DefaultIfEmpty ()
+                                                      select new ProjectProgramDetail {
+                                                        Program = pd.ProgramName
+                                                      }).ToList(),
+                                            Project = prj.ProjectCode + '-' + prj.ProjectName,
+                                            Job = (from pbl in _dbContext.ProjectBudgetLineDetail
+                                                      .Where(x=>x.BudgetLineId==mp.ProjectBudgetLine.BudgetLineId && x.IsDeleted==false)
+                                                       join pjd in _dbContext.ProjectJobDetail 
+                                                       on pbl.ProjectJobId equals pjd.ProjectJobId into pjdl from pjd in pjdl.DefaultIfEmpty ()
+                                                      select new JobDetail{Job = pjd.ProjectJobName}).FirstOrDefault(),
+                                            Sector = (from psd in _dbContext.ProjectSector
+                                                      .Where(x=>x.ProjectId==prj.ProjectId && x.IsDeleted==false)
+                                                       join sd in _dbContext.SectorDetails 
+                                                       on psd.SectorId equals sd.SectorId into sdl from sd in sdl.DefaultIfEmpty ()
+                                                      select new ProjectSectorDetail {
+                                                        Sector = sd.SectorName
+                                                      }).ToList(),
+                                            Area = "-",
+                                            Account = acc.ChartOfAccountNewCode + '-' + acc.AccountName,
+                                            SalaryPercentage = mp.SalaryPercentage.ToString(),
+                                            AnalyticalSalary = (b.BasicSalary * mp.SalaryPercentage) / 100
+                                         }).ToList(),
                         BasicSalary = b.BasicSalary,
-                        CurrencyCode = c.CurrencyCode,
-                        Attendance = "-",
-                        Absentess = "-",
-                        Salary = "-",
-                        Food = "-",
-                        Tr = "-",
-                        Medical = "-",
-                        AllowanceOther = "-",
-                        AllowanceOther1 = "-",
-                        AllowanceOther2 = "-",
                         GrossSalary = ps.GrossSalary,
+                        CurrencyCode = c.CurrencyCode,
+                        Attendance = empPayrollAttendance.Where(x=>x.AttendanceTypeId == (int)AttendanceType.P).Count(),
+                        Absentess = empPayrollAttendance.Where(x=>x.AttendanceTypeId == (int)AttendanceType.A).Count(),
+
+                        AllowanceAdvance = _dbContext.AccumulatedSalaryHeadDetail
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.AdvanceRecovery).Select(x=> new {x.SalaryAllowance}).FirstOrDefault().SalaryAllowance,
+                        AllowanceSalaryTax = _dbContext.AccumulatedSalaryHeadDetail
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.SalaryTax).Select(x=> new {x.SalaryAllowance}).FirstOrDefault().SalaryAllowance,
+                        AllowancePension = _dbContext.AccumulatedSalaryHeadDetail
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.Pension).Select(x=> new {x.SalaryAllowance}).FirstOrDefault().SalaryAllowance,                       
+                        AllowanceCb = _dbContext.AccumulatedSalaryHeadDetail
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.CapacityBuilding).Select(x=> new {x.SalaryAllowance}).FirstOrDefault().SalaryAllowance,
+                        AllowanceSecurity = _dbContext.AccumulatedSalaryHeadDetail
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.Security).Select(x=> new {x.SalaryAllowance}).FirstOrDefault().SalaryAllowance,
                         Advance = _dbContext.AccumulatedSalaryHeadDetail
-                        .Where(x=>x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.Id == (int)AccumulatedSalaryHead.AdvanceRecovery).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.AdvanceRecovery).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
                         SalaryTax = _dbContext.AccumulatedSalaryHeadDetail
-                        .Where(x=>x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.Id == (int)AccumulatedSalaryHead.SalaryTax).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
-                        Fine = "-",
-                        DeductionOther = "-",
-                        Pension = "-",
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.SalaryTax).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
+                        Fine = _dbContext.EmployeeBonusFineSalaryHead.Any(y => y.IsDeleted == false && y.EmployeeId == e.EmployeeID &&
+                           y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Credit) ?
+                            _dbContext.EmployeeBonusFineSalaryHead.Where(y => y.IsDeleted == false && y.EmployeeId == e.EmployeeID &&
+                            y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Credit).Select(z => z.Amount).DefaultIfEmpty(0).Sum() : 0,
+                        Bonus = _dbContext.EmployeeBonusFineSalaryHead.Any(y => y.IsDeleted == false && y.EmployeeId == e.EmployeeID &&
+                           y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Debit) ?
+                            _dbContext.EmployeeBonusFineSalaryHead.Where(y => y.IsDeleted == false && y.EmployeeId == e.EmployeeID &&
+                            y.Month == request.Month && y.Year == financialYear.StartDate.Year && y.TransactionTypeId == (int)TransactionType.Debit).Select(z => z.Amount).DefaultIfEmpty(0).Sum() : 0,
+                        Pension = _dbContext.AccumulatedSalaryHeadDetail
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.Pension).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,                      
                         Cb = _dbContext.AccumulatedSalaryHeadDetail
-                        .Where(x=>x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.Id == (int)AccumulatedSalaryHead.CapacityBuilding).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.CapacityBuilding).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
                         Security = _dbContext.AccumulatedSalaryHeadDetail
-                        .Where(x=>x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.Id == (int)AccumulatedSalaryHead.Security).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
+                        .Where(x=>x.Year == financialYear.StartDate.Year && x.Month == request.Month && x.EmployeeId == e.EmployeeID && x.IsDeleted == false && x.SalaryComponentId == (int)AccumulatedSalaryHead.Security).Select(x=> new {x.SalaryDeduction}).FirstOrDefault().SalaryDeduction,
                         Net = ps.NetSalary,
-                        AFN = "-",
-                        Other1Desc = "-",
-                        Other2Desc = "-",
-                        ApprovedEmployeeCode = "-",
-                        ApprovedEmployeeName = "-",
+                        SalaryCurrencyCode = c.CurrencyCode,
+                        ApprovedEmployeeCode = e.EmployeeCode,
+                        ApprovedEmployeeName = e.EmployeeName,
                         LogoPath = logoPath,
                         PersianChaName = persianChaName
                 }).FirstOrDefaultAsync ();
+
+                if(details != null)
+                {
+                    details.Salary = (double)Math.Round((double)(details.BasicSalary - (details.Absentess* details.WorkingHours * details.HourlyRate)), 2);
+                }
                 return await _pdfExportService.ExportToPdf (details, "Pages/PdfTemplates/MonthlyPaySlipReport.cshtml", true);
             } catch (Exception ex) {
                 throw new Exception (ex.Message);
