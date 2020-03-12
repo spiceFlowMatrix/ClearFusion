@@ -26,20 +26,72 @@
             (change)="getInventoryTypeSelectedValue($event)">
           </lib-hum-dropdown>
         </div>
-        <div class="col-md-3">
+
+        <!-- <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['InventoryId'].hasError('required')"
             [options]="storeInventory$" formControlName='InventoryId' [placeHolder]="'Inventory(Master)'"
             (change)="getMasterInventorySelectedValue($event)"></lib-hum-dropdown>
+        </div> -->
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Inventory(Master)" aria-label="Number" matInput formControlName="InventoryId"
+              (keyup)="filterInventoryName($event)" name="InventoryId" [matAutocomplete]="matAutocomplete1">
+            <mat-autocomplete #matAutocomplete1="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeStoreInventoryValue($event,item.value)"
+                *ngFor="let item of storeInventory$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <mat-spinner *ngIf="purchasepinner" diameter="20" matSuffix></mat-spinner>
+         </mat-form-field>
+         <div class="alert alert-warning" *ngIf="inventoryErr!==null">{{inventoryErr}}</div>
         </div>
-        <div class="col-md-3">
+
+
+
+
+        <!-- <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['ItemGroupId'].hasError('required')"
             [options]="storeItemGroups$" formControlName='ItemGroupId' [placeHolder]="'Item Group'"
             (change)="getItemGroupSelectedValue($event)"></lib-hum-dropdown>
+        </div> -->
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Item Group" aria-label="Number" matInput formControlName="ItemGroupId"
+              (keyup)="filterItemGroupName($event)" name="ItemGroupId" [matAutocomplete]="matAutocomplete2">
+            <mat-autocomplete #matAutocomplete2="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeItemGroupValue($event,item.value)"
+                *ngFor="let item of storeItemGroups$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <mat-spinner *ngIf="itemGroupspinner" diameter="20" matSuffix></mat-spinner>
+         </mat-form-field>
+         <div class="alert alert-warning" *ngIf="itemerr!==null">{{itemerr}}</div>
         </div>
-        <div class="col-md-3">
+
+
+
+        <!-- <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['ItemId'].hasError('required')"
             [options]="storeItems$" formControlName='ItemId' [placeHolder]="'Item'"
             (change)="getItemSelectedValue($event)"></lib-hum-dropdown>
+        </div> -->
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Item" aria-label="Number" matInput formControlName="ItemId"
+              (keyup)="filterItemName($event)" name="ItemId" [matAutocomplete]="matAutocomplete3">
+            <mat-autocomplete #matAutocomplete3="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeItemValue($event,item.value)"
+                *ngFor="let item of storeItems$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <mat-spinner *ngIf="itemSpinner" diameter="20" matSuffix></mat-spinner>
+         </mat-form-field>
         </div>
     </div>
 
@@ -50,15 +102,45 @@
             [options]="offices$" formControlName='OfficeId' [placeHolder]="'Office'"
             (change)="getOfficeSelectedValue($event)"></lib-hum-dropdown>
         </div>
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['ProjectId'].hasError('required')"
             [options]="project$" formControlName='ProjectId' [placeHolder]="'Project'"
             (change)="getProjectSelectedValue($event)"></lib-hum-dropdown>
+        </div> -->
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Project" aria-label="Number" matInput formControlName="ProjectId"
+              (keyup)="filterProjectName($event)" name="ProjectId" [matAutocomplete]="matAutocomplete4">
+            <mat-autocomplete #matAutocomplete4="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeProjectValue($event,item.value)"
+                *ngFor="let item of project$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <mat-spinner *ngIf="projectSpinner" diameter="20" matSuffix></mat-spinner>
+         </mat-form-field>
         </div>
-        <div class="col-md-3">
+
+
+        <!-- <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['BudgetLineId'].hasError('required')"
             [options]="budgetLine$" formControlName='BudgetLineId' [placeHolder]="'Budget Line'"
             ></lib-hum-dropdown>
+        </div> -->
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Budget Line" aria-label="Number" matInput formControlName="BudgetLineId"
+              (keyup)="filterBudgetLineName($event)" name="BudgetLineId" [matAutocomplete]="matAutocomplete5">
+            <mat-autocomplete #matAutocomplete5="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.value)"
+                *ngFor="let item of budgetLine$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <mat-spinner *ngIf="budgetSpinner" diameter="20" matSuffix></mat-spinner>
+         </mat-form-field>
         </div>
     </div>
 
@@ -209,16 +291,51 @@
             <mat-datepicker #ReceiptDate></mat-datepicker>
           </mat-form-field>
         </div>
-        <div class="col-md-3">
+        <!-- <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceivedFromLocation'].hasError('required')"
             [options]="storeSource$" formControlName='ReceivedFromLocation' [placeHolder]="'Received From Location'"
             ></lib-hum-dropdown>
+        </div> -->
+
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Received From Location" aria-label="Number" matInput formControlName="ReceivedFromLocation"
+              (keyup)="filterReceivedFromLocationeName($event)" name="ReceivedFromLocation" [matAutocomplete]="matAutocomplete6">
+            <mat-autocomplete #matAutocomplete6="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeReceivedFromLocValue($event,item.value)"
+                *ngFor="let item of storeSource$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <mat-spinner *ngIf="receivedFromLocSpinner" diameter="20" matSuffix></mat-spinner>
+         </mat-form-field>
+
         </div>
-        <div class="col-md-3">
+
+
+        <!-- <div class="col-md-3">
           <lib-hum-dropdown [validation]="addPurchaseForm.controls['ReceivedFromEmployeeId'].hasError('required')"
             [options]="employeeList$" formControlName='ReceivedFromEmployeeId' [placeHolder]="'Received From Employee'"
             ></lib-hum-dropdown>
+        </div> -->
+
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Received From Employee" aria-label="Number" matInput formControlName="ReceivedFromEmployeeId"
+              (keyup)="filterReceivedFromEmployeeName($event)" name="ReceivedFromEmployeeId" [matAutocomplete]="matAutocomplete7">
+            <mat-autocomplete #matAutocomplete7="matAutocomplete">
+              <mat-option (onSelectionChange)="onChangeReceivedFromEmployeeValue($event,item.value)"
+                *ngFor="let item of employeeList$ | async" [value]="item.name">{{item.name}}
+              </mat-option>
+            </mat-autocomplete>
+            <mat-hint>Please enter altest 3 characters to search</mat-hint>
+            <mat-spinner *ngIf="receivedFromEmpSpinner" diameter="20" matSuffix></mat-spinner>
+         </mat-form-field>
+         <div class="alert alert-warning" *ngIf="err!==null">{{err}}</div>
         </div>
+
+
     </div>
     <div class="row">
         <div class="col-md-3">
