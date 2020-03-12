@@ -46,6 +46,13 @@ namespace HumanitarianAssistance.Application.Store.Models
         public long? TransportItemId { get; set; }
         public int? TransportItemTypeCategory { get; set; }
         public int? ItemGroupTransportCategory { get; set; }
+        public string InventoryMasterName { get; set; }
+        public string ItemGroupName { get; set; }
+        public string ItemName { get; set; }
+        public string ProjectName { get; set; }
+        public string BudgetLineName { get; set; }
+        public string ReceivedFromLocationName { get; set; }
+        public string ReceivedFromEmployeeName { get; set; }
         public List<PurchasedVehicleModel> PurchasedVehicleList { get; set; }
         public List<PurchasedGeneratorModel> PurchasedGeneratorList { get; set; }
         public List<StoreDocumentModel> StoreDocumentList {get; set;}
