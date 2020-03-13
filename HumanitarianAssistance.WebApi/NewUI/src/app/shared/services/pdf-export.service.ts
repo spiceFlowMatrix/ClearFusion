@@ -151,7 +151,7 @@ export class PdfExportService {
 
     // for arabic
     doc.setFontSize(10);
-    doc.text(195, 16, 'اداره درآمد افغانستان', {
+    doc.text(195, 16, 'جمهوری اسلامی افغانستان', {
       maxWidth: 250,
       align: 'right',
       lang: 'ar'

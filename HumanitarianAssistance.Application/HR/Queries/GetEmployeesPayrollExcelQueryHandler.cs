@@ -147,6 +147,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                     NetSalary = 0,
                     MonthNumber = x.Month,
                     HourlyRate = x.HourlyRate,
+                    AttendanceGroupId = x.EmployeeDetail.EmployeeProfessionalDetail.AttendanceGroupId,
                     Salary = x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
                              y.Month == x.Month && y.Year == x.Year && y.SalaryComponentId == (int)AccumulatedSalaryHead.GrossSalary) != null ?
                             x.EmployeeDetail.AccumulatedSalaryHeadDetailList.FirstOrDefault(y => y.IsDeleted == false &&
@@ -249,13 +250,16 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             var currency = await _dbContext.CurrencyDetails.FirstOrDefaultAsync(x => x.IsDeleted == false && x.CurrencyId == item.CurrencyId);
                             var officeDetail = await _dbContext.OfficeDetail.FirstOrDefaultAsync(x => x.IsDeleted == false && x.OfficeId == item.OfficeId);
                             return string.Format("Exchange rate not defined for currency {0} and Office {1}", currency.CurrencyCode, officeDetail.OfficeCode);
+                        } else {
+                            rate= (double)exchangeRate.Rate;
                         }
                     }
 
                     int weeklyOffDays = ParticularDayInMonth(new DateTime(financialYear.StartDate.Year, item.MonthNumber, 1), weeklyOff);
                     var payrollHourForEmployee = payrollHours.FirstOrDefault(x => x.IsDeleted == false && x.OfficeId == item.OfficeId
                                                                               && x.PayrollMonth == item.MonthNumber &&
-                                                                              x.PayrollYear == financialYear.StartDate.Year);
+                                                                              x.PayrollYear == financialYear.StartDate.Year &&
+                                                                              x.AttendanceGroupId == item.AttendanceGroupId);
 
                     int workingHours = payrollHourForEmployee.OutTime.Value.Subtract(payrollHourForEmployee.InTime.Value).Hours;
                     double payToBeSubtracted = weeklyOffDays * rate * item.HourlyRate * workingHours;
@@ -286,7 +290,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                             Pension = (item.Pension * rate * analytical.Percentage) / 100,
                             Project = analytical.Project,
                             Percentage = analytical.Percentage,
-                            Salary = ((item.BasicPay * rate) - ((item.AbsentHours * item.HourlyRate * rate)* analytical.Percentage / 100)),
+                            Salary = (((item.BasicPay * rate)* analytical.Percentage / 100) - ((item.AbsentDays * workingHours * item.HourlyRate * rate)* analytical.Percentage / 100)),
                             SalaryTax = (item.SalaryTax * rate * analytical.Percentage) / 100,
                             Security = (item.Security * rate * analytical.Percentage) / 100,
                         };

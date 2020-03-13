@@ -51,6 +51,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public double HourlyRate { get; set; }
         public int MonthNumber { get; set; }
         public int AbsentDays { get; set; }
+        public long? AttendanceGroupId { get; set; }
         public List<EmployeeAnalyticalInfo> EmployeeAnalyticalInfoList { get; set; }
     }
     
