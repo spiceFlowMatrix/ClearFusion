@@ -9,9 +9,7 @@ import {
   Validators,
   FormGroup,
   FormBuilder,
-  AbstractControl,
   FormArray,
-  FormGroupDirective
 } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
 import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
@@ -43,10 +41,12 @@ import { StaticUtilities } from 'src/app/shared/static-utilities';
 })
 export class AddPurchaseComponent implements OnInit, OnDestroy {
   addPurchaseForm: FormGroup;
-  purchasepinner = false;
-  err = null;
-  inventoryErr = null;
-  itemerr =null;
+
+  err = true;
+  inventoryErr = true;
+  itemGroupErr = true;
+  itemErr = true;
+  budgetErr = true;
 
   inventoryMasterList: any[] = [];
   itemGroupList: any[] = [];
@@ -58,7 +58,11 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   defaultEmpList: any[] = [];
   defaultInventoryList: any[] = [];
-  defaultStoreItemGroupList: any[]=[];
+  defaultStoreItemGroupList: any[] = [];
+  defaultProjectList: any[] = [];
+  defaultBudgetList: any[] = [];
+  defaultReceivedFromLocList: any[] = [];
+  defaultItemList: any[] = [];
 
   selectedInventoryNo: number;
   selectedItemGroupId: number;
@@ -68,6 +72,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   selectedReceivedLocationId: number;
   selectedReceivedEmployeeId: number;
 
+  purchasepinner = false;
   itemGroupspinner = false;
   itemSpinner = false;
   projectSpinner = false;
@@ -192,12 +197,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   initForm() {
     this.addPurchaseForm = this.fb.group({
       InventoryTypeId: [null, [Validators.required]],
-      InventoryId: [null, [Validators.required]],
-      ItemGroupId: [null, [Validators.required]],
-      ItemId: [null, [Validators.required]],
+      InventoryId: [{value: null, disabled: this.inventoryErr}, [Validators.required]],
+      ItemGroupId: [{value: null, disabled: this.itemGroupErr}, [Validators.required]],
+      ItemId: [{value: null, disabled: this.itemErr}, [Validators.required]],
       OfficeId: [null, [Validators.required]],
       ProjectId: [null],
-      BudgetLineId: [null],
+      BudgetLineId: [{value: null, disabled: this.budgetErr}],
       PurchaseOrderNo: [null],
       PurchaseName: [null, [Validators.required]],
       ReceiptDate: [null],
@@ -210,7 +215,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       CurrencyId: [null, [Validators.required]],
       Price: [null, [Validators.required]],
       ReceivedFromLocation: [null],
-      ReceivedFromEmployeeId: [null, [Validators.required]],
+      ReceivedFromEmployeeId: [{value: null, disabled: this.err}, [Validators.required]],
       ReceiptTypeId: [null, [Validators.required]],
       StatusId: [null],
       ApplyDepreciation: [false],
@@ -242,6 +247,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         };
       })
     );
+    response.data.ProjectDetailModel.forEach(y => {
+      this.defaultProjectList.push({
+        value: y.ProjectId,
+        name: y.ProjectCode + '-' + y.ProjectName
+      });
+    });
   }
 
   subscribeAllOffice(response: any) {
@@ -288,6 +299,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         };
       })
     );
+    response.data.SourceCodeDatalist.forEach(y => {
+      this.defaultReceivedFromLocList.push({
+        value: y.SourceCodeId,
+        name: y.Code + '-' + y.Description
+      });
+    });
   }
 
   subscribeAllStatusAtTimeOfIssue(response: any) {
@@ -382,7 +399,11 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getInventoryTypeSelectedValue(event: any) {
-    this.inventoryErr=null;
+    this.inventoryErr = false;
+    this.addPurchaseForm.get('InventoryId').enable();
+    this.addPurchaseForm.controls['InventoryId'].setValue(null);
+    this.addPurchaseForm.controls['ItemGroupId'].setValue(null);
+    this.addPurchaseForm.controls['ItemId'].setValue(null);
     this.getInventoriesByInventoryTypeId(event);
   }
 
@@ -423,7 +444,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
 
   getEmployeesByOfficeId(officeId: any) {
-    this.err = null;
+    this.err = false;
+    this.addPurchaseForm.get('ReceivedFromEmployeeId').enable();
     this.purchaseService
       .getEmployeesByOfficeId(officeId)
       .pipe(takeUntil(this.destroyed$))
@@ -459,6 +481,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
               };
             })
           );
+          x.data.forEach(y => {
+            this.defaultBudgetList.push({
+              name: y.BudgetCode + '-' + y.BudgetName,
+              value: y.BudgetLineId
+            });
+          });
         });
     }
   }
@@ -502,7 +530,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
           this.defaultStoreItemGroupList.push({
             name: y.ItemGroupCode + '-' + y.ItemGroupName,
             value: y.ItemGroupId
-          })
+          });
         });
       });
   }
@@ -614,6 +642,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
             };
           })
         );
+        x.data.forEach(y => {
+          this.defaultItemList.push({
+            name: y.ItemCode + '-' + y.ItemName,
+            value: y.ItemId
+          });
+        });
         if (itemId != null) {
           this.getSelectedItemName(itemId);
         }
@@ -1288,23 +1322,23 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   //#region "onChangeStoreInventoryValue"
   onChangeStoreInventoryValue(event: any, id: number) {
-    this.itemerr= null;
+    this.itemGroupErr = false;
+    this.addPurchaseForm.get('ItemGroupId').enable();
+
     this.selectedInventoryNo = id;
     this.selectedInventoryName = event.source.value;
     this.addPurchaseForm.controls['InventoryId'].setValue(event.source.value);
     this.addPurchaseForm.controls['ItemGroupId'].setValue(null);
     this.addPurchaseForm.controls['ItemId'].setValue(null);
-    //   this.addPurchaseForm.get('InventoryId').value;
-    // console.log(this.addPurchaseForm.get('InventoryId').value)
 
     this.getAllStoreItemGroups(id);
   }
 
   filterInventoryName(event: any) {
-    this.inventoryErr = null;
+    // this.inventoryErr = null;
     const filterValue = event.target.value.toLowerCase();
     const selectedinventory = this.addPurchaseForm.get('InventoryTypeId').value;
-    if (selectedinventory != undefined && selectedinventory != null ) {
+    if (selectedinventory != undefined && selectedinventory != null) {
       if (filterValue || filterValue !== '') {
         if (filterValue.length >= 2) {
           this.purchasepinner = true;
@@ -1329,12 +1363,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                 this.storeInventory$.subscribe(console.log);
               } else {
                 this.purchasepinner = false;
-                this.addPurchaseForm.controls[
-                  'InventoryId'
-                ].setValue(null);
+                this.addPurchaseForm.controls['InventoryId'].setValue(null);
                 this.storeInventory$ = of(this.defaultInventoryList);
               }
-
             },
             error => {
               console.log(error);
@@ -1346,15 +1377,18 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         //  this.storeInventory$ = of(this.defaultAccountList);
       }
     } else {
-     this.inventoryErr = 'Please select Inventory first.'
-   }
+      // this.inventoryErr = 'Please select Inventory first.';
+    }
   }
   //#endregion
 
   filterItemGroupName(event: any) {
     const filterValue = event.target.value.toLowerCase();
-    this.itemerr = null;
-    if (this.selectedInventoryNo!=undefined && this.selectedInventoryNo !=null){
+    // this.itemGroupErr = null;
+    if (
+      this.selectedInventoryNo != undefined &&
+      this.selectedInventoryNo != null
+    ) {
       if (filterValue || filterValue !== '') {
         if (filterValue.length >= 2) {
           this.itemGroupspinner = true;
@@ -1379,12 +1413,9 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                 this.storeItemGroups$.subscribe(console.log);
               } else {
                 this.itemGroupspinner = false;
-                this.addPurchaseForm.controls[
-                  'ItemGroupId'
-                ].setValue(null);
+                this.addPurchaseForm.controls['ItemGroupId'].setValue(null);
                 this.storeItemGroups$ = of(this.defaultStoreItemGroupList);
               }
-
             },
             error => {
               console.log(error);
@@ -1396,12 +1427,13 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         //  this.storeInventory$ = of(this.defaultAccountList);
       }
     } else {
-      this.itemerr = 'Please select Inventory master first.'
+      // this.itemGroupErr = 'Please select Inventory master first.';
     }
-
   }
   onChangeItemGroupValue(event: any, id: number) {
     this.selectedItemGroupId = id;
+    this.itemErr = false;
+    this.addPurchaseForm.get('ItemId').enable();
     // this.selectedInventoryName = event.source.value;
     this.addPurchaseForm.controls['ItemGroupId'].setValue(event.source.value);
     this.getAllStoreItemsByGroupId(id);
@@ -1423,41 +1455,49 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   }
   filterItemName(event: any) {
     const filterValue = event.target.value.toLowerCase();
-    if (filterValue || filterValue !== '') {
-      if (filterValue.length >= 2) {
-        this.itemSpinner = true;
-        this.itemList = [];
-        const model = {
-          ItemGroupId: this.selectedItemGroupId,
-          FilterValue: filterValue
-        };
-        this.storeItems$ = of(this.itemList);
-        this.purchaseService.GetFilteredItemList(model).subscribe(
-          resp => {
-            this.itemList = [];
-            if (resp !== undefined && resp.ItemList.length > 0) {
-              resp.ItemList.forEach(y => {
-                this.itemList.push({
-                  name: y.ItemCode + '-' + y.ItemName,
-                  value: y.ItemId
+    if (
+      this.selectedItemGroupId !== undefined &&
+      this.selectedItemGroupId != null
+    ) {
+      if (filterValue || filterValue !== '') {
+        if (filterValue.length >= 2) {
+          this.itemSpinner = true;
+          this.itemList = [];
+          const model = {
+            ItemGroupId: this.selectedItemGroupId,
+            FilterValue: filterValue
+          };
+          this.storeItems$ = of(this.itemList);
+          this.purchaseService.GetFilteredItemList(model).subscribe(
+            resp => {
+              this.itemList = [];
+              if (resp !== undefined && resp.ItemList.length > 0) {
+                resp.ItemList.forEach(y => {
+                  this.itemList.push({
+                    name: y.ItemCode + '-' + y.ItemName,
+                    value: y.ItemId
+                  });
                 });
-              });
-              this.itemSpinner = false;
-            } else {
+                this.itemSpinner = false;
+                this.storeItems$ = of(this.itemList);
+              } else {
+                this.itemSpinner = false;
+                this.addPurchaseForm.controls['ItemId'].setValue(null);
+                this.storeItems$ = of(this.defaultItemList);
+              }
+            },
+            error => {
+              console.log(error);
               this.itemSpinner = false;
             }
-            this.storeItems$ = of(this.itemList);
-            this.storeItems$.subscribe(console.log);
-          },
-          error => {
-            console.log(error);
-            this.itemSpinner = false;
-          }
-        );
+          );
+        }
+      } else {
       }
     } else {
-      //  this.storeInventory$ = of(this.defaultAccountList);
+      console.log('Please select item group first');
     }
+
   }
 
   filterProjectName(event: any) {
@@ -1481,12 +1521,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                 });
               });
               this.projectSpinner = false;
+              this.project$ = of(this.projectList);
             } else {
               this.projectSpinner = false;
               this.addPurchaseForm.controls['ProjectId'].setValue(null);
+              this.project$ = of(this.defaultProjectList);
             }
-            this.project$ = of(this.projectList);
-            this.project$.subscribe(console.log);
           },
           error => {
             console.log(error);
@@ -1499,6 +1539,8 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     }
   }
   onChangeProjectValue(event: any, id: number) {
+    this.budgetErr = false;
+    this.addPurchaseForm.get('BudgetLineId').enable();
     this.selectedProjectId = id;
     // this.selectedInventoryName = event.source.value;
     this.addPurchaseForm.controls['ProjectId'].setValue(event.source.value);
@@ -1507,45 +1549,53 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
 
   filterBudgetLineName(event: any) {
     const filterValue = event.target.value.toLowerCase();
-    if (filterValue || filterValue !== '') {
-      if (filterValue.length >= 2) {
-        this.budgetSpinner = true;
-        this.budgetList = [];
-        const model = {
-          ProjectId: this.selectedProjectId,
-          FilterValue: filterValue
-        };
-        this.budgetLine$ = of(this.budgetList);
-        this.purchaseService.GetFilteredBudegtList(model).subscribe(
-          resp => {
-            this.budgetList = [];
-            if (resp !== undefined && resp.BudgetLineList.length > 0) {
-              resp.BudgetLineList.forEach(y => {
-                this.budgetList.push({
-                  name: y.BudgetCode + '-' + y.BudgetName,
-                  value: y.BudgetLineId
+    if (
+      this.selectedProjectId !== undefined &&
+      this.selectedProjectId != null
+    ) {
+      if (filterValue || filterValue !== '') {
+        if (filterValue.length >= 2) {
+          this.budgetSpinner = true;
+          this.budgetList = [];
+          const model = {
+            ProjectId: this.selectedProjectId,
+            FilterValue: filterValue
+          };
+          this.budgetLine$ = of(this.budgetList);
+          this.purchaseService.GetFilteredBudegtList(model).subscribe(
+            resp => {
+              this.budgetList = [];
+              if (resp !== undefined && resp.BudgetLineList.length > 0) {
+                resp.BudgetLineList.forEach(y => {
+                  this.budgetList.push({
+                    name: y.BudgetCode + '-' + y.BudgetName,
+                    value: y.BudgetLineId
+                  });
                 });
-              });
-              this.budgetSpinner = false;
-            } else {
+                this.budgetSpinner = false;
+                this.budgetLine$ = of(this.budgetList);
+                this.budgetLine$.subscribe(console.log);
+              } else {
+                this.budgetSpinner = false;
+                this.addPurchaseForm.controls['BudgetLineId'].setValue(null);
+                this.budgetLine$ = of(this.defaultBudgetList);
+              }
+            },
+            error => {
+              console.log(error);
               this.budgetSpinner = false;
             }
-            this.budgetLine$ = of(this.budgetList);
-            this.budgetLine$.subscribe(console.log);
-          },
-          error => {
-            console.log(error);
-            this.budgetSpinner = false;
-          }
-        );
+          );
+        }
+      } else {
+        this.budgetSpinner = false;
       }
     } else {
-      //  this.storeInventory$ = of(this.defaultAccountList);
+      console.log('Please select Project First');
     }
   }
   onChangeBudgetLineValue(event: any, id: number) {
     this.selectedBudgetId = id;
-    // this.selectedInventoryName = event.source.value;
     this.addPurchaseForm.controls['BudgetLineId'].setValue(event.source.value);
   }
   filterReceivedFromLocationeName(event: any) {
@@ -1571,11 +1621,14 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
                   });
                 });
                 this.receivedFromLocSpinner = false;
+                this.storeSource$ = of(this.receivedFromLocList);
               } else {
                 this.receivedFromLocSpinner = false;
+                this.addPurchaseForm.controls['ReceivedFromLocation'].setValue(
+                  null
+                );
+                this.storeSource$ = of(this.defaultReceivedFromLocList);
               }
-              this.storeSource$ = of(this.receivedFromLocList);
-              this.storeSource$.subscribe(console.log);
             },
             error => {
               console.log(error);
@@ -1595,7 +1648,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     );
   }
   filterReceivedFromEmployeeName(event: any) {
-    this.err = null;
+    // this.err = null;
     const filterValue = event.target.value.toLowerCase();
     const selectedOffice = this.addPurchaseForm.get('OfficeId').value;
     if (selectedOffice !== undefined && selectedOffice != null) {
@@ -1637,8 +1690,7 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         }
       }
     } else {
-      //  this.storeInventory$ = of(this.defaultAccountList);
-      this.err = 'Please select office first';
+      // this.err = 'Please select office first';
     }
   }
 
