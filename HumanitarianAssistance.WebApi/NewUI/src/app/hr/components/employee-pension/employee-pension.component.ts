@@ -516,28 +516,28 @@ export class EmployeePensionComponent implements OnInit {
     const taxDetail = this.employeeTaxReportData;
     if (taxDetail != null && taxDetail != undefined) {
       const pdfModel: EmployeeTaxReportModel = {
-        EmployeeId: this.employeeId,
-        TaxPayerIdentificationNumber: taxDetail.TaxPayerIdentificationNumber,
-        NameOfBusiness: taxDetail.NameOfBusiness,
-        AddressOfBusiness: taxDetail.AddressOfBusiness,
-        TelephoneNumber: taxDetail.TelephoneNumber,
-        EmailAddressEmployer: taxDetail.EmailAddressEmployer,
+        EmployeeId: this.employeeId.toString(),
+        TaxPayerIdentificationNumber: taxDetail.TaxPayerIdentificationNumber.toString(),
+        NameOfBusiness: taxDetail.NameOfBusiness.toString(),
+        AddressOfBusiness: taxDetail.AddressOfBusiness.toString(),
+        TelephoneNumber: taxDetail.TelephoneNumber.toString(),
+        EmailAddressEmployer: taxDetail.EmailAddressEmployer.toString(),
 
-        EmployeeName: taxDetail.EmployeeName,
+        EmployeeName: taxDetail.EmployeeName.toString(),
         EmployeeTaxpayerIdentification:
-        taxDetail.EmployeeTaxpayerIdentification,
-        EmployeeAddress: taxDetail.EmployeeAddress,
-        TelephoneNumberEmployee: taxDetail.TelephoneNumberEmployee,
-        EmailAddressEmployee: taxDetail.EmailAddressEmployee,
+        taxDetail.EmployeeTaxpayerIdentification.toString(),
+        EmployeeAddress: taxDetail.EmployeeAddress.toString(),
+        TelephoneNumberEmployee: taxDetail.TelephoneNumberEmployee.toString(),
+        EmailAddressEmployee: taxDetail.EmailAddressEmployee.toString(),
 
-        AnnualTaxPeriod: taxDetail.AnnualTaxPeriod,
-        DatesOfEmployeement: taxDetail.DatesOfEmployeement,
-        TotalWages: taxDetail.TotalWages,
-        TotalTax: taxDetail.TotalTax,
+        AnnualTaxPeriod: taxDetail.AnnualTaxPeriod.toString(),
+        DatesOfEmployeement: taxDetail.DatesOfEmployeement.toString(),
+        TotalWages: taxDetail.TotalWages.toString(),
+        TotalTax: taxDetail.TotalTax.toString(),
 
-        OfficerName: taxDetail.OfficerName,
-        Position: taxDetail.Position,
-        Date: taxDetail.Date
+        OfficerName: taxDetail.OfficerName.toString(),
+        Position: taxDetail.Position.toString(),
+        Date: taxDetail.Date.toString()
       };
       const isDownload = this.pdfExportService.GenratePdfExportForSalaryPensionDetails(pdfModel);
       if (isDownload !== true) {

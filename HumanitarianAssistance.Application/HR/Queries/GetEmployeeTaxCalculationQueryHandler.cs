@@ -58,15 +58,11 @@ namespace HumanitarianAssistance.Application.HR.Queries
 
                     SalaryTaxReportContent obj = await _dbContext.SalaryTaxReportContent.FirstOrDefaultAsync(x=> x.IsDeleted == false && x.OfficeId == request.OfficeId);
 
-                
                 var rec = await _dbContext.EmployeeDetail
                                     .Include(x=> x.EmployeeProfessionalDetail)
-                                    .Include(x=> x.EmployeePayrollInfoDetailList
-                                            )
-                                    .Include(x=> x.AccumulatedSalaryHeadDetailList
-                                    .Where(y=> y.IsDeleted == false && y.SalaryComponentId == (int)AccumulatedSalaryHead.SalaryTax &&
-                                                    financialYear.Select(z=> z.StartDate.Year).Contains(y.Year)))
-                                    .Where(x=> x.IsDeleted == false)
+                                    .Include(x=> x.EmployeePayrollInfoDetailList)
+                                    .Include(x=> x.AccumulatedSalaryHeadDetailList)
+                                    .Where(x=> x.IsDeleted == false && x.EmployeeID == request.EmployeeId)
                                     .Select(x=> new EmployeeTaxReportModel
                                     {
                                         TaxPayerIdentificationNumber = 1001157013,
@@ -80,10 +76,16 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                         TelephoneNumberEmployee= x.Phone,
                                         EmailAddressEmployee= x.Email,
                                         AnnualTaxPeriod= x.EmployeePayrollInfoDetailList.Count()> 0?
-                                                        x.EmployeePayrollInfoDetailList.First().Year : 0,
+                                                        x.EmployeePayrollInfoDetailList.FirstOrDefault().Year : 0,
                                         DatesOfEmployeement = 0,
-                                        TotalWages= x.EmployeePayrollInfoDetailList.Select(z=> z.NetSalary).DefaultIfEmpty(0).Sum(),
-                                        TotalTax= x.AccumulatedSalaryHeadDetailList.Select(z=> z.SalaryDeduction).DefaultIfEmpty(0).Sum(),
+                                        TotalWages= x.EmployeePayrollInfoDetailList.Where(y=> y.IsDeleted == false && y.IsSalaryApproved == true &&
+                                                    financialYear.Select(z=> z.StartDate.Year).Contains(y.Year)).Count() >0 ?
+                                                    x.EmployeePayrollInfoDetailList.Where(y=> y.IsDeleted == false && y.IsSalaryApproved == true &&
+                                                    financialYear.Select(z=> z.StartDate.Year).Contains(y.Year)).Select(z=> z.NetSalary).DefaultIfEmpty(0).Sum() : 0,
+                                        TotalTax= x.AccumulatedSalaryHeadDetailList.Where(y=> y.IsDeleted == false && y.SalaryComponentId == (int)AccumulatedSalaryHead.SalaryTax &&
+                                                    financialYear.Select(z=> z.StartDate.Year).Contains(y.Year)).Count()>0 ? 
+                                                    x.AccumulatedSalaryHeadDetailList.Where(y=> y.IsDeleted == false && y.SalaryComponentId == (int)AccumulatedSalaryHead.SalaryTax &&
+                                                    financialYear.Select(z=> z.StartDate.Year).Contains(y.Year)).Select(z=> z.SalaryDeduction).DefaultIfEmpty(0).Sum() : 0,
                                         OfficerName= obj == null? "" : obj.EmployerAuthorizedOfficerName,
                                         Position= obj == null? "" : obj.PositionAuthorizedOfficer,
                                         Date= DateTime.UtcNow.Date
