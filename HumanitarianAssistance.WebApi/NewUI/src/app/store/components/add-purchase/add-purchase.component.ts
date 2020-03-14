@@ -5,12 +5,7 @@ import {
   OnDestroy,
   ViewChild
 } from '@angular/core';
-import {
-  Validators,
-  FormGroup,
-  FormBuilder,
-  FormArray,
-} from '@angular/forms';
+import { Validators, FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { PurchaseService } from '../../services/purchase.service';
 import { Observable, of, forkJoin, ReplaySubject } from 'rxjs';
 import { IDropDownModel, IPurchasedFiles } from '../../models/purchase';
@@ -197,12 +192,18 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
   initForm() {
     this.addPurchaseForm = this.fb.group({
       InventoryTypeId: [null, [Validators.required]],
-      InventoryId: [{value: null, disabled: this.inventoryErr}, [Validators.required]],
-      ItemGroupId: [{value: null, disabled: this.itemGroupErr}, [Validators.required]],
-      ItemId: [{value: null, disabled: this.itemErr}, [Validators.required]],
+      InventoryId: [
+        { value: null, disabled: this.inventoryErr },
+        [Validators.required]
+      ],
+      ItemGroupId: [
+        { value: null, disabled: this.itemGroupErr },
+        [Validators.required]
+      ],
+      ItemId: [{ value: null, disabled: this.itemErr }, [Validators.required]],
       OfficeId: [null, [Validators.required]],
       ProjectId: [null],
-      BudgetLineId: [{value: null, disabled: this.budgetErr}],
+      BudgetLineId: [{ value: null, disabled: this.budgetErr }],
       PurchaseOrderNo: [null],
       PurchaseName: [null, [Validators.required]],
       ReceiptDate: [null],
@@ -215,7 +216,10 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
       CurrencyId: [null, [Validators.required]],
       Price: [null, [Validators.required]],
       ReceivedFromLocation: [null],
-      ReceivedFromEmployeeId: [{value: null, disabled: this.err}, [Validators.required]],
+      ReceivedFromEmployeeId: [
+        { value: null, disabled: this.err },
+        [Validators.required]
+      ],
       ReceiptTypeId: [null, [Validators.required]],
       StatusId: [null],
       ApplyDepreciation: [false],
@@ -1049,6 +1053,12 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
         this.selectedReceivedLocationId = x.ReceivedFromLocation;
         this.selectedReceivedEmployeeId = x.PurchasedById; // i.e. employeeid
 
+        this.addPurchaseForm.get('InventoryId').enable();
+        this.addPurchaseForm.get('ReceivedFromEmployeeId').enable();
+        this.addPurchaseForm.get('ItemGroupId').enable();
+        this.addPurchaseForm.get('ItemId').enable();
+        this.addPurchaseForm.get('BudgetLineId').enable();
+
         this.addPurchaseForm.patchValue({
           InventoryTypeId: x.InventoryTypeId,
           InventoryId: x.InventoryMasterName,
@@ -1497,7 +1507,6 @@ export class AddPurchaseComponent implements OnInit, OnDestroy {
     } else {
       console.log('Please select item group first');
     }
-
   }
 
   filterProjectName(event: any) {
