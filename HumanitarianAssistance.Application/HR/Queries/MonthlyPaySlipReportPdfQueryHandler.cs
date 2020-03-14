@@ -72,6 +72,7 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                 where ph.AttendanceGroupId == p.AttendanceGroupId && ph.PayrollMonth == request.Month &&
                 ph.PayrollYear == financialYear.StartDate.Year && ph.IsDeleted == false &&
                 ps.IsDeleted == false  && b.IsDeleted == false  && o.IsDeleted == false &&
+                ps.Month == request.Month && ps.Year == financialYear.StartDate.Year &&
                 dd.IsDeleted == false  && t.IsDeleted == false  && p.IsDeleted == false
                 select new MonthlyPaySlipReportPdfModel {
                     PaymentDate = DateTime.Now.ToString("MM/dd/yyyy"),
