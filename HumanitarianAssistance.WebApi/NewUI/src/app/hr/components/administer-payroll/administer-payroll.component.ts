@@ -4,6 +4,11 @@ import { CommonLoaderService } from 'src/app/shared/common-loader/common-loader.
 import { ToastrService } from 'ngx-toastr';
 import { EmployeeSalaryConfigService } from '../../services/employee-salary-config.service';
 import { Router } from '@angular/router';
+import { GLOBAL } from 'src/app/shared/global';
+import { AppUrlService } from 'src/app/shared/services/app-url.service';
+import { GlobalSharedService } from 'src/app/shared/services/global-shared.service';
+import { ReplaySubject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-administer-payroll',
@@ -17,11 +22,14 @@ export class AdministerPayrollComponent implements OnInit {
   PageIndex = 0;
   PageSize = 10;
   err = null;
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   constructor(private dialogRef: MatDialogRef<AdministerPayrollComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private toastr: ToastrService,
     private commonLoader: CommonLoaderService,
     private salaryConfigService: EmployeeSalaryConfigService,
+    private appurl: AppUrlService,
+    private globalSharedService: GlobalSharedService,
     private router: Router) { }
 
   ngOnInit() {
@@ -142,4 +150,18 @@ export class AdministerPayrollComponent implements OnInit {
     ref.click();
   }
 
+  pdfExport(employeeId: number)
+  {
+    const data: any = {
+      EmployeeId:employeeId,
+      Month: this.data.Month
+    };
+    this.globalSharedService
+      .getFile(
+        this.appurl.getApiUrl() + GLOBAL.API_Pdf_GetMonthlyPaySlipPdf,
+        data
+      )
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
+  }
 }

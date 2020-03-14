@@ -525,13 +525,13 @@ export class EmployeePensionComponent implements OnInit {
 
         EmployeeName: taxDetail.EmployeeName.toString(),
         EmployeeTaxpayerIdentification:
-        taxDetail.EmployeeTaxpayerIdentification.toString(),
+        taxDetail.EmployeeTaxpayerIdentification,
         EmployeeAddress: taxDetail.EmployeeAddress.toString(),
         TelephoneNumberEmployee: taxDetail.TelephoneNumberEmployee.toString(),
         EmailAddressEmployee: taxDetail.EmailAddressEmployee.toString(),
 
         AnnualTaxPeriod: taxDetail.AnnualTaxPeriod.toString(),
-        DatesOfEmployeement: taxDetail.DatesOfEmployeement.toString(),
+        DatesOfEmployeement: taxDetail.DatesOfEmployeement,
         TotalWages: taxDetail.TotalWages.toString(),
         TotalTax: taxDetail.TotalTax.toString(),
 

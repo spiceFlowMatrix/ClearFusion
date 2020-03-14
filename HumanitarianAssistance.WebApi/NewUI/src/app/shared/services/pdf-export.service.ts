@@ -20,6 +20,7 @@ export class PdfExportService {
     // });
 
   GenratePdfExportForSalaryPensionDetails(pdfModel: EmployeeTaxReportModel) {
+    console.log(pdfModel);
     const doc = new jsPDF();
     doc.addFileToVFS('Arial.ttf', this.base64);
     doc.addFont('Arial.ttf', 'custom', 'normal');
@@ -409,7 +410,7 @@ export class PdfExportService {
     doc.text(
       100,
       115,
-      pdfModel.EmployeeTaxpayerIdentification,
+      pdfModel.EmployeeTaxpayerIdentification !== undefined ? pdfModel.EmployeeTaxpayerIdentification : '',
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
@@ -441,7 +442,7 @@ export class PdfExportService {
     doc.text(
       100,
       161,
-      pdfModel.DatesOfEmployeement,
+      pdfModel.DatesOfEmployeement !== undefined ? pdfModel.DatesOfEmployeement : '',
       { maxWidth: 50, align: 'center' }
     );
     doc.text(

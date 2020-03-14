@@ -77,7 +77,7 @@ namespace HumanitarianAssistance.Application.HR.Queries
                                         EmailAddressEmployee= x.Email,
                                         AnnualTaxPeriod= x.EmployeePayrollInfoDetailList.Count()> 0?
                                                         x.EmployeePayrollInfoDetailList.FirstOrDefault().Year : 0,
-                                        DatesOfEmployeement = 0,
+                                        DatesOfEmployeement = x.EmployeeProfessionalDetail.HiredOn,
                                         TotalWages= x.EmployeePayrollInfoDetailList.Where(y=> y.IsDeleted == false && y.IsSalaryApproved == true &&
                                                     financialYear.Select(z=> z.StartDate.Year).Contains(y.Year)).Count() >0 ?
                                                     x.EmployeePayrollInfoDetailList.Where(y=> y.IsDeleted == false && y.IsSalaryApproved == true &&
