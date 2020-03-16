@@ -35,6 +35,7 @@ export class Auth0Service {
 
   public handleAuthentication(): void {
     this.auth0.parseHash((err, authResult) => {
+      debugger;
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
         this.router.navigate(['/']);
@@ -65,6 +66,7 @@ export class Auth0Service {
     // Set the time that the access token will expire at
     const expiresAt = JSON.stringify((authResult.expiresIn * 1000) + new Date().getTime());
     localStorage.setItem('access_token', authResult.accessToken);
+    localStorage.setItem('authenticationtoken', authResult.accessToken);
     localStorage.setItem('id_token', authResult.idToken);
     localStorage.setItem('expires_at', expiresAt);
   }
@@ -72,6 +74,7 @@ export class Auth0Service {
   public logout(): void {
     // Remove tokens and expiry time from localStorage
     localStorage.removeItem('access_token');
+    localStorage.removeItem('authenticationtoken');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
     // Go back to the home route

@@ -7,6 +7,7 @@ import {
 import { CommonLoaderService } from './shared/common-loader/common-loader.service';
 import { SignalRService } from './shared/services/signal-r.service';
 import { NotifySignalRService } from './shared/services/notify-signalr.service';
+import { Auth0Service } from './auth0/auth0.service';
 
 @Component({
   selector: 'app-root',
@@ -20,8 +21,11 @@ export class AppComponent implements OnInit {
     private router: Router,
     public commonLoader: CommonLoaderService,
     private signalRService: SignalRService,
-    private notifyService: NotifySignalRService
-  ) {}
+    private notifyService: NotifySignalRService,
+    public auth: Auth0Service
+  ) {
+    auth.handleAuthentication();
+  }
 
   ngOnInit() {
     this.router.events.subscribe(event => {
