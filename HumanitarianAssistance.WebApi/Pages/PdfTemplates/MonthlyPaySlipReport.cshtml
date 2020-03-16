@@ -17,7 +17,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <table style="width:100%;">
+            <table style="width:693px;">
                 <tr>
                     <td align="center"><img src="@Model.LogoPath" alt=""></td>                   
                 </tr>
@@ -31,7 +31,7 @@
             </table>
         </div><br>
         <div class="row">
-            <table style="width:1020;" cellpadding="6" cellspacing="0">
+            <table style="width:693px;" cellpadding="6" cellspacing="0">
                 <tbody>
                     <tr style="border-left: 1px solid">
                         <th colspan="2" style="font-weight:bold;font-size: 11px; border-bottom:2px solid gray">Payment Date:</th>
@@ -74,16 +74,16 @@
                 @foreach (var Item in Model.AnalyticalInfo) {
                     <tr>
                         <td style="font-size: 11px;text-align:center ;border-bottom:2px solid gray">@Item.BudgetLine</td>
-                        <td width="2%" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">
                             @foreach (var data in @Item.Program) {
-                              @data.Program <text>,</text>
+                              @data.Program<text>,</text> <br>
                              }
                             </td>
                         <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.Project</td>
                         <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.Job.Job</td>
-                        <td width="2%" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">
                             @foreach (var data in @Item.Sector) {
-                               @data.Sector <text>,</text>
+                               @data.Sector<text>,</text><br>
                              }
                         </td>
                         <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.Area</td>
