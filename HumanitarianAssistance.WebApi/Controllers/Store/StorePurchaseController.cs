@@ -303,9 +303,66 @@ namespace HumanitarianAssistance.WebApi.Controllers.Store
         [ProducesResponseType(200)]
         public async Task<IActionResult> GetProcurementDetailsByProcurementId(int id)
         {
-            
-            var result = await Task.FromResult(_mediator.Send(new GetProcurementDetailsByProcurementIdQuery { Id = id} ));
+
+            var result = await Task.FromResult(_mediator.Send(new GetProcurementDetailsByProcurementIdQuery { Id = id }));
             return Ok(await result);
+        }
+
+
+
+        [HttpPost]
+        [ProducesResponseType(200)]
+
+        public async Task<IActionResult> GetFilteredInventoryMasterList([FromBody] GetFilteredInventoryMasterListQuery command)
+        {
+           var result= await Task.FromResult( _mediator.Send(command));
+           return Ok(await result);
+        }
+        
+        // GetFilteredItemGroupList
+          [HttpPost]
+        [ProducesResponseType(200)]
+
+        public async Task<IActionResult> GetFilteredItemGroupList([FromBody] GetFilteredItemGroupListQuery command)
+        {
+           var result= await Task.FromResult( _mediator.Send(command));
+           return Ok(await result);
+        }
+          [HttpPost]
+        [ProducesResponseType(200)]
+
+        public async Task<IActionResult> GetFilteredItemList([FromBody] GetFilteredItemListQuery command)
+        {
+           var result= await Task.FromResult( _mediator.Send(command));
+           return Ok(await result);
+        }  [HttpPost]
+        [ProducesResponseType(200)]
+
+        public async Task<IActionResult> GetFilteredProjectList([FromBody] GetFilteredProjectListQuery command)
+        {
+           var result= await Task.FromResult( _mediator.Send(command));
+           return Ok(await result);
+        }  [HttpPost]
+        [ProducesResponseType(200)]
+
+        public async Task<IActionResult> GetFilteredBudegtList([FromBody] GetFilteredBudegtListQuery command)
+        {
+           var result= await Task.FromResult( _mediator.Send(command));
+           return Ok(await result);
+        }  [HttpPost]
+        [ProducesResponseType(200)]
+
+        public async Task<IActionResult> GetFilteredReceivedFromLocationList([FromBody] GetFilteredReceivedFromLocationListQuery command)
+        {
+           var result= await Task.FromResult( _mediator.Send(command));
+           return Ok(await result);
+        }  [HttpPost]
+        [ProducesResponseType(200)]
+
+        public async Task<IActionResult> GetFilteredReceivedFromEmpList([FromBody] GetFilteredReceivedFromEmpListQuery command)
+        {
+           var result= await Task.FromResult( _mediator.Send(command));
+           return Ok(await result);
         }
 
     }

@@ -28,7 +28,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
             {
                 var ProjectList = await _dbContext.ProjectDetail
                                           .Where(x => !x.IsDeleted)
-                                          .OrderByDescending(x => x.ProjectId).Select(x => new ProjectDetailModel
+                                          .OrderByDescending(x => x.CreatedDate).Select(x => new ProjectDetailModel
                                           {
                                               ProjectId = x.ProjectId,
                                               ProjectCode = x.ProjectCode,
@@ -38,7 +38,7 @@ namespace HumanitarianAssistance.Application.Project.Queries
                                               IsCriteriaEvaluationSubmit = x.IsCriteriaEvaluationSubmit,
                                               ProjectPhase = x.ProjectPhaseDetailsId == x.ProjectPhaseDetails.ProjectPhaseDetailsId ? x.ProjectPhaseDetails.ProjectPhase.ToString() : "",
                                               TotalDaysinHours = x.EndDate == null ? (Convert.ToString(Math.Round(DateTime.UtcNow.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + DateTime.UtcNow.Subtract(x.StartDate.Value).Minutes)) : (Convert.ToString(Math.Round(x.EndDate.Value.Subtract(x.StartDate.Value).TotalHours, 0) + ":" + x.EndDate.Value.Subtract(x.StartDate.Value).Minutes))
-                                          }).ToListAsync();
+                                          }).Take(15).ToListAsync();
                 response.data.ProjectDetailModel = ProjectList;
                 response.StatusCode = 200;
                 response.Message = "Success";
