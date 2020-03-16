@@ -165,7 +165,7 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                 {
                     details.Salary = (double)Math.Round((double)(details.BasicSalary - (details.Absentess* details.WorkingHours * details.HourlyRate)), 2);
                 }
-                return await _pdfExportService.ExportToPdf (details, "Pages/PdfTemplates/MonthlyPaySlipReport.cshtml", true);
+                return await _pdfExportService.ExportToPdf (details, "Pages/PdfTemplates/MonthlyPaySlipReport.cshtml");
             } catch (Exception ex) {
                 throw new Exception (ex.Message);
             }
