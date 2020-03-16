@@ -7,5 +7,6 @@ namespace HumanitarianAssistance.Application.CommonServicesInterface
     {
         Task<bool> AuditLog(AuditLogModel AuditLogModel);
         void HRMAuditLogService(AuditLogModel model, dynamic request);
+        dynamic ListHRMLogEntries();
     }
 }
