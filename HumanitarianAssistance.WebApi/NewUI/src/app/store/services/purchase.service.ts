@@ -262,7 +262,7 @@ getPurchaseFilterList(): any {
       );
   }
 
-  addPurchase(purchase: any, itemGroupTransportCategory: number, itemTransportCategory: number) {
+  addPurchase(purchase: any, itemGroupTransportCategory: number, itemTransportCategory: number, quantity: number) {
     const purchaseModel: IAddEditPurchaseModel = {
       ApplyDepreciation: purchase.ApplyDepreciation,
       AssetTypeId: purchase.AssetTypeId,
@@ -280,7 +280,7 @@ getPurchaseFilterList(): any {
       PurchaseName: purchase.PurchaseName,
       PurchaseOrderNo: purchase.PurchaseOrderNo,
       PurchasedById: purchase.ReceivedFromEmployeeId,
-      Quantity: purchase.Quantity,
+      Quantity: quantity,
       ReceivedFromLocation: purchase.ReceivedFromLocation,
       ReceiptTypeId: purchase.ReceiptTypeId,
       Status: purchase.StatusId,
@@ -649,4 +649,55 @@ getPreviousYearsList(years: number): Observable<IDropDownModel[]> {
     );
   }
   //#endregion
+
+
+  GetFilteredInventoryMaterList(data: any) {
+    debugger
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredInventoryMasterList , data
+    );
+  }
+  GetFilteredItemGroupList(data: any) {
+    debugger
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredItemGroupList , data
+    );
+  }
+  GetFilteredItemList(data: any) {
+    debugger
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredItemList , data
+    );
+  }
+  GetFilteredProjectList(data: any) {
+    debugger
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredProjectList , data
+    );
+  }
+  GetFilteredBudegtList(data: any) {
+    debugger
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredBudegtList , data
+    );
+  }
+  GetFilteredReceivedFromLocationList(data: any) {
+    debugger
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredReceivedFromLocationList , data
+    );
+  }
+  GetFilteredReceivedFromEmpList(data: any) {
+    debugger
+    return this.globalService
+    .post(
+      this.appurl.getApiUrl() + GLOBAL.API_StorePurchase_GetFilteredReceivedFromEmpList , data
+    );
+  }
 }

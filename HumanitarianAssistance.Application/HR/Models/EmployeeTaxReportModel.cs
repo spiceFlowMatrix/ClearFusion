@@ -18,7 +18,7 @@ namespace HumanitarianAssistance.Application.HR.Models
 		public string EmailAddressEmployee { get; set; }
         
 		public int AnnualTaxPeriod { get; set; }
-		public int DatesOfEmployeement { get; set; }
+		public DateTime? DatesOfEmployeement { get; set; }
 		public double? TotalWages { get; set; }
 		public double? TotalTax { get; set; }
 

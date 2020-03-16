@@ -516,54 +516,29 @@ export class EmployeePensionComponent implements OnInit {
     const taxDetail = this.employeeTaxReportData;
     if (taxDetail != null && taxDetail != undefined) {
       const pdfModel: EmployeeTaxReportModel = {
-        EmployeeId: this.employeeId,
-        TaxPayerIdentificationNumber: taxDetail.TaxPayerIdentificationNumber,
-        NameOfBusiness: taxDetail.NameOfBusiness,
-        AddressOfBusiness: taxDetail.AddressOfBusiness,
-        TelephoneNumber: taxDetail.TelephoneNumber,
-        EmailAddressEmployer: taxDetail.EmailAddressEmployer,
+        EmployeeId: this.employeeId.toString(),
+        TaxPayerIdentificationNumber: taxDetail.TaxPayerIdentificationNumber.toString(),
+        NameOfBusiness: taxDetail.NameOfBusiness.toString(),
+        AddressOfBusiness: taxDetail.AddressOfBusiness.toString(),
+        TelephoneNumber: taxDetail.TelephoneNumber.toString(),
+        EmailAddressEmployer: taxDetail.EmailAddressEmployer.toString(),
 
-        EmployeeName: taxDetail.EmployeeName,
+        EmployeeName: taxDetail.EmployeeName.toString(),
         EmployeeTaxpayerIdentification:
         taxDetail.EmployeeTaxpayerIdentification,
-        EmployeeAddress: taxDetail.EmployeeAddress,
-        TelephoneNumberEmployee: taxDetail.TelephoneNumberEmployee,
-        EmailAddressEmployee: taxDetail.EmailAddressEmployee,
+        EmployeeAddress: taxDetail.EmployeeAddress.toString(),
+        TelephoneNumberEmployee: taxDetail.TelephoneNumberEmployee.toString(),
+        EmailAddressEmployee: taxDetail.EmailAddressEmployee.toString(),
 
-        AnnualTaxPeriod: taxDetail.AnnualTaxPeriod,
+        AnnualTaxPeriod: taxDetail.AnnualTaxPeriod.toString(),
         DatesOfEmployeement: taxDetail.DatesOfEmployeement,
-        TotalWages: taxDetail.TotalWages,
-        TotalTax: taxDetail.TotalTax,
+        TotalWages: taxDetail.TotalWages.toString(),
+        TotalTax: taxDetail.TotalTax.toString(),
 
-        OfficerName: taxDetail.OfficerName,
-        Position: taxDetail.Position,
-        Date: taxDetail.Date
+        OfficerName: taxDetail.OfficerName.toString(),
+        Position: taxDetail.Position.toString(),
+        Date: taxDetail.Date.toString()
       };
-      // this.httpSvc.get('../../../../assets/fonts/arial.txt', { responseType: 'blob' }).subscribe(data => {
-      //   console.log(data);
-      // const fileReader: FileReader = new FileReader();
-      // fileReader.onloadend = function(x) {
-      //   console.log(fileReader.result);
-      //    this.fileContent = fileReader.result;
-      // };
-      // fileReader.readAsText(data);
-      // });
-      // console.log(this.fileContent);
-      // const file = this.httpSvc.get('../../../../assets/fonts/Persian.ttf', { FileTypes: 'blob' });
-      // console.log(file);
-      // const fileReader: FileReader = new FileReader();
-      // const self = this;
-      // fileReader.onloadend = function(x) {
-      //   self.fileContent = fileReader.result;
-      // }
-      // fileReader.readAsText(file);
-      // const file = fileList[0];
-      //  // '../../../../assets/fonts/Persian.ttf';
-      // const fileReader = new FileReader();
-      // fileReader.onload = (e) => {
-      //   console.log(fileReader.result);
-      // };
-      // fileReader.readAsText(file);
       const isDownload = this.pdfExportService.GenratePdfExportForSalaryPensionDetails(pdfModel);
       if (isDownload !== true) {
         this.toastr.warning('Please Try Again');

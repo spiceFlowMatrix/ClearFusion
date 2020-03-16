@@ -92,5 +92,6 @@ namespace HumanitarianAssistance.Domain.Entities.HR
         public  virtual ICollection<InterviewDetails> InterviewDetails { get; set; }
         public EmployeeBasicSalaryDetail EmployeeBasicSalaryDetail { get; set; }
         public List<EmployeeSalaryAnalyticalInfo> EmployeeAnalyticalList { get; set; }
+        public List<EmployeePayrollInfoDetail> EmployeePayrollInfoDetailList {get; set;}
     }
 }

@@ -9,7 +9,8 @@ import { AddProcurementsComponent } from './components/add-procurements/add-proc
 import { EntryComponentComponent } from './components/entry-component/entry-component.component';
 import {
   MatIconModule, MatMenuModule, MatSidenavModule, MatCardModule, MatButtonModule,
-  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule, MatTabsModule, MatSelectModule, MatOptionModule, MatTreeModule
+  MatInputModule, MatDividerModule, MatListModule, MatExpansionModule,
+  MatTabsModule, MatSelectModule, MatOptionModule, MatTreeModule, MatAutocompleteModule
 } from '@angular/material';
 import { ShareLayoutModule } from '../shared/share-layout.module';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -107,7 +108,8 @@ import { ProcurementControlPanelComponent } from './components/procurement-contr
     MatTreeModule,
     MatSelectModule,
     MatOptionModule,
-    MatRadioModule
+    MatRadioModule,
+    MatAutocompleteModule
     // MatRangeDatepickerModule,
     // MatNativeDateModule
 
