@@ -815,6 +815,7 @@ export class RequestDetailComponent implements OnInit {
           if (response.statusCode === 200) {
             this.updateCandidateStatus(model);
             this.getAllCandidateList(this.filterValueModel);
+            this.getExistingEmployeeDropDownList();
             this.loader.hideLoader();
           } else {
             this.toastr.error(response.message);

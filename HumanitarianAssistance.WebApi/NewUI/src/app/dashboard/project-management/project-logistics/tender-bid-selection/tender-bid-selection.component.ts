@@ -32,7 +32,7 @@ export class TenderBidSelectionComponent implements OnInit {
           element.OfferDocumentation +
           element.Company_GoodsSpecification + element.Service_Warranty +
           element.Certification_GMP_COPP + element.WorkExperience +
-          element.DeliveryDate)
+          element.DeliveryDateScore)
       });
     });
 
@@ -43,13 +43,13 @@ export class TenderBidSelectionComponent implements OnInit {
         element.OfferDocumentation +
         element.Company_GoodsSpecification + element.Service_Warranty +
         element.Certification_GMP_COPP + element.WorkExperience +
-        element.DeliveryDate) > this.max.TotalScore) {
+        element.DeliveryDateScore) > this.max.TotalScore) {
         this.max.TotalScore = (element.Profile_Experience + element.OfferValidity +
           element.TOR_SOWAcceptance + element.Securities_BankGuarantee +
           element.OfferDocumentation +
           element.Company_GoodsSpecification + element.Service_Warranty +
           element.Certification_GMP_COPP + element.WorkExperience +
-          element.DeliveryDate);
+          element.DeliveryDateScore);
         this.max.BidId = element.BidId;
       }
     });

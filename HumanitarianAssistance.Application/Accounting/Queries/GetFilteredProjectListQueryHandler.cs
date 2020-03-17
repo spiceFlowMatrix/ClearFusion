@@ -23,7 +23,22 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
 
             try
             {
-                var projectList = await _dbContext.ProjectDetail.Where(x=> x.IsDeleted == false &&
+                if(request.FilterValue == null || request.FilterValue == "null")
+                {
+                    var projectList = await _dbContext.ProjectDetail.Where(x=> x.IsDeleted == false)
+                                    .OrderByDescending(x=>x.CreatedDate)
+                                    .Select(x=> new {
+                                        ProjectId= x.ProjectId,
+                                        ProjectName=  x.ProjectName,
+                                        ProjectCode= x.ProjectCode
+                                    }).Take(15)
+                                    .ToListAsync();
+
+                    response.Add("projectList", projectList);
+                } 
+                else 
+                {
+                    var projectList = await _dbContext.ProjectDetail.Where(x=> x.IsDeleted == false &&
                                   x.ProjectName.ToLower().Contains(request.FilterValue.ToLower()) ||
                                   x.ProjectCode.ToLower().Contains(request.FilterValue.ToLower()))
                                   .Select(x=> new {
@@ -33,7 +48,8 @@ namespace HumanitarianAssistance.Application.Accounting.Queries
                                   })
                                   .ToListAsync();
 
-                response.Add("projectList", projectList);
+                    response.Add("projectList", projectList);
+                }
             }
             catch(Exception ex)
             {

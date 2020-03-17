@@ -37,12 +37,16 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                 await _dbContext.SaveChangesAsync();
                     AuditLogModel logs = new AuditLogModel () {
                         EmployeeId = (int)obj.EmployeeID,
-                        TypeOfEntity = (int) TypeOfEntity.History,
-                        EntityId = null,
-                        ActionTypeId = (int) ActionType.Add,
-                        ActionDescription = (TypeOfEntity.History).GetDescription(),
+                        //TypeOfEntity = (int) TypeOfEntity.History,
+                        TypeOfEntityName = TypeOfEntity.History.ToString(),
+                        PerformedBy = request.CreatedById,
+                        // EntityId = null,
+                        // ActionTypeId = (int) ActionType.Add,
+                        // ActionTypeIdName = ActionType.Add.ToString(),
+                        // ActionDescription = String.Format("Employee history added for EmployeeCode: {0}", "E"+(int)obj.EmployeeID),
                     };
-                    bool isLoged = await _actionLog.AuditLog (logs);
+                    // await _actionLog.AuditLog (logs);
+                    _actionLog.HRMAuditLogService(logs,request);
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
             }

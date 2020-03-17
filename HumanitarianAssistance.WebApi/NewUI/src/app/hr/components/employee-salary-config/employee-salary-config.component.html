@@ -101,7 +101,7 @@
                     <tbody>
                         <tr>
                             <td>Active Hourly Rate</td>
-                            <td>{{ monthlySalaryBreakdown.HourlyRate }}</td>
+                            <td>{{ monthlySalaryBreakdown.HourlyRate | number : '1.2-2' }}</td>
                         </tr>
                         <tr>
                             <td>Month</td>
@@ -109,11 +109,11 @@
                         </tr>
                         <tr>
                             <td>Total Gross Salary</td>
-                            <td>{{ monthlySalaryBreakdown.GrossSalary }}</td>
+                            <td>{{ monthlySalaryBreakdown.GrossSalary | number : '1.2-2' }}</td>
                         </tr>
                         <tr>
                             <td>Total Net Salary</td>
-                            <td>{{ monthlySalaryBreakdown.NetSalary }}</td>
+                            <td>{{ monthlySalaryBreakdown.NetSalary | number : '1.2-2' }}</td>
                         </tr>
                         <tr>
                             <td>Status</td>
@@ -121,7 +121,7 @@
                         </tr>
                         <tr>
                             <td>Salary Paid Amount</td>
-                            <td>{{ monthlySalaryBreakdown.SalaryPaidAmount }}</td>
+                            <td>{{ monthlySalaryBreakdown.SalaryPaidAmount | number : '1.2-2' }}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -49,6 +49,9 @@ namespace HumanitarianAssistance.Application.HR.Models
         public string BudgetLine { get; set; }
         public double Percentage { get; set; }
         public double HourlyRate { get; set; }
+        public int MonthNumber { get; set; }
+        public int AbsentDays { get; set; }
+        public long? AttendanceGroupId { get; set; }
         public List<EmployeeAnalyticalInfo> EmployeeAnalyticalInfoList { get; set; }
     }
     
@@ -58,7 +61,7 @@ namespace HumanitarianAssistance.Application.HR.Models
         public string SubHeader { get; set; }
         public string Currency { get; set; }
         public string Office { get; set; }
-        public string Date { get; set; }
+        public string Months { get; set; }
     }
 
     public class EmployeeAnalyticalInfo 

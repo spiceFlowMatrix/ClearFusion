@@ -32,7 +32,8 @@ export class ModifyTransactionComponent implements OnInit {
 
   voucherNo: any;
   voucherDetail: any;
-  displayedColumns: string[] = ['select', 'AccountCode', 'Description', 'CreditAmount', 'DebitAmount', 'ProjectName', 'BudgetLineName', 'JobName'];
+  displayedColumns: string[] = ['select', 'AccountCode', 'Description', 'DebitAmount', 'CreditAmount',
+    'ProjectName', 'BudgetLineName', 'JobName'];
   ELEMENT_DATA: any[] = [];
   isModifyTransactions = false;
   transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
@@ -40,10 +41,13 @@ export class ModifyTransactionComponent implements OnInit {
   addEditTransaction = false;
   addEditTransactionForm: FormGroup;
   filterdOptionsAccountList: Observable<any[]>;
-  accountspinner= false;
+  accountspinner = false;
   projectspinner = false;
-  budgetlinespinner= false;
+  budgetlinespinner = false;
   accountList: any[] = [];
+  defaultAccountList: any[] = [];
+  defaultProjectList: any[] = [];
+  defaultBudgetLineList: any[] = [];
   projectList: any[] = [];
   jobList: any[] = [];
   budgetLineList: any[] = [];
@@ -73,30 +77,32 @@ export class ModifyTransactionComponent implements OnInit {
     this.onFormInIt();
     this.getDetailsByVoucherNo();
     this.getVoucherTransactionsByVoucherNo();
-    this.setAutoComplete();
+    this.getDefaultAccountList();
+    this.getDefaultProjectList();
+    // this.setAutoComplete();
 
   }
 
   setAutoComplete() {
 
-    this.filterdOptionsAccountList = this.addEditTransactionForm.controls[
-      'AccountId'
-    ].valueChanges.pipe(
-      startWith<string | any>(''),
-      map(value => this.filterAccountName(value))
-    );
-    this.filterdOptionsProjectList = this.addEditTransactionForm.controls[
-      'ProjectId'
-    ].valueChanges.pipe(
-      startWith<string | any>(''),
-      map(value => this.filterProjectName(value))
-    );
-    this.filterdOptionsBudgetLineList = this.addEditTransactionForm.controls[
-      'BudgetLine'
-    ].valueChanges.pipe(
-      startWith<string | any>(''),
-      map(value => this.filterBudgetLineName(value))
-    );
+    // this.addEditTransactionForm.controls[
+    //   'AccountId'
+    // ].valueChanges.pipe(
+    //   startWith<string | any>(''),
+    //   map(value => this.filterAccountName(value))
+    // );
+    // this.filterdOptionsProjectList = this.addEditTransactionForm.controls[
+    //   'ProjectId'
+    // ].valueChanges.pipe(
+    //   startWith<string | any>(''),
+    //   map(value => this.filterProjectName(value))
+    // );
+    // this.filterdOptionsBudgetLineList = this.addEditTransactionForm.controls[
+    //   'BudgetLine'
+    // ].valueChanges.pipe(
+    //   startWith<string | any>(''),
+    //   map(value => this.filterBudgetLineName(value))
+    // );
   }
   onFormInIt() {
     this.onInItAddTransactionForm();
@@ -136,6 +142,7 @@ export class ModifyTransactionComponent implements OnInit {
 
   onInItAddTransactionForm() {
     this.addEditTransactionForm = this.fb.group({
+      'TransactionId': [null],
       'AccountId': ['', [Validators.required]],
       'AccountName': [null],
       'Description': [null, [Validators.required]],
@@ -148,6 +155,10 @@ export class ModifyTransactionComponent implements OnInit {
       'Type': [null],
     });
     this.addEditTransactionForm.controls['BudgetLine'].disable();
+    this.selectedAccountNo = null;
+    this.selectedProjectName = null;
+    this.selectedProjectId = null;
+    this.selectedProjectName = null;
   }
 
   getDetailsByVoucherNo() {
@@ -198,11 +209,11 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onAddTransactionTopBtnClick() {
-   // this.onInItAddTransactionForm();
-   this.addEditTransactionForm.get('Credit').setValue(0);
-   this.addEditTransactionForm.get('Debit').setValue(0);
-   this.addEditTransactionForm.get('Debit').enable();
-   this.addEditTransactionForm.get('Credit').enable();
+    this.onInItAddTransactionForm();
+    this.addEditTransactionForm.get('Credit').setValue(0);
+    this.addEditTransactionForm.get('Debit').setValue(0);
+    this.addEditTransactionForm.get('Debit').enable();
+    this.addEditTransactionForm.get('Credit').enable();
     this.showAddTransactionTop = true;
   }
 
@@ -211,77 +222,225 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   onAddTransactionBottomBtnClick() {
-    // this.onInItAddTransactionForm();
+    this.onInItAddTransactionForm();
     this.addEditTransactionForm.get('Credit').setValue(0);
     this.addEditTransactionForm.get('Debit').setValue(0);
     this.addEditTransactionForm.get('Debit').enable();
     this.addEditTransactionForm.get('Credit').enable();
-     this.showAddTransactionBottom = true;
-   }
+    this.showAddTransactionBottom = true;
+  }
 
-   cancelTransactionBottomBtnClicked() {
-     this.showAddTransactionBottom = false;
-   }
+  cancelTransactionBottomBtnClicked() {
+    this.showAddTransactionBottom = false;
+  }
 
-  private filterAccountName(value: string): any[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      if (value.length >= 2) {
-        this.getFilteredAccountList(filterValue);
-        return this.accountList;
-      } else {
+  private filterAccountName(event) {
+    const filterValue = event.target.value.toLowerCase();
+    if (filterValue || filterValue !== '') {
+      if (filterValue.length >= 2) {
+        this.accountspinner = true;
         this.accountList = [];
+        this.filterdOptionsAccountList = of(this.accountList);
+        this.voucherService
+          .GetFilteredInputLevelAccountList(filterValue)
+          .subscribe(resp => {
+            this.accountList = [];
+            if (resp !== undefined && resp.AccountList.length > 0) {
+              resp.AccountList.forEach(element => {
+                this.accountList.push({
+                  AccountId: element.ChartOfAccountNewId,
+                  AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
+                });
+              });
+              this.accountspinner = false;
+            } else {
+              this.accountspinner = false;
+            }
+            this.filterdOptionsAccountList = of(this.accountList);
+            this.filterdOptionsAccountList.subscribe(console.log)
+          }, error => {
+            console.log(error);
+            this.accountspinner = false;
+          });
       }
+    } else {
+      this.filterdOptionsAccountList = of(this.defaultAccountList);
     }
   }
 
-  private filterProjectName(value: string): any[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      if (value.length >= 2) {
-        this.getFilteredProjectList(filterValue);
-        return this.projectList;
+  private getDefaultAccountList() {
+    this.accountList = [];
+    this.defaultAccountList = [];
+    this.voucherService
+      .GetFilteredInputLevelAccountList(null)
+      .subscribe(resp => {
+        this.accountList = [];
+        if (resp !== undefined && resp.AccountList.length > 0) {
+          resp.AccountList.forEach(element => {
+            this.accountList.push({
+              AccountId: element.ChartOfAccountNewId,
+              AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
+            });
+          });
+          this.defaultAccountList = this.accountList;
+          this.filterdOptionsAccountList = of(this.defaultAccountList);
+          this.accountspinner = false;
+        } else {
+          this.accountspinner = false;
+        }
+      }, error => {
+        console.log(error);
+        this.accountspinner = false;
+      });
+  }
+
+  private getDefaultProjectList() {
+    this.projectList = [];
+    this.defaultProjectList = [];
+    this.projectspinner = true;
+    this.voucherService
+      .GetFilteredProjectList(null)
+      .subscribe(resp => {
+        this.projectList = [];
+        if (resp !== undefined && resp.projectList.length > 0) {
+          resp.projectList.forEach(element => {
+            this.projectList.push({
+              ProjectId: element.ProjectId,
+              ProjectName: element.ProjectCode + '-' + element.ProjectName
+            });
+          });
+          this.defaultProjectList = this.projectList;
+          this.filterdOptionsProjectList = of(this.defaultProjectList);
+          this.projectspinner = false;
+        } else {
+          this.projectspinner = false;
+        }
+      }, error => {
+        this.projectspinner = false;
+      });
+  }
+
+  private getDefaultBudgetLineList() {
+    const model = {
+      ProjectId: this.selectedProjectId,
+      FilterValue: null
+    };
+    this.budgetlinespinner = true;
+    this.voucherService
+      .getFilteredBudgetLineList(model)
+      .subscribe(resp => {
+        this.budgetLineList = [];
+        if (resp !== undefined && resp.budgetLineList.length > 0) {
+          resp.budgetLineList.forEach(element => {
+            this.budgetLineList.push({
+              BudgetLineId: element.BudgetLineId,
+              BudgetLineName: element.BudgetLineCode + '-' + element.BudgetLineName
+            });
+          });
+          this.defaultBudgetLineList = this.budgetLineList;
+          this.filterdOptionsBudgetLineList = of(this.defaultBudgetLineList);
+          this.budgetlinespinner = false;
+        } else {
+          this.budgetlinespinner = false;
+        }
+      }, error => {
+        this.budgetlinespinner = false;
+      });
+  }
+
+  private filterProjectName(event) {
+    const filterValue = event.target.value.toLowerCase();
+    if (filterValue || filterValue !== '') {
+      if (filterValue.length >= 2) {
+        // this.getFilteredProjectList(filterValue);
+        this.projectspinner = true;
+        this.voucherService
+          .GetFilteredProjectList(filterValue)
+          .subscribe(resp => {
+            this.projectList = [];
+            this.filterdOptionsProjectList = of(this.projectList);
+            if (resp !== undefined && resp.projectList.length > 0) {
+              resp.projectList.forEach(element => {
+                this.projectList.push({
+                  ProjectId: element.ProjectId,
+                  ProjectName: element.ProjectCode + '-' + element.ProjectName
+                });
+              });
+              this.filterdOptionsProjectList = of(this.projectList);
+              this.projectspinner = false;
+            } else {
+              this.projectspinner = false;
+            }
+          }, error => {
+            this.projectspinner = false;
+          });
       } else {
         this.addEditTransactionForm.controls['BudgetLine'].disable();
         this.projectList = [];
+        this.filterdOptionsProjectList = of(this.projectList);
       }
+    } else {
+      this.filterdOptionsProjectList = of(this.defaultProjectList);
     }
   }
 
-  private filterBudgetLineName(value: string): any[] {
-    if (value) {
-      const filterValue = value.toLowerCase();
-      if (value.length >= 2) {
-        this.getFilteredBudgetLineList(filterValue);
-        return this.budgetLineList;
-      } else {
-        this.budgetLineList = [];
+  private filterBudgetLineName(event) {
+    const filterValue = event.target.value.toLowerCase();
+    this.budgetLineList = [];
+    if (filterValue || filterValue !== '') {
+      if (filterValue.length >= 2) {
+        const model = {
+          ProjectId: this.selectedProjectId,
+          FilterValue: filterValue
+        };
+        this.budgetlinespinner = true;
+        this.voucherService
+          .getFilteredBudgetLineList(model)
+          .subscribe(resp => {
+            this.budgetLineList = [];
+            if (resp !== undefined && resp.budgetLineList.length > 0) {
+              resp.budgetLineList.forEach(element => {
+                this.budgetLineList.push({
+                  BudgetLineId: element.BudgetLineId,
+                  BudgetLineName: element.BudgetLineCode + '-' + element.BudgetLineName
+                });
+              });
+              this.filterdOptionsBudgetLineList = of(this.budgetLineList);
+              this.budgetlinespinner = false;
+            } else {
+              this.budgetlinespinner = false;
+              this.filterdOptionsBudgetLineList = of(this.budgetLineList);
+            }
+          }, error => {
+            this.budgetlinespinner = false;
+          });
       }
+    } else {
+      this.filterdOptionsBudgetLineList = of(this.defaultBudgetLineList);
     }
   }
 
   getFilteredAccountList(data: string) {
-    if (data !== undefined && data != null) {
-      this.accountspinner = true;
-      this.voucherService
-        .GetFilteredInputLevelAccountList(data)
-        .subscribe(resp => {
-          this.accountList = [];
-          if (resp !== undefined && resp.AccountList.length > 0) {
-            resp.AccountList.forEach(element => {
-              this.accountList.push({
-                AccountId: element.ChartOfAccountNewId,
-                AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
-              });
+    this.accountspinner = true;
+    this.accountList = [];
+    this.voucherService
+      .GetFilteredInputLevelAccountList(data)
+      .subscribe(resp => {
+        this.accountList = [];
+        if (resp !== undefined && resp.AccountList.length > 0) {
+          resp.AccountList.forEach(element => {
+            this.accountList.push({
+              AccountId: element.ChartOfAccountNewId,
+              AccountName: element.ChartOfAccountNewCode + '-' + element.AccountName
             });
-            this.accountspinner = false;
-          } else {
-            this.accountspinner = false;
-          }
-        }, error=> {
+          });
           this.accountspinner = false;
-        });
-    }
+        } else {
+          this.accountspinner = false;
+        }
+      }, error => {
+        this.accountspinner = false;
+      });
   }
 
   getFilteredProjectList(data: string) {
@@ -302,7 +461,7 @@ export class ModifyTransactionComponent implements OnInit {
           } else {
             this.projectspinner = false;
           }
-        }, error=> {
+        }, error => {
           this.projectspinner = false;
         });
     }
@@ -341,14 +500,20 @@ export class ModifyTransactionComponent implements OnInit {
       // this.addEditTransactionForm.controls['AccountId'].setValue(id);
       this.selectedAccountNo = id;
       this.selectedAccountName = event.source.value;
+      this.addEditTransactionForm.controls['AccountId'].setValue(event.source.value);
     }
   }
 
   onChangeProjectValue(event: any, id: number) {
     if (id !== undefined && id != null) {
-      this.selectedProjectId = id;
-      this.selectedProjectName = event.source.value;
-      this.addEditTransactionForm.controls['BudgetLine'].enable();
+      if (event.isUserInput) {
+        this.selectedProjectId = id;
+        this.selectedProjectName = event.source.value;
+        this.addEditTransactionForm.controls['ProjectId'].setValue(event.source.value);
+        this.addEditTransactionForm.controls['BudgetLine'].setValue('');
+        this.getDefaultBudgetLineList();
+        this.addEditTransactionForm.controls['BudgetLine'].enable();
+      }
     } else {
       this.addEditTransactionForm.controls['BudgetLine'].disable();
     }
@@ -358,6 +523,7 @@ export class ModifyTransactionComponent implements OnInit {
     if (id !== undefined && id != null) {
       this.selectedBudgetLineId = id;
       this.selectedBudgetLineName = event.source.value;
+      this.addEditTransactionForm.controls['BudgetLine'].setValue(event.source.value);
       this.getProjectJobDetailByBudgetLineId(id);
     } else {
 
@@ -382,11 +548,19 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   addTransaction() {
-
     if (!this.addEditTransactionForm.valid) {
       this.errorMessage = 'Please correct form errors and try again';
       return;
     }
+
+    if (this.addEditTransactionForm.value.TransactionId && this.addEditTransactionForm.value.TransactionId !== 0) {
+      this.editTransaction();
+    } else {
+      this.addNewTransaction();
+    }
+  }
+
+  addNewTransaction() {
     const creditamount = Number(this.addEditTransactionForm.getRawValue().Credit);
     const debitamount = Number(this.addEditTransactionForm.getRawValue().Debit);
     if (creditamount == 0) {
@@ -421,6 +595,8 @@ export class ModifyTransactionComponent implements OnInit {
       this.voucherDetail.TotalCredit += parseFloat(creditamount.toFixed(2));
     }
 
+    this.ELEMENT_DATA.push(model);
+    this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
     this.selectedAccountNo = null;
     this.selectedProjectName = null;
     this.selectedProjectId = null;
@@ -429,8 +605,47 @@ export class ModifyTransactionComponent implements OnInit {
     this.showAddTransactionBottom = false;
     this.addEditTransactionForm.reset();
     this.setAutoComplete();
-    this.ELEMENT_DATA.push(model);
-    this.transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
+  }
+
+  editTransaction() {
+    const index = this.ELEMENT_DATA.findIndex(x => x.TransactionId === this.addEditTransactionForm.value.TransactionId);
+    if (index !== -1) {
+      const creditamount = Number(this.addEditTransactionForm.getRawValue().Credit);
+      const debitamount = Number(this.addEditTransactionForm.getRawValue().Debit);
+      if (creditamount === 0) {
+        this.ELEMENT_DATA[index].Type = 'Debit';
+      } else {
+        this.ELEMENT_DATA[index].Type = 'Credit';
+      }
+
+      this.voucherDetail.TotalDebit = this.voucherDetail.TotalDebit + parseFloat(debitamount.toFixed(2));
+      this.voucherDetail.TotalCredit = this.voucherDetail.TotalCredit + parseFloat(creditamount.toFixed(2));
+      this.voucherDetail.TotalDebit = this.voucherDetail.TotalDebit - this.ELEMENT_DATA[index].Debit;
+      this.voucherDetail.TotalCredit = this.voucherDetail.TotalCredit - this.ELEMENT_DATA[index].Credit;
+
+      this.ELEMENT_DATA[index].AccountNo = this.selectedAccountNo,
+        this.ELEMENT_DATA[index].Debit = debitamount.toFixed(2),
+        this.ELEMENT_DATA[index].Credit = creditamount.toFixed(2),
+        this.ELEMENT_DATA[index].Amount = 0,
+        this.ELEMENT_DATA[index].ProjectId = this.selectedProjectId,
+        this.ELEMENT_DATA[index].ProjectName = this.selectedProjectName,
+        this.ELEMENT_DATA[index].BudgetLineName = this.selectedBudgetLineName,
+        this.ELEMENT_DATA[index].BudgetLineId = this.selectedBudgetLineId,
+        this.ELEMENT_DATA[index].Description = this.addEditTransactionForm.getRawValue().Description,
+        this.ELEMENT_DATA[index].VoucherNo = this.voucherNo,
+        this.ELEMENT_DATA[index].JobId = this.addEditTransactionForm.getRawValue().JobId,
+        this.ELEMENT_DATA[index].JobName = this.addEditTransactionForm.getRawValue().JobName,
+        this.ELEMENT_DATA[index].AccountCode = this.selectedAccountName;
+    }
+
+    this.selectedAccountNo = null;
+    this.selectedProjectName = null;
+    this.selectedProjectId = null;
+    this.selectedProjectName = null;
+    this.showAddTransactionTop = false;
+    this.showAddTransactionBottom = false;
+    this.addEditTransactionForm.reset();
+    this.setAutoComplete();
   }
 
   cancelButtonClicked() {
@@ -467,16 +682,12 @@ export class ModifyTransactionComponent implements OnInit {
     const debitsTotal = this.ELEMENT_DATA.filter(x => x.Type === 'Debit');
 
     if (creditsTotal.length === 0 && debitsTotal.length === 0) {
-      // this.errorMessage = 'Credits and Debits must be equal';
-      // this.isFormSubmitted = false;
-      // return;
     } else {
       if (creditsTotal.length === 0 || debitsTotal.length === 0) {
         this.errorMessage = 'Credits and Debits must be equal';
         this.isFormSubmitted = false;
         return;
-      }
-      else {
+      } else {
         let credit = 0;
         let debit = 0;
         if (creditsTotal.length == 1) {
@@ -484,7 +695,7 @@ export class ModifyTransactionComponent implements OnInit {
         } else { creditsTotal.map(item => item.Credit).reduce((prev, next) => credit = Number(prev) + Number(next)); }
         if (debitsTotal.length == 1) {
           debit = Number(debitsTotal[0].Debit);
-        } else {  debitsTotal.map(item => item.Debit).reduce((prev, next) => debit = Number(prev) + Number(next)); }
+        } else { debitsTotal.map(item => item.Debit).reduce((prev, next) => debit = Number(prev) + Number(next)); }
         if (credit !== debit) {
           this.errorMessage = 'Credits and Debits must be equal';
           this.isFormSubmitted = false;
@@ -496,8 +707,6 @@ export class ModifyTransactionComponent implements OnInit {
 
 
     this.errorMessage = '';
-
-    // traveler.map(item => item.Amount).reduce((prev, next) => prev + next);
 
     this.ELEMENT_DATA.forEach(x => {
       let item = {
@@ -531,20 +740,20 @@ export class ModifyTransactionComponent implements OnInit {
   onAmountEvent(value, type) {
     const val = Number(value);
     //if (val && val !== 0) {
-      if (type === 2 && val !== 0) {
-        this.addEditTransactionForm.get('Debit').setValue(val.toFixed(2));
-        this.addEditTransactionForm.get('Credit').setValue(0);
-        this.addEditTransactionForm.get('Credit').disable();
-        // this.addEditTransactionForm.get('Credit').setValue(0);
-      } else if (type === 2 && val == 0) {
-        this.addEditTransactionForm.get('Credit').enable();
-      } else if(type === 1 && val !== 0) {
-        this.addEditTransactionForm.get('Credit').setValue(val.toFixed(2));
-        this.addEditTransactionForm.get('Debit').setValue(0);
-        this.addEditTransactionForm.get('Debit').disable();
-      } else if(type === 1 && val == 0) {
-        this.addEditTransactionForm.get('Debit').enable();
-      }
+    if (type === 2 && val !== 0) {
+      this.addEditTransactionForm.get('Debit').setValue(val.toFixed(2));
+      this.addEditTransactionForm.get('Credit').setValue(0);
+      this.addEditTransactionForm.get('Credit').disable();
+      // this.addEditTransactionForm.get('Credit').setValue(0);
+    } else if (type === 2 && val == 0) {
+      this.addEditTransactionForm.get('Credit').enable();
+    } else if (type === 1 && val !== 0) {
+      this.addEditTransactionForm.get('Credit').setValue(val.toFixed(2));
+      this.addEditTransactionForm.get('Debit').setValue(0);
+      this.addEditTransactionForm.get('Debit').disable();
+    } else if (type === 1 && val == 0) {
+      this.addEditTransactionForm.get('Debit').enable();
+    }
     //}
 
   }
@@ -552,11 +761,11 @@ export class ModifyTransactionComponent implements OnInit {
     if (val == 1) {
       // this.addEditTransactionForm.get('Credit').enable();
       this.addEditTransactionForm.get('Debit').setValue(0);
-     //  this.addEditTransactionForm.get('Debit').disable();
+      //  this.addEditTransactionForm.get('Debit').disable();
     } else {
       // this.addEditTransactionForm.get('Debit').enable();
       this.addEditTransactionForm.get('Credit').setValue(0);
-     // this.addEditTransactionForm.get('Credit').disable();
+      // this.addEditTransactionForm.get('Credit').disable();
     }
   }
   pagination(event) {
@@ -575,10 +784,44 @@ export class ModifyTransactionComponent implements OnInit {
   }
 
   enableDisableBudgetLine(value) {
-    if (value == null || value == undefined || value== '' ) {
+    if (value == null || value == undefined || value == '') {
       this.addEditTransactionForm.controls['BudgetLine'].setValue('');
       this.addEditTransactionForm.controls['BudgetLine'].disable();
     }
+  }
+
+  editTransactionBtnClick(data) {
+    this.showAddTransactionBottom = true;
+    this.showAddTransactionTop = true;
+    this.addEditTransactionForm.controls['Credit'].enable();
+    this.addEditTransactionForm.controls['Debit'].enable();
+
+    if (data.Credit === 0) {
+      this.addEditTransactionForm.controls['Credit'].disable();
+    } else if (data.Debit === 0) {
+      this.addEditTransactionForm.controls['Debit'].disable();
+    }
+
+    this.addEditTransactionForm.patchValue({
+      'TransactionId': data.TransactionId,
+      'AccountId': data.AccountCode,
+      'AccountName': data.AccountCode,
+      'Description': data.Description,
+      'Credit': data.Credit,
+      'Debit': data.Debit,
+      'ProjectId': data.ProjectName,
+      'BudgetLine': data.BudgetLineName,
+      'JobId': data.JobId,
+      'JobName': data.JobName,
+      'Type': data.Type,
+    });
+    this.selectedProjectId = data.ProjectId;
+    this.selectedBudgetLineId = data.BudgetLineId;
+    this.selectedAccountNo = data.AccountNo;
+    this.selectedBudgetLineName = data.BudgetLineName;
+    this.selectedProjectName = data.ProjectName;
+    this.selectedAccountName = data.AccountCode;
+    this.addEditTransactionForm.controls['BudgetLine'].enable();
   }
 
 }

@@ -84,6 +84,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                         PdfDocument doc = new PdfDocument(pdfWriter);
                         if(isLandscape){
                             doc.SetDefaultPageSize(PageSize.A4.Rotate());
+                             
                         }
 
                             // string[] fonts= {                                
@@ -98,6 +99,7 @@ namespace HumanitarianAssistance.Application.CommonServices
                             // cp.SetFontProvider(fontProvider);                            
                         // CAUTION : Don't remove using block from here, it used to destroy the stream once pdf is generated
                         using (var document = HtmlConverter.ConvertToDocument(stringWriter.ToString(), doc,cp)) { }
+                   
                     }
                     _stream.Position = 0;
 

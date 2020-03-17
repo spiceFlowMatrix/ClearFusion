@@ -44,6 +44,8 @@ namespace HumanitarianAssistance.Application.HR.Commands.Create
                     SexId= model.CandidateDetails.GenderId,
                     CountryId= model.CandidateDetails.CountryId,
                     ProvinceId= model.CandidateDetails.ProvinceId,
+                    HiredOn= DateTime.UtcNow,
+                    CreatedDate = DateTime.UtcNow,
                    // District= model.CandidateDetails.DistrictID,
                    // ExperienceYear= model.CandidateDetails.RelevantExperienceInYear,
                    Password= model.CandidateDetails.Password,

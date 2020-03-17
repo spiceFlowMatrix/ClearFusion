@@ -34,9 +34,9 @@
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input #securityDate class="fixedWidth"
-            formControlName="SecurityDate" matInput [matDatepicker]="securityDatepicker" placeholder="Security Date" >
-          <mat-datepicker-toggle matSuffix [for]="securityDatepicker"></mat-datepicker-toggle>
-          <mat-datepicker #securityDatepicker></mat-datepicker>
+            formControlName="TenderDeliveryDate" matInput [matDatepicker]="deliveryDatepicker" placeholder="Delivery Date" >
+          <mat-datepicker-toggle matSuffix [for]="deliveryDatepicker"></mat-datepicker-toggle>
+          <mat-datepicker #deliveryDatepicker></mat-datepicker>
         </mat-form-field>
         <mat-form-field class="example-full-width">
           <input matInput type="number" formControlName="QuotedAmount" placeholder="Quoted Amount">
@@ -58,7 +58,7 @@
                 tenderBidForm.value.OfferDocumentation +
                 tenderBidForm.value.Company_GoodsSpecification + tenderBidForm.value.Service_Warranty +
                 tenderBidForm.value.Certification_GMP_COPP + tenderBidForm.value.WorkExperience +
-                tenderBidForm.value.DeliveryDate }}</td>
+                tenderBidForm.value.DeliveryDateScore }}</td>
           </tr>
           <tr>
             <td class="font_weight_600">Results Qualified?</td>
@@ -106,7 +106,7 @@
               <input matInput type="number" formControlName="WorkExperience" placeholder="Work Experience">
             </mat-form-field>
             <mat-form-field class="example-full-width">
-              <input matInput type="number" formControlName="DeliveryDate" placeholder="Delivery Date">
+              <input matInput type="number" formControlName="DeliveryDateScore" placeholder="Delivery Date">
             </mat-form-field>
             <button type="submit" #submitBtn style="display: none;"></button>
           </div>

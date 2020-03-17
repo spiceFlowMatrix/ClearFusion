@@ -55,13 +55,14 @@
         <td>{{voucherDetail.ChequeNo}}</td>
       </tr>
       <tr>
-        <td><strong>Total Credit</strong></td>
-        <td>{{voucherDetail.TotalCredit}}</td>
-      </tr>
-      <tr>
         <td><strong>Total Debit</strong></td>
         <td>{{voucherDetail.TotalDebit}}</td>
       </tr>
+      <tr>
+        <td><strong>Total Credit</strong></td>
+        <td>{{voucherDetail.TotalCredit}}</td>
+      </tr>
+
     </table>
   </div>
   <div class="row container-fluid"
@@ -113,7 +114,7 @@
     </div>
     <div class="col-sm-11">
       <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionTopBtnClick()"></hum-button>
-      <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button>
+      <!-- <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button> -->
     </div>
   </div>
   <div class="row" *ngIf="showAddTransactionTop">
@@ -131,7 +132,7 @@
           <div class="col-sm-3">
             <mat-form-field class="example-full-width">
               <input type="text" placeholder="Search and Select Account" aria-label="Number" matInput formControlName="AccountId"
-                name="AccountId" [matAutocomplete]="matAutocomplete1">
+                (keyup)="filterAccountName($event)" name="AccountId" [matAutocomplete]="matAutocomplete1">
               <mat-autocomplete #matAutocomplete1="matAutocomplete">
                 <mat-option (onSelectionChange)="onChangeAccountValue($event,item.AccountId)"
                   *ngFor="let item of filterdOptionsAccountList | async" [value]="item.AccountName">{{item.AccountName}}
@@ -147,15 +148,7 @@
               <textarea matInput rows="1" formControlName="Description" placeholder="Description"></textarea>
             </mat-form-field>
           </div>
-          <div class="col-sm-3">
-            <mat-form-field class="example-full-width">
-              <mat-label>Credit</mat-label>
-              <input formControlName="Credit" (input)="checkAmount(1)" (blur)="onAmountEvent($event.target.value, 1)" matInput placeholder="Credit"
-                type="number">
-              <mat-error *ngIf="addEditTransactionForm.controls['Credit'].hasError('min')">Amount can not be 0</mat-error>
-            </mat-form-field>
 
-          </div>
           <div class="col-sm-3">
             <mat-form-field class="example-full-width">
               <mat-label>Debit</mat-label>
@@ -165,12 +158,20 @@
             </mat-form-field>
           </div>
 
+          <div class="col-sm-3">
+            <mat-form-field class="example-full-width">
+              <mat-label>Credit</mat-label>
+              <input formControlName="Credit" (input)="checkAmount(1)" (blur)="onAmountEvent($event.target.value, 1)" matInput placeholder="Credit"
+                type="number">
+              <mat-error *ngIf="addEditTransactionForm.controls['Credit'].hasError('min')">Amount can not be 0</mat-error>
+            </mat-form-field>
+          </div>
         </div>
         <div class="col-sm-12">
           <div class="col-sm-3">
             <mat-form-field class="example-full-width">
               <input type="text" placeholder="Search and Select Project" aria-label="Number" matInput formControlName="ProjectId"
-                name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
+              (keyup)="filterProjectName($event)" name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
               <mat-autocomplete #matAutocomplete2="matAutocomplete">
                 <mat-option (onSelectionChange)="onChangeProjectValue($event,item.ProjectId)"
                   *ngFor="let item of filterdOptionsProjectList | async" [value]="item.ProjectName">{{item.ProjectName}}
@@ -183,7 +184,7 @@
           <div class="col-sm-3">
             <mat-form-field class="example-full-width">
               <input type="text" placeholder="Search and Select BudgetLine" aria-label="Number" matInput
-                formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
+              (keyup)="filterBudgetLineName($event)" formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
               <mat-autocomplete #matAutocomplete3="matAutocomplete">
                 <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
                   *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">
@@ -194,19 +195,6 @@
               <mat-spinner *ngIf="budgetlinespinner" diameter="20" matSuffix></mat-spinner>
             </mat-form-field>
           </div>
-          <!-- <div class="col-sm-3 padding_top_20">
-            <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
-          </div>
-          <div class="col-sm-3">
-            <mat-form-field>
-              <mat-label>Transaction Type</mat-label>
-              <mat-select formControlName="Type">
-                <mat-option *ngFor="let type of typeList" [value]="type.value">
-                  {{type.name}}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-          </div> -->
         </div>
       </div>
       <button type="submit" style="display: none;" #btnSubmit></button>
@@ -227,12 +215,6 @@
       </td>
     </ng-container>
 
-    <!-- Type Column -->
-    <!-- <ng-container matColumnDef="Type">
-      <th mat-header-cell *matHeaderCellDef> Type </th>
-      <td mat-cell *matCellDef="let element"> {{element.Type}} </td>
-    </ng-container> -->
-
     <!-- Account Column -->
     <ng-container matColumnDef="AccountCode">
       <th mat-header-cell *matHeaderCellDef> Account </th>
@@ -246,14 +228,14 @@
     </ng-container>
 
     <!-- Amount Column -->
-    <ng-container matColumnDef="CreditAmount">
-      <th mat-header-cell *matHeaderCellDef> Credit Amount </th>
-      <td mat-cell *matCellDef="let element"> {{element.Credit}} </td>
-    </ng-container>
-
     <ng-container matColumnDef="DebitAmount">
       <th mat-header-cell *matHeaderCellDef> Debit Amount </th>
       <td mat-cell *matCellDef="let element"> {{element.Debit}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="CreditAmount">
+      <th mat-header-cell *matHeaderCellDef> Credit Amount </th>
+      <td mat-cell *matCellDef="let element"> {{element.Credit}} </td>
     </ng-container>
 
     <!-- Project Column -->
@@ -274,8 +256,16 @@
       <td mat-cell *matCellDef="let element"> {{element.JobName}} </td>
     </ng-container>
 
+    <!-- Project Job Column -->
+    <!-- <ng-container matColumnDef="Edit">
+      <th mat-header-cell *matHeaderCellDef> Edit Transaction </th>
+      <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
+          <a style="color: blueviolet;" mat-button (click)="editTransactionBtnClick(element)">Edit</a>
+      </td>
+    </ng-container> -->
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns;" (click)="selection.toggle(row)">
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
     </tr>
   </table>
   <mat-paginator [length]="recordCount" [pageSize]="transactionPagingModel.PageSize"
@@ -285,7 +275,7 @@
   <div class="row">
     <div class="col-sm-11">
       <hum-button [type]="'add'" [text]="'ADD TRANSACTION'" (click)="onAddTransactionBottomBtnClick()"></hum-button>
-      <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button>
+      <!-- <hum-button [type]="'remove'" [text]="'DELETE SELECTED'" (click)="deleteTransactions()"></hum-button> -->
     </div>
   </div>
   <div class="row" *ngIf="showAddTransactionBottom">
@@ -303,7 +293,7 @@
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search and Select Account" aria-label="Number" matInput formControlName="AccountId"
-              name="AccountId" [matAutocomplete]="matAutocomplete1">
+            (keyup)="filterAccountName($event)" name="AccountId" [matAutocomplete]="matAutocomplete1">
             <mat-autocomplete #matAutocomplete1="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeAccountValue($event,item.AccountId)"
                 *ngFor="let item of filterdOptionsAccountList | async" [value]="item.AccountName">{{item.AccountName}}
@@ -320,28 +310,26 @@
         </div>
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
-            <mat-label>Credit</mat-label>
-            <input formControlName="Credit" (input)="checkAmount(1)" (blur)="onAmountEvent($event.target.value, 1)" matInput placeholder="Credit"
-              type="number">
-            <mat-error *ngIf="addEditTransactionForm.controls['Credit'].hasError('min')">Amount can not be 0</mat-error>
-          </mat-form-field>
-
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field class="example-full-width">
             <mat-label>Debit</mat-label>
             <input formControlName="Debit" (input)="checkAmount(2)" (blur)="onAmountEvent($event.target.value, 2)" matInput placeholder="Debit"
               type="number">
             <mat-error *ngIf="addEditTransactionForm.controls['Debit'].hasError('min')">Amount can not be 0</mat-error>
           </mat-form-field>
         </div>
-
+        <div class="col-sm-3">
+          <mat-form-field class="example-full-width">
+            <mat-label>Credit</mat-label>
+            <input formControlName="Credit" (input)="checkAmount(1)" (blur)="onAmountEvent($event.target.value, 1)" matInput placeholder="Credit"
+              type="number">
+            <mat-error *ngIf="addEditTransactionForm.controls['Credit'].hasError('min')">Amount can not be 0</mat-error>
+          </mat-form-field>
+        </div>
       </div>
       <div class="col-sm-12">
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search and Select Project" aria-label="Number" matInput formControlName="ProjectId"
-              name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
+            (keyup)="filterProjectName($event)" name="ProjectId" [matAutocomplete]="matAutocomplete2" (blur)="enableDisableBudgetLine($event.target.value)">
             <mat-autocomplete #matAutocomplete2="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeProjectValue($event,item.ProjectId)"
                 *ngFor="let item of filterdOptionsProjectList | async" [value]="item.ProjectName">{{item.ProjectName}}
@@ -353,7 +341,7 @@
         <div class="col-sm-3">
           <mat-form-field class="example-full-width">
             <input type="text" placeholder="Search and Select BudgetLine" aria-label="Number" matInput
-              formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
+            (keyup)="filterBudgetLineName($event)" formControlName="BudgetLine" name="BudgetLine" [matAutocomplete]="matAutocomplete3">
             <mat-autocomplete #matAutocomplete3="matAutocomplete">
               <mat-option (onSelectionChange)="onChangeBudgetLineValue($event,item.BudgetLineId)"
                 *ngFor="let item of filterdOptionsBudgetLineList | async" [value]="item.BudgetLineName">
@@ -363,19 +351,6 @@
             <mat-hint>Please enter altest 3 characters to search</mat-hint>
           </mat-form-field>
         </div>
-        <!-- <div class="col-sm-3 padding_top_20">
-          <span>Job:</span> {{addEditTransactionForm.get('JobName').value}}
-        </div>
-        <div class="col-sm-3">
-          <mat-form-field>
-            <mat-label>Transaction Type</mat-label>
-            <mat-select formControlName="Type">
-              <mat-option *ngFor="let type of typeList" [value]="type.value">
-                {{type.name}}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-        </div> -->
       </div>
     </div>
     <button type="submit" style="display: none;" #btnSubmit></button>

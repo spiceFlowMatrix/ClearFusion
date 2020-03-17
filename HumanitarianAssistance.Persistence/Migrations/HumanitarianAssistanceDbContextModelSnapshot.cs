@@ -2329,8 +2329,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.HasIndex("CurrencyId");
 
-                    b.HasIndex("EmployeeId")
-                        .IsUnique();
+                    b.HasIndex("EmployeeId");
 
                     b.ToTable("EmployeeBasicSalaryDetail");
                 });
@@ -7295,7 +7294,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted");
 
-                    b.Property<int>("MarksObtained");
+                    b.Property<double>("MarksObtained");
 
                     b.Property<string>("ModifiedById");
 
@@ -7309,7 +7308,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<double>("TotalMarksObtain");
 
-                    b.Property<int>("WrittenTestMarks");
+                    b.Property<double>("WrittenTestMarks");
 
                     b.HasKey("InterviewId");
 
@@ -8396,7 +8395,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<DateTime?>("CreatedDate");
 
-                    b.Property<int>("DeliveryDate");
+                    b.Property<int>("DeliveryDateScore");
 
                     b.Property<string>("Email");
 
@@ -8430,11 +8429,11 @@ namespace HumanitarianAssistance.Persistence.Migrations
 
                     b.Property<double>("SecurityAmount");
 
-                    b.Property<DateTime>("SecurityDate");
-
                     b.Property<int>("Service_Warranty");
 
                     b.Property<int>("TOR_SOWAcceptance");
+
+                    b.Property<DateTime>("TenderDeliveryDate");
 
                     b.Property<int>("WorkExperience");
 
@@ -9793,7 +9792,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.AccumulatedSalaryHeadDetail", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
+                        .WithMany("AccumulatedSalaryHeadDetailList")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
@@ -9926,7 +9925,7 @@ namespace HumanitarianAssistance.Persistence.Migrations
             modelBuilder.Entity("HumanitarianAssistance.Domain.Entities.HR.EmployeeBonusFineSalaryHead", b =>
                 {
                     b.HasOne("HumanitarianAssistance.Domain.Entities.HR.EmployeeDetail", "EmployeeDetail")
-                        .WithMany()
+                        .WithMany("EmployeeBonusFineSalaryHeadList")
                         .HasForeignKey("EmployeeId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
