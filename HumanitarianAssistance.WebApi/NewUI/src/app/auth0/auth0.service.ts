@@ -35,7 +35,6 @@ export class Auth0Service {
 
   public handleAuthentication(): void {
     this.auth0.parseHash((err, authResult) => {
-      debugger;
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
         this.router.navigate(['/']);
@@ -54,6 +53,7 @@ export class Auth0Service {
     }
 
     const self = this;
+    this.auth0.
     this.auth0.client.userInfo(accessToken, (err, profile) => {
       if (profile) {
         self.userProfile = profile;
