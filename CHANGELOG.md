@@ -1,6 +1,6 @@
 # Change Log
 
-## [ Version  [3.1] ] - `(17-March-2020)`
+## [ Version  [3.1]  - `(17-March-2020)`
 
 ## Enhancements
 
