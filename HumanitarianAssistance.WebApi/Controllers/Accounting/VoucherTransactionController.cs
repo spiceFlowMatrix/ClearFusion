@@ -18,7 +18,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
     [Produces("application/json")]
     [Route("api/VoucherTransaction/[Action]")]
     [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.Accounting))]
-    [Authorize]
+    [Authorize ("view:vouchers")]
     public class VoucherTransactionController : BaseController
     {
         [HttpPost]

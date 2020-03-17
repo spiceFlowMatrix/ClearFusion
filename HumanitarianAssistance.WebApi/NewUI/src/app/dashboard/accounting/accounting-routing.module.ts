@@ -39,7 +39,7 @@ const routes: Routes = [
       {
         path: 'vouchers',
         loadChildren: './vouchers/vouchers.module#VouchersModule',
-        canActivate: [RoleGuardService],
+        // canActivate: [RoleGuardService],
         data: {
           module: ModuleId,
           page: accountingNewMaster.Vouchers

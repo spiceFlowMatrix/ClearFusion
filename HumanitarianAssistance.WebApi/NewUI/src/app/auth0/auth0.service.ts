@@ -53,7 +53,6 @@ export class Auth0Service {
     }
 
     const self = this;
-    this.auth0.
     this.auth0.client.userInfo(accessToken, (err, profile) => {
       if (profile) {
         self.userProfile = profile;

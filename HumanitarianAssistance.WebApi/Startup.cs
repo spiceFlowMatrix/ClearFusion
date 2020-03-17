@@ -53,8 +53,8 @@ namespace HumanitarianAssistance.WebApi
         {
             //get and set environment variable at run time
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
-           // string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
-           string connectionString = "Server=35.204.36.109;Port=5432;Database=edg_testing_database;User Id=clearfusion_review_proxyuser;Password=867983learnhave86momenttravellocate54";
+            // string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+            string connectionString = "Server=35.204.36.109;Port=5432;Database=edg_testing_database;User Id=clearfusion_review_proxyuser;Password=867983learnhave86momenttravellocate54";
             defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             // Database connection
@@ -73,10 +73,10 @@ namespace HumanitarianAssistance.WebApi
                 options.Version = Configuration["Stackdriver:Version"];
                 options.Options = ErrorReportingOptions.Create(
                 EventTarget.ForLogging(
-                    projectId: Configuration["Stackdriver:ProjectId"], 
+                    projectId: Configuration["Stackdriver:ProjectId"],
                     loggingClient: LoggingServiceV2Client.Create(channel)));
             });
-            
+
             // Add trace service.
             // services.AddGoogleTrace(options =>
             // {
@@ -138,7 +138,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-                
+
 
             }).AddJwtBearer(options =>
             {
@@ -168,10 +168,12 @@ namespace HumanitarianAssistance.WebApi
             services.AddAuthorization(options =>
             {
                 options.AddPolicy("read:messages", policy => policy.Requirements.Add(new HasScopeRequirement("read:messages", domain)));
+                options.AddPolicy("view:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("view:vouchers", domain)));
+                options.AddPolicy("edit:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("edit:vouchers", domain)));
 
             });
 
-          
+
 
             // register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
@@ -223,7 +225,7 @@ namespace HumanitarianAssistance.WebApi
             var channel = new Grpc.Core.Channel(
                 LoggingServiceV2Client.DefaultEndpoint.Host,
                 googleCredential.ToChannelCredentials());
-            loggerFactory.AddGoogle(Configuration["Stackdriver:ProjectId"], null , LoggingServiceV2Client.Create(channel));
+            loggerFactory.AddGoogle(Configuration["Stackdriver:ProjectId"], null, LoggingServiceV2Client.Create(channel));
             app.UseGoogleExceptionLogging();
             // Configure trace service.
             // app.UseGoogleTrace();
@@ -278,7 +280,7 @@ namespace HumanitarianAssistance.WebApi
                     {
                         // it will use package.json & will search for start command to run
                         // spa.UseAngularCliServer(npmScript: "start");
-                         spa.Options.DefaultPageStaticFileOptions = olduiDist;
+                        spa.Options.DefaultPageStaticFileOptions = olduiDist;
                     }
                     else
                     {
@@ -304,7 +306,7 @@ namespace HumanitarianAssistance.WebApi
                 if (env.IsDevelopment())
                 {
                     // it will use package.json & will search for start command to run
-                       spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseAngularCliServer(npmScript: "start");
                     // spa.Options.DefaultPageStaticFileOptions = defaultDist;
                 }
                 else
