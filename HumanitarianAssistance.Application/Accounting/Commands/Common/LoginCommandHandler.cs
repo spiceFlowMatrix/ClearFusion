@@ -53,12 +53,13 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
             {
 
                 // model validate
-                if (request.UserName == null || request.Password == null)
-                {
-                    throw new Exception(StaticResource.InvalidUserCredentials);
-                }
+                // if (request.UserName == null || request.Password == null)
+                // {
+                //     throw new Exception(StaticResource.InvalidUserCredentials);
+                // }
 
-                var user = await _userManager.FindByNameAsync(request.UserName.Trim());
+                // var user = await _userManager.FindByNameAsync(request.UserName.Trim());
+                 var user = await _userManager.FindByIdAsync(request.UserId);
 
                 if (user == null)
                 {
@@ -67,18 +68,18 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
 
                 // validate user
 
-                if (!await _userManager.CheckPasswordAsync(user, request.Password))
-                {
-                    throw new Exception(StaticResource.InvalidUserCredentials);
-                }
+                // if (!await _userManager.CheckPasswordAsync(user, request.Password))
+                // {
+                //     throw new Exception(StaticResource.InvalidUserCredentials);
+                // }
 
                 
                 //var result1 = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
 
                 
 
-                var userDetail = _dbContext.UserDetails.AsNoTracking().FirstOrDefault(x => x.IsDeleted == false && x.AspNetUserId == user.Id);
-                var offices = _dbContext.UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == userDetail.UserID).Select(x => x.OfficeId).ToList();
+                 var userDetail = _dbContext.UserDetails.AsNoTracking().FirstOrDefault(x => x.IsDeleted == false && x.AspNetUserId == request.UserId);
+                // var offices = _dbContext.UserDetailOffices.Where(x => x.IsDeleted == false && x.UserId == userDetail.UserID).Select(x => x.OfficeId).ToList();
 
                 // TODO: check if user is currently active or not
                 // if (userDetail.Status != (int)UserStatus.Active)
@@ -93,28 +94,28 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
                 List<OrderSchedulePermissionModel> OrderSchedulePermissionModelList = new List<OrderSchedulePermissionModel>();
 
                 #region "Get CLAIMS & ROLES"
-                var userClaims = await _userManager.GetClaimsAsync(user);
+                // var userClaims = await _userManager.GetClaimsAsync(user);
                 var roles = await _userManager.GetRolesAsync(user);
 
-                userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())); // subject used for ClaimTypes.NameIdentifier
-                userClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
-                userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
+                // userClaims.Add(new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())); // subject used for ClaimTypes.NameIdentifier
+                // userClaims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
+                // userClaims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
                 #endregion
 
                 #region "Generate token"
-                string k = _configuration["JwtKey"];
-                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
-                var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-                var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
+                // string k = _configuration["JwtKey"];
+                // var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(k));
+                // var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+                // var expires = DateTime.Now.AddDays(Convert.ToDouble(_configuration["JwtExpireDays"]));
 
-                var token = new JwtSecurityTokenHandler()
-                                .WriteToken(new JwtSecurityToken(
-                                issuer: _configuration.GetSection("JwtIssuerOptions:Issuer").Value,
-                                audience: _configuration.GetSection("JwtIssuerOptions:Audience").Value,
-                                claims: userClaims,
-                                expires: DateTime.Now.AddYears(1),
-                                signingCredentials: creds
-                            ));
+                // var token = new JwtSecurityTokenHandler()
+                //                 .WriteToken(new JwtSecurityToken(
+                //                 issuer: _configuration.GetSection("JwtIssuerOptions:Issuer").Value,
+                //                 audience: _configuration.GetSection("JwtIssuerOptions:Audience").Value,
+                //                 claims: userClaims,
+                //                 expires: DateTime.Now.AddYears(1),
+                //                 signingCredentials: creds
+                //             ));
 
                 #endregion
 
@@ -314,13 +315,13 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
                 #region "Set responses"
                 
                 response.data.AspNetUserId = user.Id;
-                response.data.Token = token;
-                response.data.Roles = roles.ToList();
+                // response.data.Token = token;
+                 response.data.Roles = roles.ToList();
                 response.data.RolePermissionModelList = RolePermissionModelList;
                 response.data.ApproveRejectPermissionsInRole = ApproveRejectRolePermissionModelList;
                 response.data.AgreeDisagreePermissionsInRole = AgreeDisagreeRolePermissionModelList;
                 response.data.OrderSchedulePermissionsInRole = OrderSchedulePermissionModelList;
-                response.data.UserOfficeList = offices.Count > 0 ? offices : null;
+                // response.data.UserOfficeList = offices.Count > 0 ? offices : null;
 
                 response.StatusCode = 200;
                 response.Message = StaticResource.SuccessText;

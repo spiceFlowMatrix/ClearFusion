@@ -170,10 +170,10 @@ namespace HumanitarianAssistance.WebApi
                 options.AddPolicy("read:messages", policy => policy.Requirements.Add(new HasScopeRequirement("read:messages", domain)));
                 options.AddPolicy("view:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("view:vouchers", domain)));
                 options.AddPolicy("edit:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("edit:vouchers", domain)));
-
+                options.AddPolicy("manage:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("manage:vouchers", domain)));
+                options.AddPolicy("read:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("read:vouchers", domain)));
+                options.AddPolicy("validate:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("validate:vouchers", domain)));
             });
-
-
 
             // register the scope authorization handler
             services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();

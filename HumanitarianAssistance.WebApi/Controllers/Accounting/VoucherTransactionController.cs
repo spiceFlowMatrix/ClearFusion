@@ -18,22 +18,25 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
     [Produces("application/json")]
     [Route("api/VoucherTransaction/[Action]")]
     [ApiExplorerSettings(GroupName = nameof(SwaggerGrouping.Accounting))]
-    [Authorize ("view:vouchers")]
+    [Authorize]
     public class VoucherTransactionController : BaseController
     {
         [HttpPost]
+        [Authorize ("view:vouchers")]
         public async Task<ApiResponse> GetAllVoucherList([FromBody]GetAllVoucherListQuery model)
         {
             return await _mediator.Send(model);
         }
 
         [HttpPost]
+        [Authorize ("view:vouchers")]
         public async Task<ApiResponse> GetVoucherDetailByVoucherNo([FromBody] long id)
         {
             return await _mediator.Send(new GetVoucherDetailByVoucherNoQuery { VoucherId = id });
         }
 
         [HttpPost]
+        [Authorize ("add:vouchers")]
         public async Task<ApiResponse> AddVoucherDetail([FromBody] AddVoucherDetailCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -45,6 +48,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
+        [Authorize ("edit:vouchers")]
         public async Task<ApiResponse> EditVoucherDetail([FromBody] EditVoucherDetailCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -56,6 +60,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
+        [Authorize ("validate:vouchers")]
         public async Task<ApiResponse> VerifyVoucher([FromBody] long id)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -69,12 +74,14 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
+        [Authorize ("view:vouchers")]
         public async Task<ApiResponse> GetAllTransactionsByVoucherId([FromBody] GetAllTransactionsByVoucherIdQuery query)
         {
             return await _mediator.Send(query);
         }
 
         [HttpPost]
+        [Authorize ("add:vouchers")]
         public async Task<ApiResponse> AddEditTransactionList([FromBody] AddEditTransactionListCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -86,6 +93,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
+        [Authorize ("validate:vouchers")]
         public async Task<IActionResult> VerifySelectedVouchers([FromBody] List<long> VoucherNos)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -141,6 +149,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
+        [Authorize ("add:vouchers")]
         public async Task<object> SaveTransactionList([FromBody] SaveTransactionListCommand transactions)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;

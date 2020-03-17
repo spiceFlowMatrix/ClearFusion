@@ -5,6 +5,9 @@ import { Observable, Observer, of, timer } from 'rxjs';
 import 'rxjs/add/operator/filter';
 import * as auth0 from 'auth0-js';
 import { flatMap } from 'rxjs/operators';
+import { GlobalService } from '../shared/services/global-services.service';
+import { GLOBAL } from '../shared/global';
+import { AppUrlService } from '../shared/services/app-url.service';
 
 (window as any).global = window;
 
@@ -22,12 +25,15 @@ export class Auth0Service {
 
   userProfile: any;
   refreshSubscription: any;
+  userRolesArr: any[] = [];
+  userRoles: string;
   observer: Observer<boolean>;
   ssoAuthComplete$: Observable<boolean> = new Observable(
     obs => (this.observer = obs)
   );
 
-  constructor(public router: Router) { }
+  constructor(public router: Router, private globalService: GlobalService,
+    private appURL: AppUrlService,) { }
 
   public login(): void {
     this.auth0.authorize();
@@ -37,6 +43,10 @@ export class Auth0Service {
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.setSession(authResult);
+        const data = {
+          UserId: authResult.idTokenPayload.sub.substring(6)
+        };
+        this.onFormSubmit(data);
         this.router.navigate(['/']);
       } else if (err) {
         this.router.navigate(['/']);
@@ -130,6 +140,79 @@ export class Auth0Service {
   public unscheduleRenewal() {
     if (!this.refreshSubscription) return;
     this.refreshSubscription.unsubscribe();
+  }
+
+  onFormSubmit(data) {
+    const loginData = {
+      UserName: null,
+      Password: null,
+      UserId: data.UserId
+    };
+
+    // this.commonLoaderService.showLoader();
+
+    this.globalService
+      .post(this.appURL.getApiUrl() + GLOBAL.API_Login_Auth_Url, loginData)
+      .subscribe(
+        // tslint:disable-next-line:no-shadowed-variable
+        data => {
+
+          if (data.StatusCode === 200) {
+            // set token
+            // localStorage.setItem('authenticationtoken', data.data.Token);
+
+            data.data.Roles.forEach(element => {
+              this.userRolesArr.push(element);
+            });
+            this.userRoles = this.userRolesArr.join(',');
+            localStorage.setItem('UserRoles', this.userRoles);
+
+            if (data.data.RolePermissionModelList != null) {
+              localStorage.setItem(
+                'RolePermissions',
+                JSON.stringify(data.data.RolePermissionModelList)
+              );
+            }
+            if (data.data.ApproveRejectPermissionsInRole != null) {
+              localStorage.setItem(
+                'ApproveRejectRolePermissions',
+                JSON.stringify(data.data.ApproveRejectPermissionsInRole)
+              );
+            }
+
+            if (data.data.AgreeDisagreePermissionsInRole != null) {
+
+              localStorage.setItem('AgreeDisagreeRolePermissions', JSON.stringify(data.data.AgreeDisagreePermissionsInRole));
+            }
+
+            if (data.data.OrderSchedulePermissionsInRole != null) {
+
+              localStorage.setItem('OrderScheduleRolePermissions', JSON.stringify(data.data.OrderSchedulePermissionsInRole));
+            }
+
+            // check if Office Id present
+            localStorage.setItem('ALLOFFICES', '');
+            if (
+              data.data.UserOfficeList != null &&
+              data.data.UserOfficeList.length > 0
+            ) {
+              const Offices = data.data.UserOfficeList.join(',');
+              localStorage.setItem('ALLOFFICES', Offices);
+            }
+
+            // redirect to dashboard
+            this.router.navigate(['']);
+
+          } else if (data.StatusCode === 400) {
+            // this.toastr.error(data.Message);
+          }
+
+          // this.commonLoaderService.hideLoader();
+        },
+        error => {
+          // this.commonLoaderService.hideLoader();
+        }
+      );
   }
 
 }
