@@ -20,8 +20,9 @@ export class Auth0Service {
     domain: environment.Auth0Config.domain,
     responseType: 'token id_token',
     audience: environment.Auth0Config.apiUrl,
-    redirectUri: environment.Auth0Config.callbackURL,
-    scope: 'openid profile email read:messages'
+    redirectUri: environment.Auth0Config.callbackURL
+    // ,
+    // scope: 'openid profile email read:messages'
   });
 
   userProfile: any;
@@ -84,6 +85,7 @@ export class Auth0Service {
   }
 
   public logout(): void {
+    this.auth0.logout();
     // Remove tokens and expiry time from localStorage
 
     localStorage.removeItem('access_token');
@@ -91,7 +93,7 @@ export class Auth0Service {
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
     // Go back to the home route
-    this.router.navigate(['/']);
+  //  this.router.navigate(['/']);
   }
 
   public isAuthenticated(): boolean {
