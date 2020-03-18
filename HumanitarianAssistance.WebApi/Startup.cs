@@ -173,6 +173,7 @@ namespace HumanitarianAssistance.WebApi
                 options.AddPolicy("manage:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("manage:vouchers", domain)));
                 options.AddPolicy("read:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("read:vouchers", domain)));
                 options.AddPolicy("validate:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("validate:vouchers", domain)));
+                options.AddPolicy("add:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("add:vouchers", domain)));
             });
 
             // register the scope authorization handler
