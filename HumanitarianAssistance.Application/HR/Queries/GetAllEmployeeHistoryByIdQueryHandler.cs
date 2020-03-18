@@ -9,15 +9,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using HumanitarianAssistance.Application.CommonModels;
+using HumanitarianAssistance.Application.CommonServicesInterface;
+using HumanitarianAssistance.Common.Enums;
+
 namespace HumanitarianAssistance.Application.HR.Queries
 {
     public class GetAllEmployeeHistoryByIdQueryHandler : IRequestHandler<GetAllEmployeeHistoryByIdQuery, ApiResponse>
     {
         private readonly HumanitarianAssistanceDbContext _dbContext;
+        private readonly IActionLogService _actionLog;
 
-        public GetAllEmployeeHistoryByIdQueryHandler(HumanitarianAssistanceDbContext dbContext)
+        public GetAllEmployeeHistoryByIdQueryHandler(HumanitarianAssistanceDbContext dbContext, IActionLogService actionLog)
         {
             _dbContext = dbContext;
+            _actionLog = actionLog;
         }
 
         public async Task<ApiResponse> Handle(GetAllEmployeeHistoryByIdQuery request, CancellationToken cancellationToken)
@@ -37,6 +43,12 @@ namespace HumanitarianAssistance.Application.HR.Queries
                 response.data.EmployeeHistoryDetailList = employeehistorylist;
                 response.StatusCode = StaticResource.successStatusCode;
                 response.Message = "Success";
+
+                AuditLogModel logs = new AuditLogModel () {
+                    EmployeeId = (int)request.EmployeeId,
+                    TypeOfEntityName = TypeOfEntity.History.ToString()
+                };
+                _actionLog.HRMAuditLogService(logs,request);
             }
             catch (Exception ex)
             {

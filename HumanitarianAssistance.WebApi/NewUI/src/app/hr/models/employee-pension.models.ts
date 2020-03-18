@@ -39,27 +39,27 @@ export interface PensionDetailModel {
   Amount: any;
 }
 export class EmployeeTaxReportModel {
-  EmployeeId?: number;
-  TaxPayerIdentificationNumber: any;
-  NameOfBusiness: any;
-  AddressOfBusiness: any;
-  TelephoneNumber: any;
-  EmailAddressEmployer: any;
+  EmployeeId?: string;
+  TaxPayerIdentificationNumber: string;
+  NameOfBusiness: string;
+  AddressOfBusiness: string;
+  TelephoneNumber: string;
+  EmailAddressEmployer: string;
 
-  EmployeeName: any;
-  EmployeeTaxpayerIdentification: any;
-  EmployeeAddress: any;
-  TelephoneNumberEmployee: any;
-  EmailAddressEmployee: any;
+  EmployeeName: string;
+  EmployeeTaxpayerIdentification: string;
+  EmployeeAddress: string;
+  TelephoneNumberEmployee: string;
+  EmailAddressEmployee: string;
 
-  AnnualTaxPeriod: any;
-  DatesOfEmployeement: any;
-  TotalWages: any;
-  TotalTax: any;
+  AnnualTaxPeriod: string;
+  DatesOfEmployeement: string;
+  TotalWages: string;
+  TotalTax: string;
 
-  OfficerName: any;
-  Position: any;
-  Date: any;
+  OfficerName: string;
+  Position: string;
+  Date: string;
 }
 
 export interface IPensionDetails {
