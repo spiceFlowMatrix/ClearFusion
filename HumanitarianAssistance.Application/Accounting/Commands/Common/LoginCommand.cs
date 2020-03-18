@@ -12,10 +12,11 @@ namespace HumanitarianAssistance.Application.Accounting.Commands.Common
             Password = null;
         }
 
-        [Required]
+        //[Required]
         public string UserName { get; set; }
 
-        [Required]
+        //[Required]
         public string Password { get; set; }
+        public string UserId { get; set; }
     }
 }

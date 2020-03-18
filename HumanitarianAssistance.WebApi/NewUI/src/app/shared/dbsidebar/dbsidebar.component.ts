@@ -6,6 +6,7 @@ import { GlobalService } from '../services/global-services.service';
 import { LocalStorageService } from '../services/localstorage.service';
 import { GLOBAL } from '../global';
 import { LoginService } from 'src/app/login/login.service';
+import { Auth0Service } from 'src/app/auth0/auth0.service';
 
 @Component({
   selector: 'app-dbsidebar',
@@ -204,7 +205,9 @@ export class DbsidebarComponent implements OnInit {
     private globalService: GlobalService,
     private appurl: AppUrlService,
     private localstorageservice: LocalStorageService,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private auth0: Auth0Service,
+    private route: Router
   ) {}
 
   ngOnInit() {
@@ -270,7 +273,9 @@ export class DbsidebarComponent implements OnInit {
   onLogout() {
     this.selectedLink = undefined;
 
-    this.loginService.logout();
+    // this.loginService.logout();
+    this.auth0.logout();
+   // this.route.navigate(['/login']);
   }
   //#endregion
 }

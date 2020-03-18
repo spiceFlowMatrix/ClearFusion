@@ -28,6 +28,12 @@ using Microsoft.Extensions.Logging;
 using Google.Cloud.Logging.V2;
 using Google.Apis.Auth.OAuth2;
 using Grpc.Auth;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Threading.Tasks;
+using Auth0WebApi.Handlers;
+using Microsoft.AspNetCore.Authorization;
 
 namespace HumanitarianAssistance.WebApi
 {
@@ -47,7 +53,8 @@ namespace HumanitarianAssistance.WebApi
         {
             //get and set environment variable at run time
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
-            string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+            // string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+            string connectionString = "Server=35.204.36.109;Port=5432;Database=edg_testing_database;User Id=clearfusion_review_proxyuser;Password=867983learnhave86momenttravellocate54";
             defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
             // Database connection
@@ -66,10 +73,10 @@ namespace HumanitarianAssistance.WebApi
                 options.Version = Configuration["Stackdriver:Version"];
                 options.Options = ErrorReportingOptions.Create(
                 EventTarget.ForLogging(
-                    projectId: Configuration["Stackdriver:ProjectId"], 
+                    projectId: Configuration["Stackdriver:ProjectId"],
                     loggingClient: LoggingServiceV2Client.Create(channel)));
             });
-            
+
             // Add trace service.
             // services.AddGoogleTrace(options =>
             // {
@@ -101,7 +108,7 @@ namespace HumanitarianAssistance.WebApi
             services.AddAutoMapper();
 
             // add authorization
-            services.AddAuthorization();
+            // services.AddAuthorization();
 
 
             //For Cors Setting
@@ -126,6 +133,52 @@ namespace HumanitarianAssistance.WebApi
                 c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
+            string domain = $"https://{Configuration["Auth0:Domain"]}/";
+            services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+
+            }).AddJwtBearer(options =>
+            {
+                options.Authority = domain;
+                options.Audience = Configuration["Auth0:ApiIdentifier"];
+
+                options.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        // Grab the raw value of the token, and store it as a claim so we can retrieve it again later in the request pipeline
+                        // Have a look at the ValuesController.UserInformation() method to see how to retrieve it and use it to retrieve the
+                        // user's information from the /userinfo endpoint
+                        if (context.SecurityToken is JwtSecurityToken token)
+                        {
+                            if (context.Principal.Identity is ClaimsIdentity identity)
+                            {
+                                identity.AddClaim(new Claim("access_token", token.RawData));
+                            }
+                        }
+
+                        return Task.FromResult(0);
+                    }
+                };
+            });
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("read:messages", policy => policy.Requirements.Add(new HasScopeRequirement("read:messages", domain)));
+                options.AddPolicy("view:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("view:vouchers", domain)));
+                options.AddPolicy("edit:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("edit:vouchers", domain)));
+                options.AddPolicy("manage:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("manage:vouchers", domain)));
+                options.AddPolicy("read:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("read:vouchers", domain)));
+                options.AddPolicy("validate:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("validate:vouchers", domain)));
+                options.AddPolicy("add:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("add:vouchers", domain)));
+            });
+
+            // register the scope authorization handler
+            services.AddSingleton<IAuthorizationHandler, HasScopeHandler>();
+
             // // 406 (Not Acceptable) 
             // // use to return files from Controller
             // services.AddMvc(options =>
@@ -138,7 +191,7 @@ namespace HumanitarianAssistance.WebApi
 
 
             // Jwt configuration
-            services.AddJwtAuthentication(Configuration);
+            // services.AddJwtAuthentication(Configuration);
 
             // swagger configuration
             services.AddSwaggerDocumentation();
@@ -173,7 +226,7 @@ namespace HumanitarianAssistance.WebApi
             var channel = new Grpc.Core.Channel(
                 LoggingServiceV2Client.DefaultEndpoint.Host,
                 googleCredential.ToChannelCredentials());
-            loggerFactory.AddGoogle(Configuration["Stackdriver:ProjectId"], null , LoggingServiceV2Client.Create(channel));
+            loggerFactory.AddGoogle(Configuration["Stackdriver:ProjectId"], null, LoggingServiceV2Client.Create(channel));
             app.UseGoogleExceptionLogging();
             // Configure trace service.
             // app.UseGoogleTrace();
@@ -227,7 +280,8 @@ namespace HumanitarianAssistance.WebApi
                     if (env.IsDevelopment())
                     {
                         // it will use package.json & will search for start command to run
-                        //  spa.UseAngularCliServer(npmScript: "start");
+                        // spa.UseAngularCliServer(npmScript: "start");
+                        spa.Options.DefaultPageStaticFileOptions = olduiDist;
                     }
                     else
                     {
@@ -253,7 +307,8 @@ namespace HumanitarianAssistance.WebApi
                 if (env.IsDevelopment())
                 {
                     // it will use package.json & will search for start command to run
-                    //  spa.UseAngularCliServer(npmScript: "start");
+                    spa.UseAngularCliServer(npmScript: "start");
+                    // spa.Options.DefaultPageStaticFileOptions = defaultDist;
                 }
                 else
                 {
