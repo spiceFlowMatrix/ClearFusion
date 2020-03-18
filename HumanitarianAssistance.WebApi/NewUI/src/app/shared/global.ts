@@ -640,6 +640,8 @@ export class GLOBAL {
   public static API_Pdf_GetInterviewDetailReportPdf = 'Pdf/GetInterviewDetailReportPdf';
   public static API_Pdf_GetLogisticGoodsNoteReportPdf = 'Pdf/GetLogisticGoodsNoteReportPdf';
 
+
+
   //#endregion
 
   // Store
@@ -713,6 +715,15 @@ export class GLOBAL {
   public static API_Store_AddInventoryItems = 'Store/AddInventoryItems';
   public static API_Store_EditInventoryItems = 'Store/EditInventoryItems';
   public static API_Store_DeleteInventoryItems = 'Store/DeleteInventoryItems';
+
+  public static API_StorePurchase_GetFilteredInventoryMasterList = 'StorePurchase/GetFilteredInventoryMasterList';
+  public static API_StorePurchase_GetFilteredItemGroupList = 'StorePurchase/GetFilteredItemGroupList';
+  public static API_StorePurchase_GetFilteredItemList = 'StorePurchase/GetFilteredItemList';
+  public static API_StorePurchase_GetFilteredProjectList = 'StorePurchase/GetFilteredProjectList';
+  public static API_StorePurchase_GetFilteredBudegtList = 'StorePurchase/GetFilteredBudegtList';
+  public static API_StorePurchase_GetFilteredReceivedFromLocationList = 'StorePurchase/GetFilteredReceivedFromLocationList';
+  public static API_StorePurchase_GetFilteredReceivedFromEmpList = 'StorePurchase/GetFilteredReceivedFromEmpList';
+
 
 
 

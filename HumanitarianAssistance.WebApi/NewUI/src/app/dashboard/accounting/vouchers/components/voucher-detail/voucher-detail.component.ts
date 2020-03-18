@@ -388,7 +388,6 @@ export class VoucherDetailComponent implements OnInit {
   }
 
   checkPermission(permission) {
-    debugger;
     return this.auth0Service.checkPermissions(permission);
   }
 

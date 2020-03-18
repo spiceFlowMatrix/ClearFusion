@@ -6,9 +6,9 @@ namespace HumanitarianAssistance.Persistence.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail");
+            // migrationBuilder.DropIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail");
 
             migrationBuilder.RenameColumn(
                 name: "SecurityDate",
@@ -32,18 +32,18 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 nullable: false,
                 oldClrType: typeof(int));
 
-            migrationBuilder.CreateIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail",
-                column: "EmployeeId",
-                unique: true);
+            // migrationBuilder.CreateIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail",
+            //     column: "EmployeeId",
+            //     unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail");
+            // migrationBuilder.DropIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail");
 
             migrationBuilder.RenameColumn(
                 name: "TenderDeliveryDate",
@@ -67,10 +67,10 @@ namespace HumanitarianAssistance.Persistence.Migrations
                 nullable: false,
                 oldClrType: typeof(double));
 
-            migrationBuilder.CreateIndex(
-                name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
-                table: "EmployeeBasicSalaryDetail",
-                column: "EmployeeId");
+            // migrationBuilder.CreateIndex(
+            //     name: "IX_EmployeeBasicSalaryDetail_EmployeeId",
+            //     table: "EmployeeBasicSalaryDetail",
+            //     column: "EmployeeId");
         }
     }
 }

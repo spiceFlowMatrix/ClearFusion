@@ -1,32 +1,31 @@
 <h3 mat-dialog-title>Payroll Administration</h3>
 <mat-dialog-content>
-  <span style="background-color: rgb(238, 235, 235);"><strong>Selected Month:</strong> {{data.MonthName}}</span>
-  <div class="alert alert-warning margin_top_20" *ngIf="err!==null">{{err}}</div>
-  <table class="table table-striped margin_top_20" *ngIf="err==null">
-    <tr>
-      <th>Employee Code - Name</th>
-      <th>Currency</th>
-      <th>Gross Salary</th>
-      <th>NET Salary</th>
-      <th>Current Status</th>
-      <th></th>
-      <th></th>
-    </tr>
-    <tr *ngFor="let emp of payrollList">
-      <td>{{emp.EmployeeName}}</td>
-      <td>{{emp.Currency}}</td>
-      <td>{{emp.GrossSalary}}</td>
-      <td>{{emp.NETSalary}}</td>
-      <td>{{(emp.IsApproved)?'Approved': 'UnApproved'}}</td>
-      <td><button mat-button><h5 style="color: #0390D1;"><i class="fas fa-file-pdf"></i> &nbsp;SALARY SLIP</h5></button></td>
-      <td><button mat-button (click)="navigateToBreakdown(emp.EmployeeId)"><h5 style="color: #0390D1;"><i class="fas fa-eye"></i> &nbsp;SEE BREAKDOWN</h5></button></td>
-    </tr>
-  </table>
-  <mat-paginator *ngIf="err==null" [length]="TotalCount" [pageSize]="PageSize" [pageIndex]="PageIndex"
-            [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageEvent($event)"></mat-paginator>
+    <span style="background-color: rgb(238, 235, 235);"><strong>Selected Month:</strong> {{data.MonthName}}</span>
+    <div class="alert alert-warning margin_top_20" *ngIf="err!==null">{{err}}</div>
+    <table class="table table-striped margin_top_20" *ngIf="err==null">
+        <tr>
+            <th>Employee Code - Name</th>
+            <th>Currency</th>
+            <th>Gross Salary</th>
+            <th>NET Salary</th>
+            <th>Current Status</th>
+            <th></th>
+            <th></th>
+        </tr>
+        <tr *ngFor="let emp of payrollList">
+            <td>{{emp.EmployeeName}}</td>
+            <td>{{emp.Currency}}</td>
+            <td>{{emp.GrossSalary}}</td>
+            <td>{{emp.NETSalary}}</td>
+            <td>{{(emp.IsApproved)?'Approved': 'UnApproved'}}</td>
+            <td><button mat-button (click)="pdfExport(emp.EmployeeId)"><h5 style="color: #0390D1;"><i class="fas fa-file-pdf"></i> &nbsp;SALARY SLIP</h5></button></td>
+            <td><button mat-button (click)="navigateToBreakdown(emp.EmployeeId)"><h5 style="color: #0390D1;"><i class="fas fa-eye"></i> &nbsp;SEE BREAKDOWN</h5></button></td>
+        </tr>
+    </table>
+    <mat-paginator *ngIf="err==null" [length]="TotalCount" [pageSize]="PageSize" [pageIndex]="PageIndex" [pageSizeOptions]="[10, 25, 50, 100]" (page)="pageEvent($event)"></mat-paginator>
 </mat-dialog-content>
 <mat-dialog-actions>
     <button mat-button *ngIf="err==null" (click)="approveAll()"><h5 style="color: #0390D1;"> APPROVE ALL</h5></button>
-    <button mat-button  *ngIf="err==null" (click)="revokeAll()"><h5 style="color: rgb(218, 59, 38);"> REVOKE ALL</h5></button>
+    <button mat-button *ngIf="err==null" (click)="revokeAll()"><h5 style="color: rgb(218, 59, 38);"> REVOKE ALL</h5></button>
     <button mat-button (click)="closePopUp()"><h5 style="color: rgb(101, 103, 104);"> CANCEL</h5></button>
 </mat-dialog-actions>

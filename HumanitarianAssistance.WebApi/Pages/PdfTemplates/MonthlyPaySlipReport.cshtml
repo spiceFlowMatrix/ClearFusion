@@ -5,10 +5,10 @@
     <title></title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="https://fonts.googleapis.com/css?family=Roboto:400,500&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }        
+    <style>     
+                body {
+            font-family: 'Arial', sans-serif;
+        }
         .container {
             max-width: 1300px;
         }
@@ -17,7 +17,7 @@
 <body>
     <div class="container">
         <div class="row">
-            <table style="width:100%;">
+            <table style="width:693px;">
                 <tr>
                     <td align="center"><img src="@Model.LogoPath" alt=""></td>                   
                 </tr>
@@ -25,150 +25,150 @@
                    <td align="center"> <img src="@Model.PersianChaName" alt=""></td>
                 </tr>
                 <tr>
-                    <td align="center" style="font-size:20px;font-weight:500;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)
-                        <br><span style="font-size: 17px; font-weight: 500;">MONTHLY PAY SLIP/VOUCHER</span></td>
-                </tr>
+                    <td align="center" style="font-size:16px;font-weight:bold;">COORDINATION OF HUMANITARIAN ASSISTANCE(CHA)
+                        <br><span style="font-size: 13px;font-weight:bold;">MONTHLY PAY SLIP/VOUCHER</span></td>
+                </tr>        
             </table>
-        </div><br><br>
+        </div><br>
         <div class="row">
-            <table style="width:100%;" cellpadding="10" cellspacing="0">
+            <table style="width:693px;" cellpadding="6" cellspacing="0">
                 <tbody>
                     <tr style="border-left: 1px solid">
-                        <th colspan="2" style="font-size: 15px; font-weight: 500; border-bottom:2px solid gray">Payment Date:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400; border-bottom:2px solid gray">@Model.PaymentDate</td>
-                        <th style="font-size: 15px; font-weight: 500; border-bottom:2px solid gray">Salary Month:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400; text-align:center;border-bottom:2px solid gray">@Model.SalaryMonth</td>
-                        <th style="font-size: 15px; font-weight: 500; border-bottom:2px solid gray">Salary Year:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400; text-align:center;border-bottom:2px solid gray">@Model.SalaryYear</td>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; border-bottom:2px solid gray">Payment Date:</th>
+                        <td colspan="1" style="font-size: 11px;border-bottom:2px solid gray">@Model.PaymentDate</td>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; border-bottom:2px solid gray">Salary Month:</th>
+                        <td colspan="1"style="font-size: 11px;border-bottom:2px solid gray">@Model.SalaryMonth</td>
+                        <th colspan="2"style="font-weight:bold;font-size: 11px; border-bottom:2px solid gray">Salary Year:</th>
+                        <td colspan="2" style="font-size: 11px;border-bottom:2px solid gray">@Model.SalaryYear</td>
                     </tr>
                     <tr>
-                        <th style="font-size: 15px; font-weight: 500;">Employee Code</th>
-                        <th colspan="2" style="font-size: 15px; font-weight: 500;">Employee Name</th>
-                        <th colspan="2" style="font-size: 15px; font-weight: 500;">Designation</th>
-                        <th colspan="2" style="font-size: 15px; font-weight: 500;">Type</th>
-                        <th colspan="2" style="font-size: 15px; font-weight: 500;">Office</th>
-                        <th style="font-size: 15px; font-weight: 500;">Sex</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Employee Code</th>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; ">Employee Name</th>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; ">Designation</th>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; ">Type</th>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; ">Office</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Sex</th>
                     </tr>                    
                     <tr>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.EmployeeCode</td>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.EmployeeName</td>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Designation</td>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Type</td>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Office</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Sex</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.EmployeeCode</td>
+                        <td colspan="2" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.EmployeeName</td>
+                        <td colspan="2" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Designation</td>
+                        <td colspan="2" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Type</td>
+                        <td colspan="2" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Office</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Sex</td>
                     </tr>
                     <tr>
-                        <th colspan="10" style="font-size: 15px; font-weight: 500;">Analytical Information</th>
+                        <th colspan="10" style="font-weight:bold;font-size: 11px; ">Analytical Information</th>
                     </tr>
                     <tr>
-                        <th style="font-size: 15px; font-weight: 500;">B/Line</th>
-                        <th style="font-size: 15px; font-weight: 500;">Program</th>
-                        <th style="font-size: 15px; font-weight: 500;">Project</th>
-                        <th style="font-size: 15px; font-weight: 500;">Job</th>
-                        <th style="font-size: 15px; font-weight: 500;">Sector</th>
-                        <th style="font-size: 15px; font-weight: 500;">Area</th>
-                        <th style="font-size: 15px; font-weight: 500;">Account</th>
-                        <th style="font-size: 15px; font-weight: 500;">Salary(%)</th>
-                        <th colspan="2" style="font-size: 15px; font-weight: 500;">Salary</th>
+                        <th style="font-weight:bold;font-size: 11px; ">B/Line</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Program</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Project</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Job</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Sector</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Area</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Account</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Salary(%)</th>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; ">Salary</th>
+                    </tr>
+                @foreach (var Item in Model.AnalyticalInfo) {
+                    <tr>
+                        <td style="font-size: 11px;text-align:center ;border-bottom:2px solid gray">@Item.BudgetLine</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">
+                            @foreach (var data in @Item.Program) {
+                              @data.Program<text>,</text> <br>
+                             }
+                            </td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.Project</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.Job.Job</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">
+                            @foreach (var data in @Item.Sector) {
+                               @data.Sector<text>,</text><br>
+                             }
+                        </td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.Area</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.Account</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.SalaryPercentage</td>
+                        <td colspan="2" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Item.AnalyticalSalary</td>                     
+                    </tr>
+                }
+                    <tr>
+                        <th style="font-weight:bold;font-size: 11px; text-align:left">Basic Salary:</th>
+                        <td colspan="2" style="font-size: 11px;"> @Model.BasicSalary</td>
+                        <th colspan="7" style="font-weight:bold;font-size: 11px; border-bottom:2px solid gray">Allowance</th>
                     </tr>
                     <tr>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center ;border-bottom:2px solid gray">@Model.BudgetLine</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Program</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Project</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Job</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Sector</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Area</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Account</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.SalaryPercentage</td>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.AnalyticalSalary</td>
+                        <th style="font-weight:bold;font-size: 11px; text-align:left">Currency Code:</th>
+                        <td colspan="2" style="font-size: 11px;">@Model.CurrencyCode</td>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; ">Advance Recovery</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Bonus</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Salary Tax</th>                        
+                        <th style="font-weight:bold;font-size: 11px; ">Pension</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Cb</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Security</th>
                     </tr>
                     <tr>
-                        <th style="font-size: 15px; font-weight: 500;text-align:left">Basic Salary:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;"> @Model.BasicSalary</td>
-                        <th colspan="7" style="font-size: 15px; font-weight: 500;border-bottom:2px solid gray">Allowance</th>
-                    </tr>
-                    <tr>
-                        <th style="font-size: 15px; font-weight: 500;text-align:left">Currency Code:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;">@Model.CurrencyCode</td>
-                        <th colspan="2" style="font-size: 15px; font-weight: 500;">Food</th>
-                        <th style="font-size: 15px; font-weight: 500;">Tr</th>
-                        <th style="font-size: 15px; font-weight: 500;">Medical</th>
-                        <th style="font-size: 15px; font-weight: 500;">Other</th>
-                        <th style="font-size: 15px; font-weight: 500;">Other 1</th>
-                        <th style="font-size: 15px; font-weight: 500;">Other 2</th>
-                    </tr>
-                    <tr>
-                        <th style="font-size: 15px; font-weight: 500;text-align:left">Attendance:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;">@Model.Attendance</td>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Food</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Tr</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Medical</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.AllowanceOther</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.AllowanceOther1</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.AllowanceOther2</td>
+                        <th style="font-weight:bold;font-size: 11px; text-align:left">Attendance:</th>
+                        <td colspan="2" style="font-size: 11px;">@Model.Attendance</td>
+                        <td colspan="2" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.AllowanceAdvance</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Bonus</td> 
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.AllowanceSalaryTax</td>                        
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.AllowancePension</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.AllowanceCb</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.AllowanceSecurity</td>
                     </tr>
                     <tr>                    
-                        <th style="font-size: 15px; font-weight: 500;text-align:left">Absentees:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;">@Model.Absentess</td>
-                        <th style="font-size: 15px; font-weight: 500;border-bottom:2px solid gray">Gross Salary:</th>
-                        <td colspan="6" style="font-size: 15px; font-weight: 400;border-bottom:2px solid gray"><u>@Model.GrossSalary</u></td>
+                        <th style="font-weight:bold;font-size: 11px; text-align:left">Absentees:</th>
+                        <td colspan="2" style="font-size: 11px;">@Model.Absentess</td>
+                        <th style="font-weight:bold;font-size: 11px; border-bottom:2px solid gray">Gross Salary:</th>
+                        <td colspan="6" style="font-size: 11px;border-bottom:2px solid gray"><u>@Model.GrossSalary</u></td>
                     </tr>
                     <tr>
-                        <th style="font-size: 15px; font-weight: 500;text-align:left">Salary:</th>
-                        <td colspan="2" style="font-size: 15px; font-weight: 400;">@Model.Salary</td>
-                        <th colspan="7" style="font-size: 15px; font-weight: 500;border-bottom:2px solid gray">Deduction</th>
+                        <th style="font-weight:bold;font-size: 11px; text-align:left">Salary:</th>
+                        <td colspan="2" style="font-size: 11px;">@Model.Salary</td>
+                        <th colspan="7" style="font-weight:bold;font-size: 11px; border-bottom:2px solid gray">Deduction</th>
                     </tr>
                     <tr>
                         <th></th>
                         <td colspan="2"></td>
-                        <th style="font-size: 15px; font-weight: 500;">Advance</th>
-                        <th style="font-size: 15px; font-weight: 500;">Salary Tax</th>
-                        <th style="font-size: 15px; font-weight: 500;">Fine</th>
-                        <th style="font-size: 15px; font-weight: 500;">Other</th>
-                        <th style="font-size: 15px; font-weight: 500;">Pension</th>
-                        <th style="font-size: 15px; font-weight: 500;">Cb</th>
-                        <th style="font-size: 15px; font-weight: 500;">Security</th>
+                        <th colspan="2" style="font-weight:bold;font-size: 11px; ">Advance Recovery</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Salary Tax</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Total Fine</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Pension</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Cb</th>
+                        <th style="font-weight:bold;font-size: 11px; ">Security</th>
                     </tr>
                     <tr>
                         <td></td>
                         <td colspan="2"></td>                                                                                            
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Advance</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.SalaryTax</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Fine</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.DeductionOther</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Pension</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Cb</td>
-                        <td style="font-size: 15px; font-weight: 400;text-align:center;border-bottom:2px solid gray">@Model.Security</td>
+                        <td colspan="2" style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Advance</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.SalaryTax</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Fine</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Pension</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Cb</td>
+                        <td style="font-size: 11px;text-align:center;border-bottom:2px solid gray">@Model.Security</td>
                     </tr>
                     <tr>
                         <th></th>
                         <td colspan="2"></td>
-                        <th style="font-size: 15px; font-weight: 500;">Net</th>
-                        <td style="font-size: 15px; font-weight: 400;">@Model.Net</td>
-                        <th style="font-size: 15px; font-weight: 500;">AFN</th>
-                        <td colspan="4" style="font-size: 15px; font-weight: 400;"><u>@Model.AFN</u></td>
-                    </tr>
-                    <tr>                        
-                        <th colspan="1" style="font-size: 15px; font-weight: 500;text-align:left">Other 1 Desc:</th>
-                        <td colspan="9" style="font-size: 15px; font-weight: 400;">@Model.Other1Desc</td>
+                        <th style="font-weight:bold;font-size: 11px; ">Net</th>
+                        <td style="font-size: 11px;">@Model.SalaryCurrencyCode</td>
+                        <th style="font-size: 11px; "><u>@Model.Net</u></th>
+                        <td colspan="4" style="font-size: 11px;"></td>
                     </tr>
                     <tr>
-                        <th colspan="1" style="font-size: 15px; font-weight: 500;text-align:left;border-bottom:2px solid gray">Other 2 Desc:</th>
-                        <td colspan="9" style="font-size: 15px; font-weight: 400;border-bottom:2px solid gray">@Model.Other2Desc</td>
+                        <td colspan="10" style="font-size: 11px;border-top:2px solid gray">This is to acknowledge that I have received an amount of @Model.CurrencyCode &nbsp; @Model.Salary and I am fully aware and agreed with all of the above mentioned printed information</td>
                     </tr>
                     <tr>
-                        <td colspan="10" style="font-size: 15px; font-weight: 400;">This is to acknowledge that I have received an amount of AFG 21491 and I am fully aware and agreed with all of the above mentioned printed information</td>
+                        <th colspan="1" style="font-weight:bold;font-size: 11px; text-align:left">Employee Code:</th>
+                        <td colspan="9" style="font-size: 11px;">@Model.ApprovedEmployeeCode</td>
                     </tr>
                     <tr>
-                        <th colspan="1" style="font-size: 15px; font-weight: 500;text-align:left">Employee Code:</th>
-                        <td colspan="9" style="font-size: 15px; font-weight: 400;">@Model.ApprovedEmployeeCode</td>
+                        <th colspan="1" style="font-weight:bold;font-size: 11px; text-align:left">Employee Name:</th>
+                        <td colspan="9" style="font-size: 11px;">@Model.ApprovedEmployeeName</td>
                     </tr>
                     <tr>
-                        <th colspan="1" style="font-size: 15px; font-weight: 500;text-align:left">Employee Name:</th>
-                        <td colspan="9" style="font-size: 15px; font-weight: 400;">@Model.ApprovedEmployeeName</td>
-                    </tr>
-                    <tr>
-                        <th colspan="10" style="font-size: 15px; font-weight: 500;text-align:left">Signature:&nbsp;&nbsp;&nbsp;________________</th>
+                        <th colspan="10" style="font-weight:bold;font-size: 11px; text-align:left">Signature:&nbsp;&nbsp;&nbsp;________________</th>
                     </tr>
                 </tbody>
             </table>

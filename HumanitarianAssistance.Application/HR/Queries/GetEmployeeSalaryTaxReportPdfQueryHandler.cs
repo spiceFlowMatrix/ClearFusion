@@ -42,7 +42,7 @@ namespace HumanitarianAssistance.Application.HR.Queries {
                     model.TelephoneNumberEmployee = request.TelephoneNumberEmployee;
                     model.EmailAddressEmployee = request.EmailAddressEmployee;
                     model.AnnualTaxPeriod = request.AnnualTaxPeriod;
-                    model.DatesOfEmployeement = request.DatesOfEmployeement;
+                    //model.DatesOfEmployeement = request.DatesOfEmployeement;
                     model.TotalWages = request.TotalWages;
                     model.TotalTax = request.TotalTax;
                     model.OfficerName = request.OfficerName;

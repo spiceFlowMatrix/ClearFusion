@@ -20,6 +20,7 @@ export class PdfExportService {
     // });
 
   GenratePdfExportForSalaryPensionDetails(pdfModel: EmployeeTaxReportModel) {
+    console.log(pdfModel);
     const doc = new jsPDF();
     doc.addFileToVFS('Arial.ttf', this.base64);
     doc.addFont('Arial.ttf', 'custom', 'normal');
@@ -151,7 +152,7 @@ export class PdfExportService {
 
     // for arabic
     doc.setFontSize(10);
-    doc.text(195, 16, 'اداره درآمد افغانستان', {
+    doc.text(195, 16, 'جمهوری اسلامی افغانستان', {
       maxWidth: 250,
       align: 'right',
       lang: 'ar'
@@ -371,110 +372,102 @@ export class PdfExportService {
     doc.text(
       100,
       56,
-      pdfModel.TaxPayerIdentificationNumber !== 0
-        ? pdfModel.TaxPayerIdentificationNumber
-        : '',
+      pdfModel.TaxPayerIdentificationNumber,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       66,
-      pdfModel.NameOfBusiness !== '' ? pdfModel.NameOfBusiness : '',
+      pdfModel.NameOfBusiness,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       76,
-      pdfModel.AddressOfBusiness !== '' ? pdfModel.AddressOfBusiness : '',
+      pdfModel.AddressOfBusiness,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       86,
-      pdfModel.TelephoneNumber !== '' ? pdfModel.TelephoneNumber : '',
+      pdfModel.TelephoneNumber,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       93,
-      pdfModel.EmailAddressEmployer !== '' ? pdfModel.EmailAddressEmployer : '',
+      pdfModel.EmailAddressEmployer,
       { maxWidth: 50, align: 'center' }
     );
     doc.setFontSize(7);
     doc.text(
       100,
       108,
-      pdfModel.EmployeeName !== undefined ? pdfModel.EmployeeName : '',
+      pdfModel.EmployeeName,
       { maxWidth: 50, align: 'center' }
     );
     // tslint:disable-next-line: max-line-length
     doc.text(
       100,
       115,
-      pdfModel.EmployeeTaxpayerIdentification !== ''
-        ? pdfModel.EmployeeTaxpayerIdentification
-        : '',
+      pdfModel.EmployeeTaxpayerIdentification !== undefined ? pdfModel.EmployeeTaxpayerIdentification : '',
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       122,
-      pdfModel.EmployeeAddress !== undefined ? pdfModel.EmployeeAddress : '',
+      pdfModel.EmployeeAddress,
       { maxWidth: 50, align: 'center' }
     );
     // tslint:disable-next-line: max-line-length
     doc.text(
       100,
       132,
-      pdfModel.TelephoneNumberEmployee !== undefined
-        ? pdfModel.TelephoneNumberEmployee
-        : '',
+      pdfModel.TelephoneNumberEmployee,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       139,
-      pdfModel.EmailAddressEmployee !== undefined
-        ? pdfModel.EmailAddressEmployee
-        : '',
+      pdfModel.EmailAddressEmployee,
       { maxWidth: 50, align: 'center' }
     );
     doc.setFontSize(7);
     doc.text(
       100,
       154,
-      pdfModel.AnnualTaxPeriod !== 0 ? pdfModel.AnnualTaxPeriod : '',
+      pdfModel.AnnualTaxPeriod,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       161,
-      pdfModel.DatesOfEmployeement !== 0 ? pdfModel.DatesOfEmployeement : '',
+      pdfModel.DatesOfEmployeement !== undefined ? pdfModel.DatesOfEmployeement : '',
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       168,
-      pdfModel.TotalWages !== undefined ? pdfModel.TotalWages : '',
+      pdfModel.TotalWages,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       175,
-      pdfModel.TotalTax !== undefined ? pdfModel.TotalTax : '',
+      pdfModel.TotalTax,
       { maxWidth: 50, align: 'center' }
     );
 
     doc.text(
       100,
       229,
-      pdfModel.OfficerName !== undefined ? pdfModel.OfficerName : '',
+      pdfModel.OfficerName,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(
       100,
       236,
-      pdfModel.Position !== undefined ? pdfModel.Position : '',
+      pdfModel.Position,
       { maxWidth: 50, align: 'center' }
     );
     doc.text(100, 243, '', { maxWidth: 50, align: 'center' });
