@@ -8,6 +8,7 @@ import { flatMap } from 'rxjs/operators';
 import { GlobalService } from '../shared/services/global-services.service';
 import { GLOBAL } from '../shared/global';
 import { AppUrlService } from '../shared/services/app-url.service';
+import * as jwt_decode from 'jwt-decode';
 
 (window as any).global = window;
 
@@ -33,15 +34,17 @@ export class Auth0Service {
   );
 
   constructor(public router: Router, private globalService: GlobalService,
-    private appURL: AppUrlService,) { }
+    private appURL: AppUrlService, ) { }
 
   public login(): void {
     this.auth0.authorize();
   }
 
   public handleAuthentication(): void {
+
     this.auth0.parseHash((err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
+        this.getPermissions();
         this.setSession(authResult);
         const data = {
           UserId: authResult.idTokenPayload.sub.substring(6)
@@ -213,6 +216,17 @@ export class Auth0Service {
           // this.commonLoaderService.hideLoader();
         }
       );
+  }
+
+  getPermissions() {
+    if (this.isAuthenticated()) {
+      const token = localStorage.getItem('access_token');
+      const permissions = jwt_decode(token)['permissions'];
+      console.log(permissions);
+
+    } else {
+      this.logout();
+    }
   }
 
 }
