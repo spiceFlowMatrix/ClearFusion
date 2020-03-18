@@ -18,6 +18,8 @@ import { AddDocumentComponent } from 'src/app/store/components/document-upload/a
 import { AddDocumentsComponent } from '../add-documents/add-documents.component';
 import { of } from 'rxjs/internal/observable/of';
 import { GlobalService } from 'src/app/shared/services/global-services.service';
+import { Auth0Service } from 'src/app/auth0/auth0.service';
+import { PermissionEnum } from 'src/app/shared/permission-enum';
 
 @Component({
   selector: 'app-voucher-detail',
@@ -56,6 +58,7 @@ export class VoucherDetailComponent implements OnInit {
   filteredOptions: Observable<string[]>;
 
   transactionPagingModel: any;
+  permissionsEnum = PermissionEnum;
 
   constructor(private routeActive: ActivatedRoute,
     private router: Router, private voucherService: VoucherService,
@@ -63,7 +66,8 @@ export class VoucherDetailComponent implements OnInit {
     private budgetLineService: BudgetLineService,
     private globalSharedService: GlobalSharedService,
     private appurl: AppUrlService, private dialog: MatDialog,
-    private globalService: GlobalService) {
+    private globalService: GlobalService,
+    private auth0Service: Auth0Service) {
     this.routeActive.url.subscribe(params => {
       this.voucherNo = +params[0].path;
     });
@@ -381,6 +385,11 @@ export class VoucherDetailComponent implements OnInit {
   navigateToLogisticRequest() {
     this.router.navigate(['project/my-project/' + this.voucherDetail.PurchaseOrderModel.ProjectId +
       '/logistic-requests/' + this.voucherDetail.PurchaseOrderModel.PurchaseOrderId]);
+  }
+
+  checkPermission(permission) {
+    debugger;
+    return this.auth0Service.checkPermissions(permission);
   }
 
 }

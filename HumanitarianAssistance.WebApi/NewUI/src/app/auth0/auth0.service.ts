@@ -87,6 +87,7 @@ export class Auth0Service {
   public logout(): void {
     this.auth0.logout();
     // Remove tokens and expiry time from localStorage
+
     localStorage.removeItem('access_token');
     localStorage.removeItem('authenticationtoken');
     localStorage.removeItem('id_token');
@@ -221,13 +222,24 @@ export class Auth0Service {
   }
 
   getPermissions() {
+    let permissions = [];
     if (this.isAuthenticated()) {
       const token = localStorage.getItem('access_token');
-      const permissions = jwt_decode(token)['permissions'];
+      permissions = jwt_decode(token)['permissions'];
       console.log(permissions);
 
     } else {
       this.logout();
+    }
+    return permissions;
+  }
+
+  checkPermissions(permission: any) {
+    const permissions: any[] = this.getPermissions();
+    if (permissions.length > 0 ) {
+      return permissions.includes(permission) ? true : false;
+    } else {
+      return false;
     }
   }
 

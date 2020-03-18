@@ -1,6 +1,6 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
   <span class="action_header"><i class="fas fa-arrow-left" (click)="backClick()"></i> &nbsp;Voucher Control Panel
-    <hum-button [type]="'edit'" [text]="'EDIT DETAILS'" (click)="editVoucher()"></hum-button>
+    <hum-button [type]="'edit'" [text]="'EDIT DETAILS'" (click)="editVoucher()" *ngIf="checkPermission(permissionsEnum[3])"></hum-button>
 
     <hum-button *ngIf="!voucherDetail.IsVoucherVerified" [type]="'text'" [text]="'VALIDATE'" (click)="validateVoucher()"></hum-button>
     <hum-button *ngIf="voucherDetail.IsVoucherVerified" [type]="'text'" [text]="'INVALIDATE'" (click)="validateVoucher()"></hum-button>
