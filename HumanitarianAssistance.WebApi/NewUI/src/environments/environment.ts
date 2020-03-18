@@ -26,10 +26,14 @@
  uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
  , // proposal doc
    Auth0Config: {
-    clientID: '5ZEGIS2KMQmnoLGgEiAgIya2wPW2rf5B',
+    // clientID: '5ZEGIS2KMQmnoLGgEiAgIya2wPW2rf5B',
+    clientID: '87STuXB3YdNy20O0NZT27yljAg0dQadK',
     domain: 'dev-cv8y2thi.auth0.com',
-    callbackURL: 'https://localhost:5001/',
-    apiUrl: 'https://localhost:5001/'
+    // callbackURL: 'https://localhost:5001/',
+    // apiUrl: 'https://localhost:5001/'
+    callbackURL: 'https://review.cha-net.org/',
+    apiUrl: 'https://review.cha-net.org/'
+
    }
 
  };

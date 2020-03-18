@@ -39,11 +39,12 @@ export class Auth0Service {
 
   public login(): void {
     this.auth0.authorize();
+
   }
 
   public handleAuthentication(): void {
 
-    this.auth0.parseHash((err, authResult) => {
+    this.auth0.parseHash({ hash: window.location.hash }, (err, authResult) => {
       if (authResult && authResult.accessToken && authResult.idToken) {
         this.getPermissions();
         this.setSession(authResult);
@@ -85,15 +86,15 @@ export class Auth0Service {
   }
 
   public logout(): void {
-    this.auth0.logout();
-    // Remove tokens and expiry time from localStorage
-
     localStorage.removeItem('access_token');
     localStorage.removeItem('authenticationtoken');
     localStorage.removeItem('id_token');
     localStorage.removeItem('expires_at');
+    location.replace(window.location.origin + '/login');
+    // this.auth0.logout();
+    // Remove tokens and expiry time from localStorage
     // Go back to the home route
-  //  this.router.navigate(['/']);
+    //  this.router.navigate(['/']);
   }
 
   public isAuthenticated(): boolean {
@@ -236,7 +237,7 @@ export class Auth0Service {
 
   checkPermissions(permission: any) {
     const permissions: any[] = this.getPermissions();
-    if (permissions.length > 0 ) {
+    if (permissions.length > 0) {
       return permissions.includes(permission) ? true : false;
     } else {
       return false;

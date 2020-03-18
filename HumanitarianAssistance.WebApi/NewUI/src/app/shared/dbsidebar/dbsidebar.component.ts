@@ -275,7 +275,7 @@ export class DbsidebarComponent implements OnInit {
 
     // this.loginService.logout();
     this.auth0.logout();
-    this.route.navigate(['/login']);
+   // this.route.navigate(['/login']);
   }
   //#endregion
 }

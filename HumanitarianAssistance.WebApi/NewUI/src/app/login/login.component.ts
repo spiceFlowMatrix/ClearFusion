@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppUrlService } from '../shared/services/app-url.service';
 import { GlobalService } from '../shared/services/global-services.service';
 import { GLOBAL } from '../shared/global';
@@ -13,7 +13,7 @@ import { Auth0Service } from '../auth0/auth0.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   userRolesArr: any[] = [];
   userRoles: string;
@@ -41,7 +41,9 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     // this.auth0.logout();
+    // this.auth0.logout();
      this.auth0.login();
+     // this.auth0.handleAuthentication();
     // this.login();
   }
 
@@ -115,5 +117,8 @@ export class LoginComponent implements OnInit {
           this.commonLoaderService.hideLoader();
         }
       );
+  }
+  ngOnDestroy(): void {
+//    this.auth0.handleAuthentication();
   }
 }

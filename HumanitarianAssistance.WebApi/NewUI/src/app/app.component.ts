@@ -24,7 +24,7 @@ export class AppComponent implements OnInit {
     private notifyService: NotifySignalRService,
     public auth: Auth0Service
   ) {
-    auth.handleAuthentication();
+    this.auth.handleAuthentication();
   }
 
   ngOnInit() {
