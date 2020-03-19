@@ -9,6 +9,7 @@ import { GlobalService } from '../shared/services/global-services.service';
 import { GLOBAL } from '../shared/global';
 import { AppUrlService } from '../shared/services/app-url.service';
 import * as jwt_decode from 'jwt-decode';
+import { CommonLoaderService } from '../shared/common-loader/common-loader.service';
 
 (window as any).global = window;
 
@@ -35,7 +36,7 @@ export class Auth0Service {
   );
 
   constructor(public router: Router, private globalService: GlobalService,
-    private appURL: AppUrlService, ) { }
+    private appURL: AppUrlService, private commonLoaderService: CommonLoaderService,) { }
 
   public login(): void {
     this.auth0.authorize();
@@ -156,7 +157,7 @@ export class Auth0Service {
       UserId: data.UserId
     };
 
-    // this.commonLoaderService.showLoader();
+     this.commonLoaderService.showLoader();
 
     this.globalService
       .post(this.appURL.getApiUrl() + GLOBAL.API_Login_Auth_Url, loginData)
@@ -214,10 +215,10 @@ export class Auth0Service {
             // this.toastr.error(data.Message);
           }
 
-          // this.commonLoaderService.hideLoader();
+           this.commonLoaderService.hideLoader();
         },
         error => {
-          // this.commonLoaderService.hideLoader();
+           this.commonLoaderService.hideLoader();
         }
       );
   }
