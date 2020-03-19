@@ -127,6 +127,11 @@ deploy_cleanarch:
           --set app.secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
           --set app.secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
+          --set app.secret.authtenantdomain="${APP_AUTH_TENANT_DOMAIN}"
+          --set app.secret.authwebappclientid="${APP_AUTH_WEBAPP_CLIENT_ID}"
+          --set app.secret.authwebappcallbackurl="${APP_AUTH_WEBAPP_CALLBACK_URL}"
+          --set app.secret.authwebappapiurl="${APP_AUTH_WEBAPP_API_URL}"
+          --set app.secret.authwebapiapiidentifier="${APP_AUTH_WEBAPI_API_IDENTIFIER}"
           --wait
           clearfusion
           ./k8s-chart
@@ -159,6 +164,11 @@ deploy_review:
           --set app.secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
           --set app.secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
+          --set app.secret.authtenantdomain="${APP_AUTH_TENANT_DOMAIN}"
+          --set app.secret.authwebappclientid="${APP_AUTH_WEBAPP_CLIENT_ID}"
+          --set app.secret.authwebappcallbackurl="${APP_AUTH_WEBAPP_CALLBACK_URL}"
+          --set app.secret.authwebappapiurl="${APP_AUTH_WEBAPP_API_URL}"
+          --set app.secret.authwebapiapiidentifier="${APP_AUTH_WEBAPI_API_IDENTIFIER}"
           --wait
           clearfusion
           ./k8s-chart
@@ -191,6 +201,11 @@ deploy_chaprod:
           --set app.secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
           --set app.secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
+          --set app.secret.authtenantdomain="${APP_AUTH_TENANT_DOMAIN}"
+          --set app.secret.authwebappclientid="${APP_AUTH_WEBAPP_CLIENT_ID}"
+          --set app.secret.authwebappcallbackurl="${APP_AUTH_WEBAPP_CALLBACK_URL}"
+          --set app.secret.authwebappapiurl="${APP_AUTH_WEBAPP_API_URL}"
+          --set app.secret.authwebapiapiidentifier="${APP_AUTH_WEBAPI_API_IDENTIFIER}"
           --wait
           clearfusion
           ./k8s-chart
@@ -222,6 +237,11 @@ deploy_smoprod:
           --set app.secret.postgrespassword="${POSTGRES_DB_PASSWORD}"
           --set app.secret.appserviceaccount="${APPLICATION_GCP_SERVICEACCOUNT}"
           --set app.secret.googlebucketname="${APP_GOOGLE_BUCKET_NAME}"
+          --set app.secret.authtenantdomain="${APP_AUTH_TENANT_DOMAIN}"
+          --set app.secret.authwebappclientid="${APP_AUTH_WEBAPP_CLIENT_ID}"
+          --set app.secret.authwebappcallbackurl="${APP_AUTH_WEBAPP_CALLBACK_URL}"
+          --set app.secret.authwebappapiurl="${APP_AUTH_WEBAPP_API_URL}"
+          --set app.secret.authwebapiapiidentifier="${APP_AUTH_WEBAPI_API_IDENTIFIER}"
           --wait
           clearfusion
           ./k8s-chart
