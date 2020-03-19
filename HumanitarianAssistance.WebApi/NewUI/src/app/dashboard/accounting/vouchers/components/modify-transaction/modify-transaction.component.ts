@@ -82,8 +82,7 @@ export class ModifyTransactionComponent implements OnInit {
     this.getVoucherTransactionsByVoucherNo();
     this.getDefaultAccountList();
     this.getDefaultProjectList();
-    console.log('permission', this.permissionsEnum[this.permissionsEnum['edit:vouchers']]);
-    if (this.checkPermission(this.permissionsEnum[this.permissionsEnum['edit:vouchers']])) {
+    if (this.checkPermission(this.permissionsEnum[this.permissionsEnum['manage:vouchers']])) {
       this.displayedColumns = ['select', 'AccountCode', 'Description', 'DebitAmount', 'CreditAmount',
       'ProjectName', 'BudgetLineName', 'JobName', 'Edit'];
     } else {

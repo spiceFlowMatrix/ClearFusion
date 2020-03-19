@@ -9,6 +9,7 @@ using HumanitarianAssistance.Application.Project.Models;
 using HumanitarianAssistance.Application.Project.Queries;
 using HumanitarianAssistance.Application.Store.Queries;
 using HumanitarianAssistance.Common.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HumanitarianAssistance.WebApi.Controllers
@@ -27,6 +28,7 @@ namespace HumanitarianAssistance.WebApi.Controllers
 
         [HttpPost]
         [Produces(contentType: "application/pdf")]
+        [Authorize ("view:vouchers")]
         public async Task<IActionResult> GetAllVoucherSummaryReportPdf([FromBody] GetAllVoucherSummaryReportPdfQuery model)
         {
             var file = await _mediator.Send(model);

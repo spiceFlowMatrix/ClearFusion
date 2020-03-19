@@ -257,7 +257,7 @@
     </ng-container>
 
     <!-- Project Job Column -->
-    <ng-container matColumnDef="Edit" *ngIf="checkPermission(permissionsEnum[3])">
+    <ng-container matColumnDef="Edit" *ngIf="checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])">
       <th mat-header-cell *matHeaderCellDef> Edit Transaction </th>
       <td mat-cell *matCellDef="let element" (click)="$event.stopPropagation()">
           <a style="color: blueviolet;" mat-button (click)="editTransactionBtnClick(element)">Edit</a>

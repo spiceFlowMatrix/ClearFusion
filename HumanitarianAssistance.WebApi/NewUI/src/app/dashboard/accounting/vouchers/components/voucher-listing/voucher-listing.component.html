@@ -1,9 +1,9 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
   <span class="action_header">Voucher Management Control Panel
-    <hum-button [type]="'add'" [text]="'ADD VOUCHER'" (click)="addVoucher()"></hum-button>
-    <hum-button [type]="'text'" [text]="'VALIDATE SELECTED'" (click)="verifySelectedVouchers()"></hum-button>
-    <hum-button [type]="'pdf'" [text]="'EXPORT SELECTED'" (click)="exportSelectedVouchers()"></hum-button>
-    <hum-button [type]="'remove'" [text]="'DELETED SELECTED'" (click)="deleteSelectedVouchers()"></hum-button>
+    <hum-button [type]="'add'" [text]="'ADD VOUCHER'" (click)="addVoucher()" *ngIf="checkPermission(permissionsEnum[permissionsEnum['add:vouchers']])"></hum-button>
+    <hum-button [type]="'text'" [text]="'VALIDATE SELECTED'" (click)="verifySelectedVouchers()" *ngIf="checkPermission(permissionsEnum[permissionsEnum['validate:vouchers']])"></hum-button>
+    <hum-button [type]="'pdf'" [text]="'EXPORT SELECTED'" (click)="exportSelectedVouchers()" *ngIf="checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])"></hum-button>
+    <hum-button [type]="'remove'" [text]="'DELETED SELECTED'" (click)="deleteSelectedVouchers()" *ngIf="checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])"></hum-button>
     <!-- <button mat-button [matMenuTriggerFor]="MonthMenu">
       <h5 style="color: #0390D1;">{{selectedMonth.name | uppercase}} &nbsp;<i class="fas fa-caret-down"></i>
       </h5>

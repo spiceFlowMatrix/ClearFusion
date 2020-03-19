@@ -7,6 +7,7 @@ import { LocalStorageService } from '../services/localstorage.service';
 import { GLOBAL } from '../global';
 import { LoginService } from 'src/app/login/login.service';
 import { Auth0Service } from 'src/app/auth0/auth0.service';
+import { PermissionEnum } from '../permission-enum';
 
 @Component({
   selector: 'app-dbsidebar',
@@ -18,6 +19,7 @@ export class DbsidebarComponent implements OnInit {
 
   // flag
   sidebarFlag = false;
+  permissionsEnum = PermissionEnum;
 
   Marketing: any = {
     TimeCategory: ApplicationPages.TimeCategory,
@@ -207,7 +209,8 @@ export class DbsidebarComponent implements OnInit {
     private localstorageservice: LocalStorageService,
     private loginService: LoginService,
     private auth0: Auth0Service,
-    private route: Router
+    private route: Router,
+    private auth0Service: Auth0Service
   ) {}
 
   ngOnInit() {
@@ -268,6 +271,10 @@ export class DbsidebarComponent implements OnInit {
     return isAllowed;
   }
   //#endregion
+
+  checkPermission(permission) {
+    return this.auth0Service.checkPermissions(permission);
+  }
 
   //#region
   onLogout() {
