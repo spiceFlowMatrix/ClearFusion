@@ -12,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 import { BudgetLineService } from 'src/app/dashboard/project-management/project-list/budgetlines/budget-line.service';
 import { startWith, map } from 'rxjs/operators';
 import { of } from 'rxjs/internal/observable/of';
+import { PermissionEnum } from 'src/app/shared/permission-enum';
+import { Auth0Service } from 'src/app/auth0/auth0.service';
 
 @Component({
   selector: 'app-modify-transaction',
@@ -22,7 +24,8 @@ export class ModifyTransactionComponent implements OnInit {
 
   constructor(private routeActive: ActivatedRoute,
     private router: Router, private voucherService: VoucherService,
-    private toastr: ToastrService, private fb: FormBuilder) {
+    private toastr: ToastrService, private fb: FormBuilder,
+    private auth0Service: Auth0Service) {
     this.routeActive.url.subscribe(params => {
       this.voucherNo = +params[0].path;
     });
@@ -32,8 +35,7 @@ export class ModifyTransactionComponent implements OnInit {
 
   voucherNo: any;
   voucherDetail: any;
-  displayedColumns: string[] = ['select', 'AccountCode', 'Description', 'DebitAmount', 'CreditAmount',
-    'ProjectName', 'BudgetLineName', 'JobName'];
+  displayedColumns: string[] = [];
   ELEMENT_DATA: any[] = [];
   isModifyTransactions = false;
   transactionDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
@@ -66,6 +68,7 @@ export class ModifyTransactionComponent implements OnInit {
   errorMessage: string;
   recordCount = 0;
   VoucherTypeEnum = VoucherType;
+  permissionsEnum = PermissionEnum;
 
   ngOnInit() {
     this.transactionPagingModel = {
@@ -79,6 +82,13 @@ export class ModifyTransactionComponent implements OnInit {
     this.getVoucherTransactionsByVoucherNo();
     this.getDefaultAccountList();
     this.getDefaultProjectList();
+    if (this.checkPermission(this.permissionsEnum[this.permissionsEnum['manage:vouchers']])) {
+      this.displayedColumns = ['select', 'AccountCode', 'Description', 'DebitAmount', 'CreditAmount',
+      'ProjectName', 'BudgetLineName', 'JobName', 'Edit'];
+    } else {
+      this.displayedColumns = ['select', 'AccountCode', 'Description', 'DebitAmount', 'CreditAmount',
+      'ProjectName', 'BudgetLineName', 'JobName'];
+    }
     // this.setAutoComplete();
 
   }
@@ -822,6 +832,10 @@ export class ModifyTransactionComponent implements OnInit {
     this.selectedProjectName = data.ProjectName;
     this.selectedAccountName = data.AccountCode;
     this.addEditTransactionForm.controls['BudgetLine'].enable();
+  }
+
+  checkPermission(permission) {
+    return this.auth0Service.checkPermissions(permission);
   }
 
 }

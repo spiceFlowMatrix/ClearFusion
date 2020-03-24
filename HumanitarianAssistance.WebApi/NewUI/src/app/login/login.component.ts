@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { AppUrlService } from '../shared/services/app-url.service';
 import { GlobalService } from '../shared/services/global-services.service';
 import { GLOBAL } from '../shared/global';
@@ -6,13 +6,14 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CommonLoaderService } from '../shared/common-loader/common-loader.service';
 import { ToastrService } from 'ngx-toastr';
+import { Auth0Service } from '../auth0/auth0.service';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   loginForm: FormGroup;
   userRolesArr: any[] = [];
   userRoles: string;
@@ -23,7 +24,8 @@ export class LoginComponent implements OnInit {
     private globalService: GlobalService,
     private fb: FormBuilder,
     private commonLoaderService: CommonLoaderService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private auth0: Auth0Service
   ) {
     this.loginForm = this.fb.group({
       Username: [null, Validators.required],
@@ -38,6 +40,10 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
+    // this.auth0.logout();
+    // this.auth0.logout();
+     this.auth0.login();
+     // this.auth0.handleAuthentication();
     // this.login();
   }
 
@@ -88,15 +94,15 @@ export class LoginComponent implements OnInit {
               localStorage.setItem('OrderScheduleRolePermissions', JSON.stringify(data.data.OrderSchedulePermissionsInRole));
             }
 
-              // check if Office Id present
-              localStorage.setItem('ALLOFFICES', '');
-              if (
-                data.data.UserOfficeList != null &&
-                data.data.UserOfficeList.length > 0
-              ) {
-                const Offices = data.data.UserOfficeList.join(',');
-                localStorage.setItem('ALLOFFICES', Offices);
-              }
+            // check if Office Id present
+            localStorage.setItem('ALLOFFICES', '');
+            if (
+              data.data.UserOfficeList != null &&
+              data.data.UserOfficeList.length > 0
+            ) {
+              const Offices = data.data.UserOfficeList.join(',');
+              localStorage.setItem('ALLOFFICES', Offices);
+            }
 
             // redirect to dashboard
             this.router.navigate(['']);
@@ -111,5 +117,8 @@ export class LoginComponent implements OnInit {
           this.commonLoaderService.hideLoader();
         }
       );
+  }
+  ngOnDestroy(): void {
+//    this.auth0.handleAuthentication();
   }
 }
