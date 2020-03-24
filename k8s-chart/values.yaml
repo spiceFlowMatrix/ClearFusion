@@ -11,3 +11,8 @@ app.secret.postgresuser: proxyuser
 app.secret.postgrespassword: mypassword
 app.secret.appserviceaccount: empty
 app.secret.googlebucketname: cf-staging-edg
+app.secret.authtenantdomain: dev-cv8y2thi.auth0.com
+app.secret.authwebappclientid: 5ZEGIS2KMQmnoLGgEiAgIya2wPW2rf5B
+app.secret.authwebappcallbackurl: https://localhost:5001/
+app.secret.authwebappapiurl: https://localhost:5001/
+app.secret.authwebapiapiidentifier: https://localhost:5001/
