@@ -1,12 +1,12 @@
 <lib-sub-header-template [headerClass]="'sub_header_template_main2'">
   <span class="action_header"><i class="fas fa-arrow-left" (click)="backClick()"></i> &nbsp;Voucher Control Panel
-    <hum-button [type]="'edit'" [text]="'EDIT DETAILS'" (click)="editVoucher()" *ngIf="checkPermission(permissionsEnum[permissionsEnum['edit:vouchers'])"></hum-button>
+    <hum-button [type]="'edit'" [text]="'EDIT DETAILS'" (click)="editVoucher()" *ngIf="checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])"></hum-button>
 
-    <hum-button *ngIf="!voucherDetail.IsVoucherVerified" [type]="'text'" [text]="'VALIDATE'" (click)="validateVoucher()"></hum-button>
-    <hum-button *ngIf="voucherDetail.IsVoucherVerified" [type]="'text'" [text]="'INVALIDATE'" (click)="validateVoucher()"></hum-button>
-    <hum-button [type]="'pdf'" [text]="'EXPORT'" (click)="exportVoucher()"></hum-button>
+    <hum-button *ngIf="!voucherDetail.IsVoucherVerified && checkPermission(permissionsEnum[permissionsEnum['validate:vouchers']])" [type]="'text'" [text]="'VALIDATE'" (click)="validateVoucher()"></hum-button>
+    <hum-button *ngIf="voucherDetail.IsVoucherVerified && checkPermission(permissionsEnum[permissionsEnum['validate:vouchers']])" [type]="'text'" [text]="'INVALIDATE'" (click)="validateVoucher()"></hum-button>
+    <hum-button [type]="'pdf'" [text]="'EXPORT'" (click)="exportVoucher()" *ngIf="checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])"></hum-button>
     <hum-button
-      *ngIf="voucherDetail.OperationalType != VoucherTypeEnum.Store && voucherDetail.OperationalType != VoucherTypeEnum.Logistics"
+      *ngIf="voucherDetail.OperationalType != VoucherTypeEnum.Store && voucherDetail.OperationalType != VoucherTypeEnum.Logistics && checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])"
       [type]="'remove'" [text]="'DELETE'" (click)="deleteVoucher()"></hum-button>
   </span>
   <div class="action_section">
@@ -107,7 +107,7 @@
     <div class="col-sm-1">
       <h4>Transactions</h4>
     </div>
-    <div class="col-sm-11" *ngIf="!isModifyTransactions">
+    <div class="col-sm-11" *ngIf="!isModifyTransactions && checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])">
       <hum-button [type]="'edit'" [text]="'MODIFY TRANSACTIONS'" (click)="onModifyTransactionsClick()"></hum-button>
     </div>
     <div class="col-sm-11" *ngIf="isModifyTransactions">
@@ -188,10 +188,19 @@
                   </mat-paginator>
   <div class="row">
     <div class="col-md-12">
-      <h4 style="padding-left: 0px !important">Documents
-        <hum-button [type]="'add'" [text]="'ADD DOCUMENT'" (click)="openAddDocumentDialog()"></hum-button>
-      </h4>
-      <div class="col-md-8">
+      <div class="row">
+        <div class="col-sm-1">
+          <h4 style="padding-left: 0px !important" *ngIf="checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])
+          || checkPermission(permissionsEnum[permissionsEnum['view:vouchers']])
+          ">Documents</h4>
+        </div>
+        <div class="col-sm-11">
+          <h4 *ngIf="checkPermission(permissionsEnum[permissionsEnum['manage:vouchers']])">
+            <hum-button [type]="'add'" [text]="'ADD DOCUMENT'" (click)="openAddDocumentDialog()"></hum-button>
+          </h4>
+        </div>
+      </div>
+      <div class="col-md-8" *ngIf="checkPermission(permissionsEnum[permissionsEnum['view:vouchers']])">
         <table class="table">
           <thead>
             <tr>

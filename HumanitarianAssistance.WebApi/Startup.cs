@@ -53,7 +53,7 @@ namespace HumanitarianAssistance.WebApi
         {
             //get and set environment variable at run time
             string DefaultCorsPolicyUrl = Environment.GetEnvironmentVariable("DEFAULT_CORS_POLICY_URL");
-            // string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
+            //  string connectionString = Environment.GetEnvironmentVariable("LINUX_DBCONNECTION_STRING");
             string connectionString = "Server=35.204.36.109;Port=5432;Database=edg_testing_database;User Id=clearfusion_review_proxyuser;Password=867983learnhave86momenttravellocate54";
             defaultCorsPolicyName = Configuration["DEFAULT_CORS_POLICY_NAME"];
 
@@ -133,18 +133,19 @@ namespace HumanitarianAssistance.WebApi
                 c.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
             });
 
-            string domain = $"https://{Configuration["Auth0:Domain"]}/";
+            string domain = Environment.GetEnvironmentVariable("AUTH_TENANT_DOMAIN");
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
 
+
             }).AddJwtBearer(options =>
             {
-                options.Authority = domain;
-                options.Audience = Configuration["Auth0:ApiIdentifier"];
-
+                options.Authority = $"https://{Environment.GetEnvironmentVariable("AUTH_TENANT_DOMAIN")}/";
+                options.Audience = Environment.GetEnvironmentVariable("AUTH_WEBAPI_API_IDENTIFIER");
+               // options.RequireHttpsMetadata = false;
                 options.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = context =>
@@ -169,7 +170,7 @@ namespace HumanitarianAssistance.WebApi
             {
                 options.AddPolicy("read:messages", policy => policy.Requirements.Add(new HasScopeRequirement("read:messages", domain)));
                 options.AddPolicy("view:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("view:vouchers", domain)));
-                options.AddPolicy("edit:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("edit:vouchers", domain)));
+                //options.AddPolicy("edit:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("edit:vouchers", domain)));
                 options.AddPolicy("manage:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("manage:vouchers", domain)));
                 options.AddPolicy("read:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("read:vouchers", domain)));
                 options.AddPolicy("validate:vouchers", policy => policy.Requirements.Add(new HasScopeRequirement("validate:vouchers", domain)));

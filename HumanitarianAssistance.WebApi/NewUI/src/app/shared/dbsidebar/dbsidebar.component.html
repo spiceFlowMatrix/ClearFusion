@@ -25,7 +25,7 @@
         <!-- <li [ngClass]="{'active': selectedLink == 2 }" *ngIf="displayChildModule(ModulesAccounting.Vouchers)">
           <a routerLink="/accounting/vouchers">Vouchers</a>
         </li> -->
-        <li [ngClass]="{'active': selectedLink == 2 }" (click)="onsideBarLinkClicked('/accounting/vouchers', 2)" *ngIf="displayChildModule(ModulesAccounting.Vouchers)"><a>Vouchers</a></li>
+        <li [ngClass]="{'active': selectedLink == 2 }" (click)="onsideBarLinkClicked('/accounting/vouchers', 2)" *ngIf="checkPermission(permissionsEnum[permissionsEnum['view:vouchers']])"><a>Vouchers</a></li>
         <li [ngClass]="{'active': selectedLink == 3 }" (click)="onsideBarLinkClicked('/accounting/chart-of-accounts', 3)" *ngIf="displayChildModule(ModulesAccounting.ChartOfAccount)"><a>Charts of Account</a></li>
         <li [ngClass]="{'active': selectedLink == 4 }" (click)="onsideBarLinkClicked('/accounting/financial-report', 4)"  *ngIf="displayChildModule(ModulesAccounting.FinancialReport)"><a>Financial Report</a></li>
         <li [ngClass]="{'active': selectedLink == 5 }" (click)="onsideBarLinkClicked('/accounting/gain-loss-report', 5)" *ngIf="displayChildModule(ModulesAccounting.GainLossReport)"><a>Gain/Loss Report</a></li>

@@ -16,6 +16,8 @@ import { GlobalSharedService } from 'src/app/shared/services/global-shared.servi
 import { GLOBAL } from 'src/app/shared/global';
 import { AppUrlService } from 'src/app/shared/services/app-url.service';
 import { MatOption } from '@angular/material';
+import { PermissionEnum } from 'src/app/shared/permission-enum';
+import { Auth0Service } from 'src/app/auth0/auth0.service';
 
 
 @Component({
@@ -38,6 +40,7 @@ export class VoucherListingComponent implements OnInit {
   selectedVoucherNo = 30;
   offices: any[];
   ELEMENT_DATA: any[] = [];
+  permissionsEnum = PermissionEnum;
   voucherDataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
   pagingModel = {
     pageIndex: 0,
@@ -48,7 +51,7 @@ export class VoucherListingComponent implements OnInit {
   constructor(private fb: FormBuilder, private voucherService: VoucherService,
     private datePipe: DatePipe, private router: Router, private routeActive: ActivatedRoute,
     private toastr: ToastrService, private globalSharedService: GlobalSharedService,
-    private appurl: AppUrlService,) {
+    private appurl: AppUrlService, private auth0Service: Auth0Service) {
     this.selectedMonth = { name: 'SELECT MONTH', value: 0 };
     this.voucherFilterForm = this.fb.group({
       'Search': [null],
@@ -398,4 +401,9 @@ export class VoucherListingComponent implements OnInit {
      this.getVoucherList();
 
  }
+
+ checkPermission(permission) {
+  return this.auth0Service.checkPermissions(permission);
+}
+
 }

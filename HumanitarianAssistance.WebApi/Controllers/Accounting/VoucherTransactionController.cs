@@ -48,7 +48,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        [Authorize ("edit:vouchers")]
+        [Authorize ("manage:vouchers")]
         public async Task<ApiResponse> EditVoucherDetail([FromBody] EditVoucherDetailCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -81,7 +81,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        [Authorize ("add:vouchers")]
+        [Authorize ("manage:vouchers")]
         public async Task<ApiResponse> AddEditTransactionList([FromBody] AddEditTransactionListCommand model)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -110,6 +110,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
+        [Authorize ("manage:vouchers")]
         public async Task<object> DeleteSelectedVouchers([FromBody] List<long> voucherNos)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -149,7 +150,7 @@ namespace HumanitarianAssistance.WebApi.Controllers.Accounting
         }
 
         [HttpPost]
-        [Authorize ("add:vouchers")]
+        [Authorize ("manage:vouchers")]
         public async Task<object> SaveTransactionList([FromBody] SaveTransactionListCommand transactions)
         {
             var userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
