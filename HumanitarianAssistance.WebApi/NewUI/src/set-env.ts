@@ -25,11 +25,8 @@ export const environment = {
     uploadUrl: 'https://storage.cloud.google.com/' // proposal doc
     , // proposal doc
       Auth0Config: {
-       // clientID: '5ZEGIS2KMQmnoLGgEiAgIya2wPW2rf5B',
        clientID: "${process.env.AUTH_WEBAPP_CLIENT_ID}",
        domain: "${process.env.AUTH_TENANT_DOMAIN}",
-       // callbackURL: 'https://localhost:5001/',
-       // apiUrl: 'https://localhost:5001/'
        callbackURL: "${process.env.AUTH_WEBAPP_CALLBACK_URL}",
        apiUrl: "${process.env.AUTH_WEBAPP_API_URL}"
     }

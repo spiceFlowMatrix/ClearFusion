@@ -140,11 +140,12 @@ namespace HumanitarianAssistance.WebApi
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 
 
+
             }).AddJwtBearer(options =>
             {
-                options.Authority = domain;
+                options.Authority = $"https://{Environment.GetEnvironmentVariable("AUTH_TENANT_DOMAIN")}/";
                 options.Audience = Environment.GetEnvironmentVariable("AUTH_WEBAPI_API_IDENTIFIER");
-
+               // options.RequireHttpsMetadata = false;
                 options.Events = new JwtBearerEvents
                 {
                     OnTokenValidated = context =>
